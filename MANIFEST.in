@@ -1,0 +1,9 @@
+include AUTHORS
+include LICENSE
+include DESCRIPTION
+include CHANGELOG.txt
+include README.md
+graft hijack
+global-exclude *.orig *.pyc *.log *.swp
+prune hijack/tests/coverage
+prune hijack/.ropeproject

@@ -1,0 +1,1 @@
+django-hijack allows superusers to hijack (=login as) and work on behalf of another user.

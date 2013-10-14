@@ -1,0 +1,10 @@
+django-nose
+coverage
+django-coverage
+django-jasmine
+ipdb
+flake8
+fabric
+factory_boy
+mock
+selenium
