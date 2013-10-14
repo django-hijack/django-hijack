@@ -20,7 +20,8 @@ To get the latest commit from GitHub
 
 TODO: Describe further installation steps (edit / remove the examples below):
 
-Add ``hijack`` to your ``INSTALLED_APPS``
+
+In your ``settings.py`` add ``hijack`` to your ``INSTALLED_APPS`` and define ``LOGIN_REDIRECT_URL``
 
 .. code-block:: python
 
@@ -28,6 +29,9 @@ Add ``hijack`` to your ``INSTALLED_APPS``
         ...,
         'hijack',
     )
+	
+	LOGIN_REDIRECT_URL = "/accounts/profile"
+	
 
 Add the ``hijack`` URLs to your ``urls.py``
 

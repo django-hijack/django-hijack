@@ -11,10 +11,8 @@ from django.core.exceptions import PermissionDenied
 def login_as(request, userID):
     if not request.user.is_superuser:
         raise PermissionDenied
-
     user = get_object_or_404(User, pk=userID)
     backend = get_backends()[0]
     user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
     login(request, user)
-
     return HttpResponseRedirect(getattr(settings, "LOGIN_REDIRECT_URL", "/"))
