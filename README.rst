@@ -38,25 +38,13 @@ Add the ``hijack`` URLs to your ``urls.py``
         url(r'^hijack/', include('hijack.urls')),
     )
 
-Before your tags/filters are available in your templates, load them by using
 
-.. code-block:: html
-
-	{% load hijack_tags %}
-
-
-Don't forget to migrate your database
-
-.. code-block:: bash
-
-    ./manage.py migrate hijack
 
 
 Usage
 -----
 
-TODO: Describe usage or point to docs. Also describe available settings and
-templatetags.
+Go to Users in the admin interface and push the ‘Hijack’ button to hijack an user.
 
 
 Contribute
