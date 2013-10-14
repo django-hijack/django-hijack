@@ -18,8 +18,6 @@ To get the latest commit from GitHub
 
     pip install -e git+git://github.com/arteria/django-hijack.git#egg=hijack
 
-TODO: Describe further installation steps (edit / remove the examples below):
-
 
 In your ``settings.py`` add ``hijack`` to your ``INSTALLED_APPS`` and define ``LOGIN_REDIRECT_URL``
 
@@ -29,9 +27,9 @@ In your ``settings.py`` add ``hijack`` to your ``INSTALLED_APPS`` and define ``L
         ...,
         'hijack',
     )
-	
-	LOGIN_REDIRECT_URL = "/accounts/profile"
-	
+    
+    LOGIN_REDIRECT_URL = "/hello/"
+    
 
 Add the ``hijack`` URLs to your ``urls.py``
 
