@@ -1,12 +1,8 @@
 """URLs for the hijack app."""
-# from django.conf.urls.defaults import patterns, url
+from django.conf.urls.defaults import patterns, url
 
 # from . import views
 
-
-# urlpatterns = patterns(
-#     '',
-#     url(r'^$',
-#         views.YourView.as_view(),
-#         name='hijack_default'),
-# )
+urlpatterns = patterns('hijack.views', 
+    url(r'^(?P<userID>\w+)', 'login_as'),
+)
