@@ -56,7 +56,7 @@ setup(
     platforms=['OS Independent'],
     keywords='django, hijack, support, customer support, debugging',
     author='arteria GmbH',
-    author_email='admin.ch',
+    author_email='admin@arteria.ch',
     url="https://github.com/arteria/django-hijack",
     packages=find_packages(),
     include_package_data=True,
