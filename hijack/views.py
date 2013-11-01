@@ -1,18 +1,20 @@
-from django.http import HttpResponse, Http404, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
-from django.conf import settings
-from django.contrib.auth import login, get_backends
-from django.core.exceptions import PermissionDenied
+from django.shortcuts import get_object_or_404
 
+from helpers import login_user
 
 @staff_member_required
-def login_as(request, userID):
-    if not request.user.is_superuser:
-        raise PermissionDenied
-    user = get_object_or_404(User, pk=userID)
-    backend = get_backends()[0]
-    user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
-    login(request, user)
-    return HttpResponseRedirect(getattr(settings, "LOGIN_REDIRECT_URL", "/"))
+def login_with_id(request, userId):
+    user = get_object_or_404(User, pk=userId)
+    return login_user(request, user)
+
+@staff_member_required
+def login_with_email(request, email):
+    user = get_object_or_404(User, email=email)
+    return login_user(request, user)
+
+@staff_member_required
+def login_with_username(request, username):
+    user = get_object_or_404(User, username=username)
+    return login_user(request, user)
