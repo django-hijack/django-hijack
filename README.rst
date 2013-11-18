@@ -27,9 +27,9 @@ In your ``settings.py`` add ``hijack`` to your ``INSTALLED_APPS`` and define ``L
         ...,
         'hijack',
     )
-    
+
     LOGIN_REDIRECT_URL = "/hello/"
-    
+
 
 Add the ``hijack`` URLs to your ``urls.py``
 
@@ -47,6 +47,32 @@ Usage
 -----
 
 Go to Users in the admin interface and push the ‘Hijack’ button to hijack an user.
+
+Or from the address bar type:
+
+* myapp.com/hijack/2
+* myapp.com/hijack/email/alex@example.com
+* myapp.com/hijack/username/alex
+
+Signal
+------
+
+You can catch a signal when a superuser logs in, because you might want to flag him and show a warning message in the interface.
+
+Add to your Account model:
+
+.. code-block:: python
+
+    superuser_login = False
+
+Catch the signal:
+
+.. code-block:: python
+
+    @receiver(post_superuser_login)
+    def set_superuser(sender, **kwargs):
+        account = Account.objects.get(user_ptr_id = kwargs['user_id'])
+        account.superuser_login = True
 
 
 Contribute
