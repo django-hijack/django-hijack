@@ -62,7 +62,7 @@ the following steps:
 
 
 ### Notify users when they were hijacked
-NOTE: This use case is not finished yet!
+NOTE: This use case is not fully implemented yet!
 
 This option allows to notify and inform users when they were hijacked by a superuser. To activate this option 
 follow these steps:
