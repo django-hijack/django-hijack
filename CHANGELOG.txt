@@ -1,4 +1,5 @@
 === (ongoing) ===
+- Store info in session (see #3 comments)
 - Signals while hijacking
 - Visual notifications for hijacking, see README for more detail
 - Django 1.6 compatibility (in urls.py)

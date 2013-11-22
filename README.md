@@ -46,22 +46,35 @@ For advanced superusers, users can be hijacked directly from the address bar by 
 * example.com/hijack/``user-id``
 * example.com/hijack/email/``email-address``
 * example.com/hijack/username/``username``
-	
-	
-### Notify users when they were hijacked
-This option allows to notify and inform users when they were hijacked by a superuser. To activate this option 
-follow these steps:
 
-* In your base.html add ``{{ load hijack_tags }}``.
-* In your project settings add ``HIJACK_NOTIFY_USER = True``. The default is False (= silent mode) 
 
 ### Notify superusers when working behalf of another user
 This option warns the superuser when working with another user as initally logged in. To activate this option perform 
 the following steps:
 
-* In your base.html add ``{{ load hijack_tags }}`` (in not already done).
+* In your base.html add ``{% load hijack_tags %}``, ``{%  load staticfiles %}`` and 
+* load the styles using ``<link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}" />``.
+* Place ``{{ request|hijackNotification }}`` just after your opening body tag.
 * In your project settings add ``HIJACK_NOTIFY_ADMIN = True``. The default is True. 
- 
+* You need to add ``django.core.context_processors.request`` to your template context processors to be able to use requests and sessions in the templates.
+* Make sure that ``django.contrib.staticfiles`` is included in your ``INSTALLED_APPS``. 
+* Do not forget to run ``python manage.py collectstatic``.
+
+
+### Notify users when they were hijacked
+NOTE: This use case is not finished yet!
+
+This option allows to notify and inform users when they were hijacked by a superuser. To activate this option 
+follow these steps:
+
+* In your base.html add ``{% load hijack_tags %}``, ``{%  load staticfiles %}`` and 
+* load the styles using ``<link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}" />``.
+* Place ``{{ request|hijackNotification }}`` just after your opening body tag.
+* In your project settings add ``HIJACK_NOTIFY_USER = True``. The default is False (= silent mode) 
+* You need to add ``django.core.context_processors.request`` to your template context processors to be able to use requests and sessions in the templates.
+* Make sure that ``django.contrib.staticfiles`` is included in your ``INSTALLED_APPS``. 
+* Do not forget to run ``python manage.py collectstatic``.
+
 
 # Signals
 
@@ -81,8 +94,7 @@ You can catch a signal when a superuser logs in as another user. Here is an exam
 # TODOs, issues and planned features
 * Handle hijack using URLs on non unique email addresses.
 * unset_superuser example for signals
-* store info in session (see #3 comments)
-* store info in user's profile (see #3 comments)
+* Store info in user's profile (see #3 comments, Use case: 'Notify users when they were hijacked', see above)
 
 
 #Contribute

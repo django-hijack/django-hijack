@@ -19,7 +19,9 @@ def login_user(request, user):
     user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
     login(request, user)
     post_superuser_login.send(sender=None, user_id = user.id)
-    return HttpResponseRedirect(getattr(settings, "LOGIN_REDIRECT_URL", "/"))
+    request.session['hijackedBySuperuser'] = True
+    request.session.modified = True
+    return HttpResponseRedirect(getattr(settings, 'LOGIN_REDIRECT_URL', '/'))
 
 
 @receiver(user_logged_out)
