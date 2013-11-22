@@ -26,13 +26,20 @@ def login_user(request, user):
 def logout_user(sender, **kwargs):
     ''' wraps logout signal '''
     user = kwargs['user'] 
-    post_superuser_login.send(sender=None, user_id = user.id)
-    print 'Successful Logout', u  
- 
+    post_superuser_logout.send(sender=None, user_id = user.id)
+    print 'Successful Logout', user  
+
+
+"""
+@receiver(post_superuser_logout)
+def unset_superuser(sender, **kwargs):
+    print kwargs['user_id']
+    #account = Account.objects.get(user_ptr_id = kwargs['user_id'])
+    #account.superuser_login = True
 
 @receiver(post_superuser_login)
 def set_superuser(sender, **kwargs):
     print kwargs['user_id']
     #account = Account.objects.get(user_ptr_id = kwargs['user_id'])
     #account.superuser_login = True
-
+"""

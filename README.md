@@ -10,7 +10,7 @@ To get the latest stable release from PyPi
 
 To get the latest commit from GitHub
 
-    pip install -e git+git://github.com/arteria/django-hijack.git#egg=hijack
+    pip install -e git+git://github.com/arteria/django-hijack.git#egg=hijack-master
 
 
 In your ``settings.py`` add ``hijack`` to your ``INSTALLED_APPS`` and define ``LOGIN_REDIRECT_URL``
@@ -43,24 +43,24 @@ of django-hijack.
 ### Hijack by callign URLs in the browser's address bar
 For advanced superusers, users can be hijacked directly from the address bar by typing:
 
-* example.com/hijack/<user-id>
-* example.com/hijack/email/<email-address>
-* example.com/hijack/username/<username>
+* example.com/hijack/``user-id``
+* example.com/hijack/email/``email-address``
+* example.com/hijack/username/``username``
 	
 	
 ### Notify users when they were hijacked
-This optional settings allows to notify and inform users when they were hijacked by a superuser. To activate this option 
+This option allows to notify and inform users when they were hijacked by a superuser. To activate this option 
 follow these steps:
 
-* In your base.html add ``{{ load hijack_tags }}``
-* In your project settings add ``HIJACK_NOTIFY_USER = True``  (default is False) 
+* In your base.html add ``{{ load hijack_tags }}``.
+* In your project settings add ``HIJACK_NOTIFY_USER = True``. The default is False (= silent mode) 
 
 ### Notify superusers when working behalf of another user
-This optional settings warns the superuser that he/she is working with another user as initally logged in. To activate 
-this option perform the following steps:
+This option warns the superuser when working with another user as initally logged in. To activate this option perform 
+the following steps:
 
-* In your base.html add ``{{ load hijack_tags }}`` (in not already done)
-* In your project settings add ``HIJACK_NOTIFY_ADMIN = True`` (default is True) 
+* In your base.html add ``{{ load hijack_tags }}`` (in not already done).
+* In your project settings add ``HIJACK_NOTIFY_ADMIN = True``. The default is True. 
  
 
 # Signals
@@ -68,6 +68,7 @@ this option perform the following steps:
 ## Superuser logs in
 You can catch a signal when a superuser logs in as another user. Here is an example:
  
+	from django.dispatch import receiver
 	from signals import post_superuser_login
 	
     @receiver(post_superuser_login)
@@ -77,8 +78,11 @@ You can catch a signal when a superuser logs in as another user. Here is an exam
 		
 		
 		
-# TODOs, know issues and planned features
+# TODOs, issues and planned features
 * Handle hijack using URLs on non unique email addresses.
+* unset_superuser example for signals
+* store info in session (see #3 comments)
+* store info in user's profile (see #3 comments)
 
 
 #Contribute
