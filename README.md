@@ -40,7 +40,7 @@ There are different possibilies to hijack an user and communicate with users.
 Go to Users in the admin backend and push the ‘Hijack’ button to hijack an user. This is the default mode and base version 
 of django-hijack.
 
-### Hijack by callign URLs in the browser's address bar
+### Hijack by calling URLs in the browser's address bar
 For advanced superusers, users can be hijacked directly from the address bar by typing:
 
 * example.com/hijack/``user-id``
