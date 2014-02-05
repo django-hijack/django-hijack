@@ -5,10 +5,6 @@ from django.conf import settings
 from django.contrib.auth.admin import UserAdmin
 
 
- 
-
-
-
 class HijackUserAdmin(UserAdmin):
     list_display = ('username', 'email', 'first_name', 'last_name',  'last_login', 'date_joined', 'is_staff', 'hijack_field',)
     list_filter = ('is_staff', 'is_superuser')
@@ -19,8 +15,10 @@ class HijackUserAdmin(UserAdmin):
     hijack_field.allow_tags = True
     hijack_field.short_description = 'Hijack User'
 
-admin.site.unregister(User)
-admin.site.register(User, HijackUserAdmin)
+# By default show a Hijack button in the admin panel for the User model.
+if getattr(settings, "SHOW_HIJACKUSER_IN_ADMIN", True):
+    admin.site.unregister(User)
+    admin.site.register(User, HijackUserAdmin)
 
 
 class SessionAdmin(admin.ModelAdmin):
