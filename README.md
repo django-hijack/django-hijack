@@ -97,6 +97,37 @@ You can catch a signal when a superuser logs in as another user. Here is an exam
 * Store info in user's profile (see #3 comments, Use case: 'Notify users when they were hijacked', see above)
 * "got it" Link in notification to remove notification and flag from session. This is useful if hijack is used to switch between users and HIJACK_NOTIFY_ADMIN is True.
 
+
+# FAQ, troubleshooting and hints
+
+### Why does the hijack button not show up in the admin site, even if I set ``SHOW_HIJACKUSER_IN_ADMIN = True`` in my project settings?
+
+If your ``UserAdmin`` object is already registered in the admin site through another app (here is an example of a Facebook profile, https://github.com/philippeowagner/django_facebook_oauth/blob/master/facebook/admin.py#L8), you could disable the registration of djanog-hijack by settings ``SHOW_HIJACKUSER_IN_ADMIN = False`` in your project settings.
+
+Afterwards create a new ``UserAdmin`` class derived from ``HijackUserAdmin``. The Facebook example would look like this:
+
+
+	from django.contrib import admin
+	from django.contrib.auth.admin import UserAdmin
+	from django.contrib.auth.models import User
+
+	from hijack.admin import HijackUserAdmin
+
+	from .models import FacebookProfile
+	
+	# We want to display our facebook profile, not the default user's profile
+	admin.site.unregister(User)
+
+	class FacebookProfileInline(admin.StackedInline):
+	    model = FacebookProfile
+        
+	class FacebookProfileAdmin(HijackUserAdmin):
+	    inlines = [FacebookProfileInline]
+		
+	admin.site.register(User, FacebookProfileAdmin)
+
+
+
 #Contribute
 
 If you want to contribute to this project, simply send us a pull request. Thanks. :)
