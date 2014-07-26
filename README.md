@@ -96,6 +96,7 @@ You can catch a signal when a superuser logs in as another user. Here is an exam
 * unset_superuser example for signals
 * Store info in user's profile (see #3 comments, Use case: 'Notify users when they were hijacked', see above)
 * "got it" Link in notification to remove notification and flag from session. This is useful if hijack is used to switch between users and HIJACK_NOTIFY_ADMIN is True.
+* Custom user models support, see #7
 
 
 # FAQ, troubleshooting and hints
