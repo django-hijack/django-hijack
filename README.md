@@ -75,8 +75,8 @@ follow these steps:
 * Do not forget to run ``python manage.py collectstatic``.
 
 
-### Allow staff to hijack Users
-This option allows staff to hijack Users, by setting ``ALLOW_STAFF_TO_HIJACKUSER`` to ``True``. The default is False.
+### Allow staff members to hijack other users
+This option allows staff members to hijack other users. In your project settings set ``ALLOW_STAFF_TO_HIJACKUSER`` to ``True``. The default is False.
 
 
 # Signals
