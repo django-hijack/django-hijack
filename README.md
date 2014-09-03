@@ -30,8 +30,6 @@ Add the ``hijack`` URLs to your ``urls.py``
         url(r'^hijack/', include('hijack.urls')),
     )
 
-
-
 ## Usage and modes
 
 There are different possibilies to hijack an user and communicate with users.
@@ -39,6 +37,7 @@ There are different possibilies to hijack an user and communicate with users.
 ###  Hijack using the 'Hijack Button' on the admin site
 Go to Users in the admin backend and push the ‘Hijack’ button to hijack an user. This is the default mode and base version 
 of django-hijack. To disable the ‘Hijack’ button on the admin site (by not registrating the HijackUserAdmin) set ``SHOW_HIJACKUSER_IN_ADMIN = False`` in your project settings.
+
 
 ### Hijack by calling URLs in the browser's address bar
 For advanced superusers, users can be hijacked directly from the address bar by typing:
@@ -74,6 +73,10 @@ follow these steps:
 * You need to add ``django.core.context_processors.request`` to your template context processors to be able to use requests and sessions in the templates.
 * Make sure that ``django.contrib.staticfiles`` is included in your ``INSTALLED_APPS``. 
 * Do not forget to run ``python manage.py collectstatic``.
+
+
+### Allow staff members to hijack other users
+This option allows staff members to hijack other users. In your project settings set ``ALLOW_STAFF_TO_HIJACKUSER`` to ``True``. The default is False.
 
 
 # Signals
