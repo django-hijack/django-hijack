@@ -32,8 +32,8 @@ def login_user(request, user):
 def logout_user(sender, **kwargs):
     ''' wraps logout signal '''
     user = kwargs['user']
-    post_superuser_logout.send(sender=None, user_id=user.id)
-    print 'Successful Logout', user
+    if hasattr(user, 'id'):
+        post_superuser_logout.send(sender=None, user_id=user.id)
 
 
 """
