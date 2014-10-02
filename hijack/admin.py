@@ -11,7 +11,7 @@ class HijackUserAdmin(UserAdmin):
     search_fields = ('username', 'first_name', 'last_name', 'email',)
 
     def hijack_field(self, obj):
-        return '<a href="/hijack/%s" class="button">Hijack %s</a>' % (str(obj.id), obj.username)
+        return '<a href="/hijack/%s/" class="button">Hijack %s</a>' % (str(obj.id), obj.username)
     hijack_field.allow_tags = True
     hijack_field.short_description = 'Hijack User'
 
