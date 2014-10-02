@@ -131,8 +131,11 @@ Afterwards create a new ``UserAdmin`` class derived from ``HijackUserAdmin``. Th
 	admin.site.register(User, FacebookProfileAdmin)
 
 
+# Similar projects
 
-#Contribute
+* [django-impersonate](https://pypi.python.org/pypi/django-impersonate)
+
+# Contribute
 
 If you want to contribute to this project, simply send us a pull request. Thanks. :)
  
