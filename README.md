@@ -134,6 +134,7 @@ Afterwards create a new ``UserAdmin`` class derived from ``HijackUserAdmin``. Th
 # Similar projects
 
 * [django-impersonate](https://pypi.python.org/pypi/django-impersonate)
+* [django-su](https://pypi.python.org/pypi/django-su)
 
 # Contribute
 
