@@ -22,7 +22,7 @@ def login_user(request, user):
     backend = get_backends()[0]
     user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
     login(request, user)
-    post_superuser_login.send(sender=None, user_id=user.id)
+    post_superuser_login.send(sender=None, user_id=user.pk)
     request.session['hijackedBySuperuser'] = True
     request.session.modified = True
     return HttpResponseRedirect(getattr(settings, 'LOGIN_REDIRECT_URL', '/'))
@@ -33,7 +33,7 @@ def logout_user(sender, **kwargs):
     ''' wraps logout signal '''
     user = kwargs['user']
     if hasattr(user, 'id'):
-        post_superuser_logout.send(sender=None, user_id=user.id)
+        post_superuser_logout.send(sender=None, user_id=user.pk)
 
 
 """

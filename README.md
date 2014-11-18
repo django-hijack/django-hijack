@@ -36,7 +36,7 @@ There are different possibilies to hijack an user and communicate with users.
 
 ###  Hijack using the 'Hijack Button' on the admin site
 Go to Users in the admin backend and push the ‘Hijack’ button to hijack an user. This is the default mode and base version 
-of django-hijack. To disable the ‘Hijack’ button on the admin site (by not registrating the HijackUserAdmin) set ``SHOW_HIJACKUSER_IN_ADMIN = False`` in your project settings.
+of django-hijack. To disable the ‘Hijack’ button on the admin site (by not registrating the HijackUserAdmin) set ``SHOW_HIJACKUSER_IN_ADMIN = False`` in your project settings. If you are using a custom user model, you will have to add support for displaying the button yourself to your own `CustomUserAdmin`. Simply mix in the `hijack.admin.HijackUserAdminMixin`, and add `hijack_field` to `list_display`.
 
 
 ### Hijack by calling URLs in the browser's address bar
@@ -99,8 +99,8 @@ You can catch a signal when a superuser logs in as another user. Here is an exam
 * unset_superuser example for signals
 * Store info in user's profile (see #3 comments, Use case: 'Notify users when they were hijacked', see above)
 * "got it" Link in notification to remove notification and flag from session. This is useful if hijack is used to switch between users and HIJACK_NOTIFY_ADMIN is True.
-* Custom user models support, see #7
 * Support for named URLs for the hijack button.
+* Graceful support for custom user models that do not feature username / email
 
 # FAQ, troubleshooting and hints
 
