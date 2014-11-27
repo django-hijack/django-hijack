@@ -1,10 +1,12 @@
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseBadRequest
 
 
-from hijack.helpers import login_user, reverseHijack
+from hijack.helpers import login_user
+from hijack.helpers import release_hijack as release_hijack_fx
 
 
 @staff_member_required
@@ -26,6 +28,6 @@ def login_with_username(request, username):
     user = get_object_or_404(User, username=username)
     return login_user(request, user)
 
-
-def reverse_hijack(request):
-    return reverseHijack(request)
+@login_required
+def release_hijack(request):
+    return release_hijack_fx(request)

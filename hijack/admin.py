@@ -12,6 +12,8 @@ class HijackUserAdmin(UserAdmin):
 
     def hijack_field(self, obj):
         return '<a href="/hijack/%s/" class="button">Hijack %s</a>' % (str(obj.id), obj.username)
+        # TODO: use reverse() here 
+        
     hijack_field.allow_tags = True
     hijack_field.short_description = 'Hijack User'
 

@@ -12,32 +12,35 @@ from hijack.signals import post_superuser_login
 from hijack.signals import post_superuser_logout
 
 
-def reverseHijack(request):
-    if not request.session.get('hijack_dict'):
-        raise Http404
-
-    hijack_dict = request.session['hijack_dict']
-    user = get_object_or_404(User, pk=hijack_dict.pop())
-    #request.user = user
-
-    backend = get_backends()[0]
-    user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
-    login(request, user)
-    post_superuser_login.send(sender=None, user_id=user.id)
-    if hijack_dict:
-        request.session['hijack_dict'] = hijack_dict
-        request.session['hijackedBySuperuser'] = True
-        request.session.modified = True
+def release_hijack(request):
+    if not request.session.get('hijack_history'):
+        raise PermissionDenied
+    hijack_history = request.session['hijack_history']
+    if len(hijack_history):
+        user_pk = hijack_history.pop()
+        user = get_object_or_404(User, pk=user_pk)
+        backend = get_backends()[0]
+        user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
+        login(request, user)
+    if len(hijack_history):
+        request.session['hijack_history'] = hijack_history
+        request.session['is_hijacked_user'] = True
+    else:
+        try:
+            del request.session['hijack_history'] 
+            del request.session['is_hijacked_user']
+        except KeyError:
+            pass
+    request.session.modified = True
     return HttpResponseRedirect(getattr(
-        settings, 'REVERSE_HIJACK_LOGIN_REDIRECT_URL', getattr(settings, 'LOGIN_REDIRECT_URL', '/')))
-
+        settings, 'REVERSE_HIJACK_LOGIN_REDIRECT_URL', getattr(
+        settings, 'LOGIN_REDIRECT_URL', '/')))
 
 def login_user(request, user):
     ''' hijack mechanism '''
-    hijack_dict = [request.user.pk]
-    if request.session.get('hijack_dict'):
-        hijack_dict = request.session['hijack_dict'] + hijack_dict
-
+    hijack_history = [request.user.pk]
+    if request.session.get('hijack_history'):
+        hijack_history = request.session['hijack_history'] + hijack_history
     if not request.user.is_superuser:
         if getattr(settings, "ALLOW_STAFF_TO_HIJACKUSER", False):
             # staff allowed, so check if user is staff
@@ -45,13 +48,12 @@ def login_user(request, user):
                 raise PermissionDenied
         else:
             raise PermissionDenied
-
     backend = get_backends()[0]
     user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
     login(request, user)
     post_superuser_login.send(sender=None, user_id=user.id)
-    request.session['hijackedBySuperuser'] = True
-    request.session['hijack_dict'] = hijack_dict
+    request.session['is_hijacked_user'] = True
+    request.session['hijack_history'] = hijack_history
     request.session.modified = True
     return HttpResponseRedirect(getattr(settings, 'LOGIN_REDIRECT_URL', '/'))
 

@@ -59,15 +59,18 @@ the following steps:
 * Make sure that ``django.contrib.staticfiles`` is included in your ``INSTALLED_APPS``. 
 * Do not forget to run ``python manage.py collectstatic``.
 
-### Reverse Hijack
+### Release/reverse hijack
 
-In the notification for the superuser when working on behalf of other users there is a link to reverse the hijack. If you click it, the hijack will be reversed and you are redirected to `LOGIN_REDIRECT_URL` or if the settings has `REVERSE_HIJACK_LOGIN_REDIRECT_URL`.
+In the visual notification for the superuser (or staff if ``ALLOW_STAFF_TO_HIJACKUSER`` is True), when working on behalf of other users, there 
+is a link to release the hijacked user and switch back. After releasing you are redirected to `LOGIN_REDIRECT_URL` or to the URL defined in `REVERSE_HIJACK_LOGIN_REDIRECT_URL`.
 
     REVERSE_HIJACK_LOGIN_REDIRECT_URL = '/admin/auth/user/'
     
-The reverse hijack will be executed when the url:`/hijack/reverseHijack/`is called. Url name="reverseHijack"
+The release/reverse hijack will be executed when the URL `/hijack/release-hijack/` is called (or whatever is linked to the URL with name = "release_hijack").
 
-If you(a) hijack a superuser(b) and then you hijack another user(c), the reverse will go through the list of hijacking users one by one: First reverseHijack and you are superuser(b) second hijack and you are superuser(a).
+#### Hijack history
+If you (A) hijack a superuser (B) and then you hijack another user (C), the release will go backwards through the
+ list of hijacked users one by one. After the first release you then are superuser (B), after the second you are superuser (A).
 
 
 ### Notify users when they were hijacked
