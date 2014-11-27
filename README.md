@@ -114,8 +114,13 @@ You can catch a signal when a superuser logs in as another user. Here is an exam
 * "got it" Link in notification to remove notification and flag from session. This is useful if hijack is used to switch between users and HIJACK_NOTIFY_ADMIN is True.
 * Custom user models support, see #7
 * Support for named URLs for the hijack button.
+* Handle signals in ``release_hijack(..)``, currently the signals are only triggered in ``login_user(..)`` and ``logout_user(..)``. 
 
 # FAQ, troubleshooting and hints
+
+### Why does the hijack button not working?
+
+The hijack button in the admin currently does not support named URLs. Include using /hijack/, see issue #16. 
 
 ### Why does the hijack button not show up in the admin site, even if I set ``SHOW_HIJACKUSER_IN_ADMIN = True`` in my project settings?
 
