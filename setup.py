@@ -51,7 +51,7 @@ setup(
     name="django-hijack",
     version=app.__version__,
     description=read('DESCRIPTION'),
-    long_description=read('README.rst'),
+    long_description=read('README.md'),
     license='The MIT License',
     platforms=['OS Independent'],
     keywords='django, hijack, support, customer support, debugging',
