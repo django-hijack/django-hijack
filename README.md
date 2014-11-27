@@ -59,6 +59,16 @@ the following steps:
 * Make sure that ``django.contrib.staticfiles`` is included in your ``INSTALLED_APPS``. 
 * Do not forget to run ``python manage.py collectstatic``.
 
+### Reverse Hijack
+
+In the notification for the superuser when working on behalf of other users there is a link to reverse the hijack. If you click it, the hijack will be reversed and you are redirected to `LOGIN_REDIRECT_URL` or if the settings has `REVERSE_HIJACK_LOGIN_REDIRECT_URL`.
+
+    REVERSE_HIJACK_LOGIN_REDIRECT_URL = '/admin/auth/user/'
+    
+The reverse hijack will be executed when the url:`/hijack/reverseHijack/`is called. Url name="reverseHijack"
+
+If you(a) hijack a superuser(b) and then you hijack another user(c), the reverse will go through the list of hijacking users one by one: First reverseHijack and you are superuser(b) second hijack and you are superuser(a).
+
 
 ### Notify users when they were hijacked
 NOTE: This use case is not fully implemented yet!
