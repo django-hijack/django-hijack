@@ -4,7 +4,8 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponseBadRequest
 
 
-from helpers import login_user
+from hijack.helpers import login_user, reverseHijack
+
 
 @staff_member_required
 def login_with_id(request, userId):
@@ -13,12 +14,18 @@ def login_with_id(request, userId):
     user = get_object_or_404(User, pk=userId)
     return login_user(request, user)
 
+
 @staff_member_required
 def login_with_email(request, email):
     user = get_object_or_404(User, email=email)
     return login_user(request, user)
 
+
 @staff_member_required
 def login_with_username(request, username):
     user = get_object_or_404(User, username=username)
     return login_user(request, user)
+
+
+def reverse_hijack(request):
+    return reverseHijack(request)
