@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.contrib.sessions.models import Session
 from django.conf import settings
 from django.contrib.auth.admin import UserAdmin
+from django.core.urlresolvers import reverse
 
 
 class HijackUserAdmin(UserAdmin):
@@ -11,7 +12,7 @@ class HijackUserAdmin(UserAdmin):
     search_fields = ('username', 'first_name', 'last_name', 'email',)
 
     def hijack_field(self, obj):
-        return '<a href="/hijack/%s/" class="button">Hijack %s</a>' % (str(obj.id), obj.username)
+        return '<a href="%s" class="button">Hijack %s</a>' % (reverse('hijack.views.login_with_id',args=(obj.id,)), obj.username)
         # TODO: use reverse() here 
         
     hijack_field.allow_tags = True

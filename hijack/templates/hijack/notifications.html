@@ -1,5 +1,6 @@
 {% load url from future %}
 <div id="hijacked-warning" >
-	Working with hijacked user '{{ request.user.username }}'! <a href="{% url 'release_hijack' %}">release hijacked user</a>
+    Working with hijacked user '{{ request.user.username }}'! <a href="{% url 'release_hijack' %}">release hijacked user</a>
     <button onclick="document.getElementById('hijacked-warning').remove();" style="float: right;margin-right: 10px" >x</button>
+    <a href="{% url 'disable_hijack_warning'  %}?next={{request.path_info}}" style="float: right;margin-right: 10px" >got it</a>    
 </div>
