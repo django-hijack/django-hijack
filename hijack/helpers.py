@@ -6,7 +6,8 @@ from django.contrib.auth import login, get_backends
 from django.dispatch import receiver
 
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.models import User
+
+from compat import get_user_model
 
 from hijack.signals import post_superuser_login
 from hijack.signals import post_superuser_logout
@@ -18,7 +19,7 @@ def release_hijack(request):
     hijack_history = request.session['hijack_history']
     if len(hijack_history):
         user_pk = hijack_history.pop()
-        user = get_object_or_404(User, pk=user_pk)
+        user = get_object_or_404(get_user_model(), pk=user_pk)
         backend = get_backends()[0]
         user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
         login(request, user)
@@ -51,7 +52,7 @@ def login_user(request, user):
     backend = get_backends()[0]
     user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
     login(request, user)
-    post_superuser_login.send(sender=None, user_id=user.id)
+    post_superuser_login.send(sender=None, user_id=user.pk)
     request.session['is_hijacked_user'] = True
     request.session['hijack_history'] = hijack_history
     request.session.modified = True
@@ -63,7 +64,7 @@ def logout_user(sender, **kwargs):
     ''' wraps logout signal '''
     user = kwargs['user']
     if hasattr(user, 'id'):
-        post_superuser_logout.send(sender=None, user_id=user.id)
+        post_superuser_logout.send(sender=None, user_id=user.pk)
 
 
 """
