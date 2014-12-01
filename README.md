@@ -72,6 +72,18 @@ The release/reverse hijack will be executed when the URL `/hijack/release-hijack
 If you (A) hijack a superuser (B) and then you hijack another user (C), the release will go backwards through the
  list of hijacked users one by one. After the first release you then are superuser (B), after the second you are superuser (A).
 
+### Support for custom user models
+
+Django-hijack supports custom user models, all you need to do is to add the hijack button to your custom user `admin.py`. Import HijackUserAdminMixin from hijack admin and add 'hijack_field' to your list_display
+
+    #imports
+    from hijack.admin import HijackUserAdminMixin
+    
+    class CustomUserAdmin(UserAdmin, HijackUserAdminMixin):
+        #code
+        list_display = ('email', 'first_name', 'last_name', 'is_staff', 'hijack_field')
+
+    
 
 ### Notify users when they were hijacked
 NOTE: This use case is not fully implemented yet!
@@ -97,16 +109,16 @@ This option allows staff members to hijack other users. In your project settings
 ## Superuser logs in
 You can catch a signal when a superuser logs in as another user. Here is an example:
  
-	from django.dispatch import receiver
-	from signals import post_superuser_login
-	
+    from django.dispatch import receiver
+    from signals import post_superuser_login
+    
     @receiver(post_superuser_login)
     def set_superuser(sender, **kwargs):
-		print "Superuser hijacked userID %s" % kwargs['user_id']
+        print "Superuser hijacked userID %s" % kwargs['user_id']
         
-		
-		
-		
+        
+        
+        
 # TODOs, issues and planned features
 * Handle hijack using URLs on non unique email addresses.
 * unset_superuser example for signals
@@ -129,24 +141,24 @@ If your ``UserAdmin`` object is already registered in the admin site through ano
 Afterwards create a new ``UserAdmin`` class derived from ``HijackUserAdmin``. The Facebook example would look like this:
 
 
-	from django.contrib import admin
-	from django.contrib.auth.admin import UserAdmin
-	from django.contrib.auth.models import User
+    from django.contrib import admin
+    from django.contrib.auth.admin import UserAdmin
+    from django.contrib.auth.models import User
 
-	from hijack.admin import HijackUserAdmin
+    from hijack.admin import HijackUserAdmin
 
-	from .models import FacebookProfile
-	
-	# We want to display our facebook profile, not the default user's profile
-	admin.site.unregister(User)
+    from .models import FacebookProfile
+    
+    # We want to display our facebook profile, not the default user's profile
+    admin.site.unregister(User)
 
-	class FacebookProfileInline(admin.StackedInline):
-	    model = FacebookProfile
+    class FacebookProfileInline(admin.StackedInline):
+        model = FacebookProfile
         
-	class FacebookProfileAdmin(HijackUserAdmin):
-	    inlines = [FacebookProfileInline]
-		
-	admin.site.register(User, FacebookProfileAdmin)
+    class FacebookProfileAdmin(HijackUserAdmin):
+        inlines = [FacebookProfileInline]
+        
+    admin.site.register(User, FacebookProfileAdmin)
 
 
 # Similar projects
