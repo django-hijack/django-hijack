@@ -92,21 +92,21 @@ follow these steps:
 ### Allow staff members to hijack other users
 This option allows staff members to hijack other users. In your project settings set ``ALLOW_STAFF_TO_HIJACKUSER`` to ``True``. The default is False.
 
-### Django 1.4 - 1.7 compatibility with django-compat
+### Django 1.4 - 1.7 compatibility with [django-compat](https://github.com/arteria/django-compat) 
 
-All critical imports are carried out with the compat library that gives the compatibility for django 1.4 to 1.7
+All critical imports are carried out with the [compat library](https://github.com/arteria/django-compat) that gives the compatibility for django 1.4 to 1.7.1
 
 Testet django versions: 1.4.16, 1.5.11, 1.6.8 and 1.7.1
 
 ### Support for custom user models
 
-Django-hijack supports custom user models, all you need to do is to add the hijack button to your custom user `admin.py`. Import HijackUserAdminMixin from hijack admin and add 'hijack_field' to your list_display
+django-hijack supports custom user models, all you need to do is to add the hijack button to your custom user `admin.py`. Import HijackUserAdminMixin from hijack admin and add ``hijack_field`` to your ``list_display``.
 
-    #imports
+    # .. imports ..
     from hijack.admin import HijackUserAdminMixin
     
     class CustomUserAdmin(UserAdmin, HijackUserAdminMixin):
-        #code
+        # .. code ..
         list_display = ('email', 'first_name', 'last_name', 'is_staff', 'hijack_field')
 
 # Signals
@@ -120,15 +120,13 @@ You can catch a signal when a superuser logs in as another user. Here is an exam
     @receiver(post_superuser_login)
     def set_superuser(sender, **kwargs):
         print "Superuser hijacked userID %s" % kwargs['user_id']
-        
-        
-        
+         
         
 # TODOs, issues and planned features
 * Handle hijack using URLs on non unique email addresses.
 * unset_superuser example for signals
 * Store info in user's profile (see #3 comments, Use case: 'Notify users when they were hijacked', see above)
-* "got it" Link in notification to remove notification and flag from session. This is useful if hijack is used to switch between users and HIJACK_NOTIFY_ADMIN is True.
+* "got it" Link in notification to remove notification and flag from session. This is useful if hijack is used to switch between users and ``HIJACK_NOTIFY_ADMIN`` is True.
 * Support for named URLs for the hijack button.
 * Handle signals in ``release_hijack(..)``, currently the signals are only triggered in ``login_user(..)`` and ``logout_user(..)``. 
 * Graceful support for custom user models that do not feature username / email
