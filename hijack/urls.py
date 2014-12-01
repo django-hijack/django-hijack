@@ -1,8 +1,4 @@
-try:
-    from django.conf.urls import patterns, url
-except ImportError:
-    from django.conf.urls.defaults import patterns, url
-
+from compat import patterns, url
  
 urlpatterns = patterns('hijack.views',
     url(r'^disable-hijack-warning/$', 'disable_hijack_warning', name='disable_hijack_warning'),
