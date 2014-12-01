@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 class HijackUserAdminMixin(object):
 
     def hijack_field(self, obj):
-        return '<a href="%s" class="button">Hijack %s</a>' % (reverse('hijack.views.login_with_id',args=(obj.id,)), obj.username)
+        return '<a href="%s" class="button">Hijack %s</a>' % (reverse('hijack.views.login_with_id',args=(obj.id,)), obj)
     hijack_field.allow_tags = True
     hijack_field.short_description = 'Hijack User'
 
