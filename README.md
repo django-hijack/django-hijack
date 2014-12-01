@@ -72,17 +72,6 @@ The release/reverse hijack will be executed when the URL `/hijack/release-hijack
 If you (A) hijack a superuser (B) and then you hijack another user (C), the release will go backwards through the
  list of hijacked users one by one. After the first release you then are superuser (B), after the second you are superuser (A).
 
-### Support for custom user models
-
-Django-hijack supports custom user models, all you need to do is to add the hijack button to your custom user `admin.py`. Import HijackUserAdminMixin from hijack admin and add 'hijack_field' to your list_display
-
-    #imports
-    from hijack.admin import HijackUserAdminMixin
-    
-    class CustomUserAdmin(UserAdmin, HijackUserAdminMixin):
-        #code
-        list_display = ('email', 'first_name', 'last_name', 'is_staff', 'hijack_field')
-
     
 
 ### Notify users when they were hijacked
@@ -103,6 +92,22 @@ follow these steps:
 ### Allow staff members to hijack other users
 This option allows staff members to hijack other users. In your project settings set ``ALLOW_STAFF_TO_HIJACKUSER`` to ``True``. The default is False.
 
+### Django 1.4 - 1.7 compatibility with django-compat
+
+All critical imports are carried out with the compat library that gives the compatibility for django 1.4 to 1.7
+
+Testet django versions: 1.4.16, 1.5.11, 1.6.8 and 1.7.1
+
+### Support for custom user models
+
+Django-hijack supports custom user models, all you need to do is to add the hijack button to your custom user `admin.py`. Import HijackUserAdminMixin from hijack admin and add 'hijack_field' to your list_display
+
+    #imports
+    from hijack.admin import HijackUserAdminMixin
+    
+    class CustomUserAdmin(UserAdmin, HijackUserAdminMixin):
+        #code
+        list_display = ('email', 'first_name', 'last_name', 'is_staff', 'hijack_field')
 
 # Signals
 
