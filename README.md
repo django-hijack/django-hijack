@@ -124,7 +124,7 @@ The hijack button in the admin currently does not support named URLs. Include us
 
 ### Why does the hijack button not show up in the admin site, even if I set ``SHOW_HIJACKUSER_IN_ADMIN = True`` in my project settings?
 
-If your ``UserAdmin`` object is already registered in the admin site through another app (here is an example of a Facebook profile, https://github.com/philippeowagner/django_facebook_oauth/blob/master/facebook/admin.py#L8), you could disable the registration of djanog-hijack by settings ``SHOW_HIJACKUSER_IN_ADMIN = False`` in your project settings.
+If your ``UserAdmin`` object is already registered in the admin site through another app (here is an example of a Facebook profile, https://github.com/philippeowagner/django_facebook_oauth/blob/master/facebook/admin.py#L8), you could disable the registration of django-hijack by settings ``SHOW_HIJACKUSER_IN_ADMIN = False`` in your project settings.
 
 Afterwards create a new ``UserAdmin`` class derived from ``HijackUserAdmin``. The Facebook example would look like this:
 
