@@ -166,8 +166,8 @@ Afterwards create a new ``UserAdmin`` class derived from ``HijackUserAdmin``. Th
 
 # Similar projects
 
-* [django-impersonate](https://pypi.python.org/pypi/django-impersonate)
-* [django-su](https://pypi.python.org/pypi/django-su)
+Similar projects can be found and compared in the [user-switching](https://www.djangopackages.com/grids/g/user-switching/) or the [support gird](https://www.djangopackages.com/grids/g/support-apps/) of djangopackages.
+ 
 
 # Contribute
 
