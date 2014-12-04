@@ -1,5 +1,5 @@
 {% load url from future %}
 <div id="hijacked-warning" >
-    <span style="padding-top: 4px; float: left;"><b>You're currently work on behalf of {{ request.user.username }}. </b></span>  <span style="float: right; margin-right: 15px;"> <a href="{% url 'release_hijack' %}"  class="django-hijack-button">release {{ request.user.username }}</a>
-    <a href="{% url 'disable_hijack_warning'  %}?next={{request.path_info}}" class="django-hijack-button">hide</a> </span>  
+    <span style="padding-top: 4px; float: left;"><b>You're currently working on behalf of {{ request.user.get_short_name }}. </b></span>  <span style="float: right; margin-right: 15px;"> <a href="{% url 'release_hijack' %}"  class="django-hijack-button">release {{ request.user.username }}</a>
+    <a href="{% url 'disable_hijack_warning'  %}?next={{request.path_info}}" class="django-hijack-button">hide</a> </span>
 </div>
