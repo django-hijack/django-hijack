@@ -1,6 +1,6 @@
 # Django Hijack
 
-django-hijack allows superusers to hijack (=login as) and work on behalf of another user.
+[django-hijack](https://github.com/arteria/django-hijack) allows superusers to hijack (=login as) and work on behalf of other users without knowing their credentials. 
 
 ## Installation
 
