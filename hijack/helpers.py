@@ -28,7 +28,7 @@ def release_hijack(request):
         request.session['is_hijacked_user'] = True
     else:
         try:
-            del request.session['hijack_history'] 
+            del request.session['hijack_history']
             del request.session['is_hijacked_user']
         except KeyError:
             pass
@@ -58,7 +58,9 @@ def login_user(request, user):
     request.session['is_hijacked_user'] = True
     request.session['hijack_history'] = hijack_history
     request.session.modified = True
-    redirect_to = request.GET.get('next', getattr(settings, 'LOGIN_REDIRECT_URL', '/'))
+    redirect_to = request.GET.get('next', getattr(
+        settings, 'HIJACK_LOGIN_REDIRECT_URL', getattr(
+        settings, 'LOGIN_REDIRECT_URL', '/')))
     return HttpResponseRedirect(redirect_to)
 
 
