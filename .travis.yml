@@ -8,7 +8,8 @@ env:
     - DJANGO='django>=1.5,<1.6'
     - DJANGO='django>=1.6,<1.7'
     - DJANGO='django>=1.7,<1.8'
-    - DJANGO='django>=1.8.a,<1.9'
+    # django-nose does not jet support django > 1.8 (there is a PR with a fix)
+    #- DJANGO='django>=1.8.a,<1.9'
 
 install:
     - pip install -r test_requirements.txt
