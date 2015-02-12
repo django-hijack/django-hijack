@@ -35,7 +35,7 @@ class HijackTests(TestCase):
         self.assertTrue('on behalf of %s' % (response.context['user'].username) in str(response.content))
         
         response = self.client.get('/hijack/release-hijack/', follow=True)
-        self.assertEquals(response.context['user'].username, 'Admin')
+        self.assertEqual(response.context['user'].username, 'Admin')
         
         response = self.client.get('/hijack/3/', follow=True)
         self.assertTrue('on behalf of %s' % (response.context['user'].username) in str(response.content))
@@ -52,12 +52,12 @@ class HijackTests(TestCase):
     def test_hijack_email(self):
         self.client.login(username='Admin',password='Admin pw')
         response = self.client.get('/hijack/email/user2@test.ch/', follow=True)
-        self.assertEquals(response.context['user'].username, 'Test2')
+        self.assertEqual(response.context['user'].username, 'Test2')
 
     def test_hijack_username(self):
         self.client.login(username='Admin',password='Admin pw')
         response = self.client.get('/hijack/username/Test1/', follow=True)
-        self.assertEquals(response.context['user'].username, 'Test1')
+        self.assertEqual(response.context['user'].username, 'Test1')
 
     def test_hijack_view_error(self):
         self.client.login(username='Admin',password='Admin pw')
@@ -67,23 +67,23 @@ class HijackTests(TestCase):
         # relese hijack before hijack
         self.client.login(username='Admin',password='Admin pw')
         response = self.client.get('/hijack/release-hijack/', follow=True)
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
 
         # check permision for hijack
         self.client.login(username='Test1',password='Test1 pw')
 
-        #setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', False)
+        setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', False)
         delattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER')
         response = self.client.get('/hijack/1/', follow=True)
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
 
         setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', False)
         response = self.client.get('/hijack/1/', follow=True)
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
 
         setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
         response = self.client.get('/hijack/1/', follow=True)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         self.client.logout()
 
@@ -91,13 +91,13 @@ class HijackTests(TestCase):
 
         setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
         response = self.client.get('/hijack/1/', )
-        self.assertEquals(response.status_code, 302)
+        self.assertTrue('name="this_is_the_login_form"' in  str(response.content))
         
     def test_hijack_admin(self):
         from hijack.admin import HijackUserAdmin
 
         ua = HijackUserAdmin(User, AdminSite())
-        self.assertEquals(ua.list_display, ('username', 'email', 'first_name', 'last_name',  'last_login', 'date_joined', 'is_staff', 'hijack_field',))
+        self.assertEqual(ua.list_display, ('username', 'email', 'first_name', 'last_name',  'last_login', 'date_joined', 'is_staff', 'hijack_field',))
 
 
 #    def test_hijack_
