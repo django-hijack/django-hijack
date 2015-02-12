@@ -2,14 +2,14 @@ language: python
 
 python:
     - 2.7
-    - 3.3
+    - 3.4
 env:
     - DJANGO='django>=1.4,<1.5'
     - DJANGO='django>=1.5,<1.6'
     - DJANGO='django>=1.6,<1.7'
     - DJANGO='django>=1.7,<1.8'
     # django-nose does not jet support django > 1.8 (there is a PR with a fix)
-    #- DJANGO='django>=1.8.a,<1.9'
+    # - DJANGO='django>=1.8.a,<1.9'
 
 install:
     - pip install -r test_requirements.txt
@@ -20,8 +20,8 @@ script:
 
 matrix:
     exclude:
-        - python: 3.3
+        - python: 3.4
           env: DJANGO='django>=1.4,<1.5'
-        - python: 3.3
+        - python: 3.4
           env: DJANGO='django>=1.5,<1.6'
 
