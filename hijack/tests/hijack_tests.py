@@ -3,6 +3,8 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.admin.sites import AdminSite
 
+from django import VERSION
+
 
 from django.test.client import Client
 
@@ -91,7 +93,11 @@ class HijackTests(TestCase):
 
         setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
         response = self.client.get('/hijack/1/', )
-        self.assertTrue('name="this_is_the_login_form"' in  str(response.content))
+        print(response.status_code)
+        if VERSION >= (1,7):
+            self.assertEqual(response.status_code, 302)
+        else:
+            self.assertTrue('name="this_is_the_login_form"' in  str(response.content))
         
     def test_hijack_admin(self):
         from hijack.admin import HijackUserAdmin
