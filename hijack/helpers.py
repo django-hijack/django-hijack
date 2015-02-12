@@ -50,7 +50,8 @@ def login_user(request, user):
             if not user.is_staff:
                 raise PermissionDenied
         else:
-            raise PermissionDenied
+            # if user is not super user / staff he should be redirected to the admin login
+            raise PermissionDenied # pragma: no cover
     backend = get_backends()[0]
     user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
     login(request, user)
