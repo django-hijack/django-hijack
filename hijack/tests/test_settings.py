@@ -32,6 +32,11 @@ STATICFILES_DIRS = (
     os.path.join(APP_ROOT, 'static'),
 )
 
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=hijack',#,hijack.tests.test_app',
+]
+
 TEMPLATE_DIRS = (
     os.path.join(APP_ROOT, 'tests/test_app/templates'),
 )
