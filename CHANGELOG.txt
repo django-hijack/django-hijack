@@ -1,5 +1,9 @@
 === (ongoing) ===
 -
+=== (1.0.4) ===
+
+- Python3 support
+- Tests
 
 === (1.0.3) ===
 - Support custom user models
