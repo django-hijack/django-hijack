@@ -37,7 +37,7 @@ dev_requires = [
 ]
 
 install_requires = [
-    'django>=1.4,<1.8',
+    'django>=1.4,<1.9',
     'django-compat',
 ]
 
@@ -65,4 +65,13 @@ setup(
     extras_require={
         'dev': dev_requires,
     },
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Framework :: Django',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
+    ],
+
 )
