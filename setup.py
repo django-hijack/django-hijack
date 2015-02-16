@@ -37,7 +37,7 @@ dev_requires = [
 ]
 
 install_requires = [
-    'django>=1.4,<1.8',
+    'django>=1.4,<1.9',
     'django-compat',
 ]
 
