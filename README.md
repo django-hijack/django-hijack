@@ -1,5 +1,8 @@
 # Django Hijack
 
+[![Build Status](https://travis-ci.org/arteria/django-hijack.svg?branch=master)](https://travis-ci.org/arteria/django-hijack)
+
+
 ![Screenshot of Hijack in action on the admin site.](https://www.arteria.ch/media/imgbucket/hijack_1.png)
 
 [django-hijack](https://github.com/arteria/django-hijack) allows superusers to hijack (=login as) and work on behalf of other users without knowing their credentials.
