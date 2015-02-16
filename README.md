@@ -23,6 +23,7 @@ In your ``settings.py`` add ``hijack`` to your ``INSTALLED_APPS`` and define ``L
     INSTALLED_APPS = (
         ...,
         'hijack',
+        'compat',
     )
 
 You can specify a `HIJACK_LOGIN_REDIRECT_URL` and a `REVERSE_HIJACK_LOGIN_REDIRECT_URL`. This settings are used to redirect to a specific url after hijacking or releasing the user. Default for both is the django `LOGIN_REDIRECT_URL`.
@@ -100,11 +101,9 @@ follow these steps:
 ### Allow staff members to hijack other users
 This option allows staff members to hijack other users. In your project settings set ``ALLOW_STAFF_TO_HIJACKUSER`` to ``True``. The default is False.
 
-### Django 1.4 - 1.7 compatibility with [django-compat](https://github.com/arteria/django-compat)
+### Django 1.4 - 1.8 compatibility with [django-compat](https://github.com/arteria/django-compat)
 
-All critical imports are carried out with the [compat library](https://github.com/arteria/django-compat) that gives the compatibility for django 1.4 to 1.7.1
-
-Testet django versions: 1.4.16, 1.5.11, 1.6.8 and 1.7.1
+All critical imports are carried out with the [compat library](https://github.com/arteria/django-compat) that gives the compatibility for django 1.4 to 1.8
 
 ### Support for custom user models
 
