@@ -9,3 +9,4 @@ factory_boy
 mock
 selenium
 django-compat
+six
