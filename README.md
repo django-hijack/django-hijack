@@ -23,9 +23,9 @@
 - [Settings](#settings)
 - [Signals](#signals)
     - [Hijacked](#superuser-logs-in)
-- [Todo, issues, planned features](#todos-issues-and-planned-features)
-- [FAP, troubleshooting and hints](#faq-troubleshooting-and-hints)
-    -[SHOW_HIJACKUSER_IN_ADMIN not working](#why-does-the-hijack-button-not-show-up-in-the-admin-site-even-if-i-set-show_hijackuser_in_admin--true-in-my-project-settings)
+- [TODOs, issues, planned features](#todos-issues-and-planned-features)
+- [FAQ, troubleshooting and hints](#faq-troubleshooting-and-hints)
+    - [SHOW_HIJACKUSER_IN_ADMIN not working](#why-does-the-hijack-button-not-show-up-in-the-admin-site-even-if-i-set-show_hijackuser_in_admin--true-in-my-project-settings)
 - [Similar projects](#similar-projects)
 - [Contribute](#contribute)
 
