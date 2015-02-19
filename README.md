@@ -63,7 +63,7 @@ Add the ``hijack`` URLs to your ``urls.py``
 
 ## Usage and modes
 
-There are different possibilies to hijack a user and communicate with users.
+There are different possibilities to hijack a user and communicate with users.
 
 ###  Hijack using the 'Hijack Button' on the admin site
 Go to Users in the admin backend and push the ‘Hijack’ button to hijack an user. This is the default mode and base version
