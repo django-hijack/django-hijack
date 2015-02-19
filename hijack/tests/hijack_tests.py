@@ -1,7 +1,9 @@
 from django.test import TestCase
+from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.admin.sites import AdminSite
+from six.moves.urllib.parse import unquote
 
 from django import VERSION
 
@@ -35,13 +37,13 @@ class HijackTests(TestCase):
         self.client.login(username='Admin',password='Admin pw')
         response = self.client.get('/hijack/2/', follow=True)
         self.assertTrue('on behalf of %s' % (response.context['user'].username) in str(response.content))
-        
+
         response = self.client.get('/hijack/release-hijack/', follow=True)
         self.assertEqual(response.context['user'].username, 'Admin')
-        
+
         response = self.client.get('/hijack/3/', follow=True)
         self.assertTrue('on behalf of %s' % (response.context['user'].username) in str(response.content))
-        
+
         response = self.client.get('/hijack/disable-hijack-warning/?next=/hello', follow=True)
         self.assertFalse('on behalf of %s' % (response.context['user'].username) in str(response.content))
 
@@ -98,19 +100,21 @@ class HijackTests(TestCase):
             self.assertEqual(response.status_code, 302)
         else:
             self.assertTrue('name="this_is_the_login_form"' in  str(response.content))
-        
+
     def test_hijack_admin(self):
         from hijack.admin import HijackUserAdmin
 
         ua = HijackUserAdmin(User, AdminSite())
         self.assertEqual(ua.list_display, ('username', 'email', 'first_name', 'last_name',  'last_login', 'date_joined', 'is_staff', 'hijack_field',))
 
+    def test_hijack_urls(self):
+        self.assertEqual('/hijack/disable-hijack-warning/', reverse('disable_hijack_warning'))
+        self.assertEqual('/hijack/release-hijack/', reverse('release_hijack'))
+        self.assertEqual('/hijack/1/', reverse('login_with_id', args=[1]))
+        self.assertEqual('/hijack/2/', reverse('login_with_id', kwargs={'userId': 2}))
+        self.assertEqual('/hijack/username/bob/', reverse('login_with_username', args=['bob']))
+        self.assertEqual('/hijack/username/bob_too/', reverse('login_with_username', kwargs={'username':'bob_too'}))
+        self.assertEqual('/hijack/email/bob@bobsburgers.com/', unquote(reverse('login_with_email', args=['bob@bobsburgers.com'])))
+        self.assertEqual('/hijack/email/bob_too@bobsburgers.com/', unquote(reverse('login_with_email', kwargs={'email':'bob_too@bobsburgers.com'})))
 
 #    def test_hijack_
-
-
-
-
-
-
-
