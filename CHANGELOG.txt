@@ -1,5 +1,11 @@
 === (ongoing) ===
--
+
+- 
+=== (1.0.5) ===
+
+- Fix an error related to django-compat on Django 1.7.x (get_user_model)
+- Updated dependencies to django-compat 1.0.1
+
 === (1.0.4) ===
 
 - Python3 support
