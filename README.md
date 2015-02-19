@@ -66,7 +66,7 @@ Add the ``hijack`` URLs to your ``urls.py``
 There are different possibilities to hijack a user and communicate with users.
 
 ###  Hijack using the 'Hijack Button' on the admin site
-Go to Users in the admin backend and push the ‘Hijack’ button to hijack an user. This is the default mode and base version
+Go to Users in the admin backend and push the ‘Hijack’ button to hijack a user. This is the default mode and base version
 of django-hijack. To disable the ‘Hijack’ button on the admin site (by not registrating the HijackUserAdmin) set ``SHOW_HIJACKUSER_IN_ADMIN = False`` in your project settings. If you are using a custom user model, you will have to add support for displaying the button yourself to your own `CustomUserAdmin`. Simply mix in the `hijack.admin.HijackUserAdminMixin`, and add `hijack_field` to `list_display`.
 
 
