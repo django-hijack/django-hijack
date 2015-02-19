@@ -7,6 +7,27 @@
 
 [django-hijack](https://github.com/arteria/django-hijack) allows superusers to hijack (=login as) and work on behalf of other users without knowing their credentials.
 
+## Table of contents
+
+- [Installation](#installation)
+- [Usage and modes](#usage-and-modes)
+    - [Hijack Button](#hijack-using-the-hijack-button-on-the-admin-site)
+    - [Hijack over url](#hijack-by-calling-urls-in-the-browsers-address-bar)
+    - [Notify when logged in as a hijacked user](#notify-superusers-when-working-behalf-of-another-user)
+    - [Release the hijack](#releasereverse-hijack)
+        - [Hijack-History](#hijack-history)
+    - [Notify user when they were hijacked](#notify-users-when-they-were-hijacked)
+    - [Allow staff to hijack](#allow-staff-members-to-hijack-other-users)
+    - [Django 1.4 to 1.8 compatibility with django-compat](#django-14---18-compatibility-with-django-compat)
+    - [Custom user models](#support-for-custom-user-models)
+- [Signals](#signals)
+    - [Hijacked](#superuser-logs-in)
+- [Todo, issues, planned features](#todos-issues-and-planned-features)
+- [FAP, troubleshooting and hints](#faq-troubleshooting-and-hints)
+    -[SHOW_HIJACKUSER_IN_ADMIN not working](#why-does-the-hijack-button-not-show-up-in-the-admin-site-even-if-i-set-show_hijackuser_in_admin--true-in-my-project-settings)
+- [Similar projects](#similar-projects)
+- [Contribute](#contribute)
+
 ## Installation
 
 To get the latest stable release from PyPi
@@ -116,9 +137,9 @@ django-hijack supports custom user models, all you need to do is to add the hija
         # .. code ..
         list_display = ('email', 'first_name', 'last_name', 'is_staff', 'hijack_field')
 
-# Signals
+## Signals
 
-## Superuser logs in
+### Superuser logs in
 You can catch a signal when a superuser logs in as another user. Here is an example:
 
     from django.dispatch import receiver
@@ -138,11 +159,7 @@ You can catch a signal when a superuser logs in as another user. Here is an exam
 * Handle signals in ``release_hijack(..)``, currently the signals are only triggered in ``login_user(..)`` and ``logout_user(..)``.
 * Graceful support for custom user models that do not feature username / email
 
-# FAQ, troubleshooting and hints
-
-### Why does the hijack button not working?
-
-The hijack button in the admin currently does not support named URLs. Include using /hijack/, see issue #16.
+## FAQ, troubleshooting and hints
 
 ### Why does the hijack button not show up in the admin site, even if I set ``SHOW_HIJACKUSER_IN_ADMIN = True`` in my project settings?
 
@@ -171,11 +188,11 @@ Afterwards create a new ``UserAdmin`` class derived from ``HijackUserAdmin``. Th
     admin.site.register(User, FacebookProfileAdmin)
 
 
-# Similar projects
+## Similar projects
 
 Similar projects can be found and compared in the [user-switching](https://www.djangopackages.com/grids/g/user-switching/) or the [support gird](https://www.djangopackages.com/grids/g/support-apps/) of djangopackages.
 
 
-# Contribute
+## Contribute
 
 If you want to contribute to this project, simply send us a pull request. Thanks. :)
