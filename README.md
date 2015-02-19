@@ -20,6 +20,7 @@
     - [Allow staff to hijack](#allow-staff-members-to-hijack-other-users)
     - [Django 1.4 to 1.8 compatibility with django-compat](#django-14---18-compatibility-with-django-compat)
     - [Custom user models](#support-for-custom-user-models)
+- [Settings](#settings)
 - [Signals](#signals)
     - [Hijacked](#superuser-logs-in)
 - [Todo, issues, planned features](#todos-issues-and-planned-features)
@@ -136,6 +137,23 @@ django-hijack supports custom user models, all you need to do is to add the hija
     class CustomUserAdmin(UserAdmin, HijackUserAdminMixin):
         # .. code ..
         list_display = ('email', 'first_name', 'last_name', 'is_staff', 'hijack_field')
+
+## Settings
+
+All configuration settings with their default value and description
+
+    # Hijack button in admin user view; default = True
+    SHOW_HIJACKUSER_IN_ADMIN = True
+    
+    # Notification for the admin if he is working for an other user; default = True
+    HIJACK_NOTIFY_ADMIN = True
+    
+    # Allow staff users to hijack; default = False
+    ALLOW_STAFF_TO_HIJACKUSER = False
+    
+    # Where to go when you hijack someone; default equals the LOGIN_REDIRECT_URL; which has the default '/accounts/profile/'
+    REVERSE_HIJACK_LOGIN_REDIRECT_URL = LOGIN_REDIRECT_URL
+
 
 ## Signals
 
