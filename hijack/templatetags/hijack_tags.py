@@ -12,4 +12,3 @@ def hijackNotification(request):
     if getattr(settings, 'HIJACK_NOTIFY_ADMIN', True) and request and request.session.get('is_hijacked_user', False):
         ans = render_to_string('hijack/notifications.html', {}, context_instance=RequestContext(request)) 
     return mark_safe(ans) 
-    
