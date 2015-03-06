@@ -1,12 +1,9 @@
 from django.contrib.admin.views.decorators import staff_member_required
 
-
 from django.contrib.auth.decorators import login_required
-
 
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
-
 
 from hijack.helpers import login_user
 from hijack.helpers import release_hijack as release_hijack_fx
