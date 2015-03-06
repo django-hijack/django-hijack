@@ -19,13 +19,13 @@ def release_hijack(request):
     if not hijack_history:
         raise PermissionDenied
 
-    if len(hijack_history):
+    if hijack_history:
         user_pk = hijack_history.pop()
         user = get_object_or_404(get_user_model(), pk=user_pk)
         backend = get_backends()[0]
         user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
         login(request, user)
-    if len(hijack_history):
+    if hijack_history:
         request.session['hijack_history'] = hijack_history
         request.session['is_hijacked_user'] = True
     else:
