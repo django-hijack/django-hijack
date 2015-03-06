@@ -71,18 +71,3 @@ def logout_user(sender, **kwargs):
     user = kwargs['user']
     if hasattr(user, 'id'):
         post_superuser_logout.send(sender=None, user_id=user.pk)
-
-
-"""
-@receiver(post_superuser_logout)
-def unset_superuser(sender, **kwargs):
-    print kwargs['user_id']
-    #account = Account.objects.get(user_ptr_id = kwargs['user_id'])
-    #account.superuser_login = True
-
-@receiver(post_superuser_login)
-def set_superuser(sender, **kwargs):
-    print kwargs['user_id']
-    #account = Account.objects.get(user_ptr_id = kwargs['user_id'])
-    #account.superuser_login = True
-"""
