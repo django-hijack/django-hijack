@@ -81,9 +81,11 @@ class HijackTests(TestCase):
         response = self.client.get('/hijack/1/', follow=True)
         self.assertEqual(response.status_code, 403)
 
+        # staff users should not be able to hijack admins
         setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
         response = self.client.get('/hijack/1/', follow=True)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 403)
+
 
         self.client.logout()
 
