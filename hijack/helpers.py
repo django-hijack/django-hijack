@@ -14,9 +14,11 @@ from hijack.signals import post_superuser_logout
 
 
 def release_hijack(request):
-    if not request.session.get('hijack_history'):
+    hijack_history = request.session.get('hijack_history', False)
+
+    if not hijack_history:
         raise PermissionDenied
-    hijack_history = request.session['hijack_history']
+
     if len(hijack_history):
         user_pk = hijack_history.pop()
         user = get_object_or_404(get_user_model(), pk=user_pk)
