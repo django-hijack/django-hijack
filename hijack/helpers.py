@@ -49,7 +49,8 @@ def login_user(request, user):
     if not request.user.is_superuser:
         if getattr(settings, "ALLOW_STAFF_TO_HIJACKUSER", False):
             # staff allowed, so check if user is staff
-            if not request.user.is_staff:
+            # staff can not hijack a superuser however
+            if not request.user.is_staff or user.is_superuser:
                 raise PermissionDenied
         else:
             # if user is not super user / staff he should be redirected to the admin login

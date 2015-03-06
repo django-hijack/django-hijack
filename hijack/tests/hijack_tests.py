@@ -17,6 +17,10 @@ class HijackTests(TestCase):
         if _:
             admin_user.set_password('Admin pw')
             admin_user.save()
+        admin_user2, _ = User.objects.get_or_create(pk=4, username='Admin2', email='admin2@test.ch', is_superuser=True, is_staff=True,)
+        if _:
+            admin_user2.set_password('Admin2 pw')
+            admin_user2.save()
         test1, _ = User.objects.get_or_create(pk=2, username='Test1', email='user1@test.ch', is_staff=True)
         if _:
             test1.set_password('Test1 pw')
@@ -25,6 +29,10 @@ class HijackTests(TestCase):
         if _:
             test2.set_password('Test2 pw')
             test2.save()
+        test3, _ = User.objects.get_or_create(pk=5, username='Test3', email='user3@test.ch', is_staff=True,)
+        if _:
+            test3.set_password('Test1 pw')
+            test3.save()
 
         self.client = Client()
 
@@ -69,6 +77,10 @@ class HijackTests(TestCase):
         response = self.client.get('/hijack/release-hijack/', follow=True)
         self.assertEqual(response.status_code, 403)
 
+        # hijack another admin user
+        response = self.client.get('/hijack/5/', follow=True)
+        self.assertEqual(response.status_code, 200)
+
         # check permision for hijack
         self.client.login(username='Test1',password='Test1 pw')
 
@@ -81,8 +93,19 @@ class HijackTests(TestCase):
         response = self.client.get('/hijack/1/', follow=True)
         self.assertEqual(response.status_code, 403)
 
+        # staff users should not be able to hijack admins
         setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
         response = self.client.get('/hijack/1/', follow=True)
+        self.assertEqual(response.status_code, 403)
+
+        # normal users should be ok
+        setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
+        response = self.client.get('/hijack/3/', follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        # other staff users should be ok
+        setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
+        response = self.client.get('/hijack/5/', follow=True)
         self.assertEqual(response.status_code, 200)
 
         self.client.logout()
