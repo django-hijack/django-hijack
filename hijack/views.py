@@ -10,13 +10,13 @@ from hijack.helpers import release_hijack as release_hijack_fx
 from compat import get_user_model
 
 @staff_member_required
-def login_with_id(request, userId):
-    # input(userId) is unicode
+def login_with_id(request, user_id):
+    # input(user_id) is unicode
     try:
-        userId = int(userId)
-    except:
-        return HttpResponseBadRequest('userId must be an integer value.')
-    user = get_object_or_404(get_user_model(), pk=userId)
+        user_id = int(user_id)
+    except ValueError:
+        return HttpResponseBadRequest('user_id must be an integer value.')
+    user = get_object_or_404(get_user_model(), pk=user_id)
     return login_user(request, user)
 
 
