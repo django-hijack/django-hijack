@@ -1,6 +1,13 @@
 === (ongoing) ===
 
-- 
+
+=== (1.0.6 upcomming) ===
+
+- Code cleanup
+- Add setting to choose which user attributes can be used for hijacking a user
+- Check staff status against logged in user instead the user being hijacked
+- Only include 'disable-hijack-warning' url if HIJACK_NOTIFY_ADMIN is enabled  
+
 === (1.0.5) ===
 
 - Fix an error related to django-compat on Django 1.7.x (get_user_model)
