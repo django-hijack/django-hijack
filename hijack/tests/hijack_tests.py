@@ -49,10 +49,6 @@ class HijackTests(TestCase):
 
         self.client.logout()
 
-        #self.client.login(username='Admin',password='Admin pw')
-        #response = self.client.get('/hijack/3/', follow=True)
-        #self.assertTrue('on behalf of %s' % (response.context['user'].username) in response.content)
-
     def test_hijack_email(self):
         self.client.login(username='Admin',password='Admin pw')
         response = self.client.get('/hijack/email/user2@test.ch/', follow=True)
@@ -111,10 +107,8 @@ class HijackTests(TestCase):
         self.assertEqual('/hijack/disable-hijack-warning/', reverse('disable_hijack_warning'))
         self.assertEqual('/hijack/release-hijack/', reverse('release_hijack'))
         self.assertEqual('/hijack/1/', reverse('login_with_id', args=[1]))
-        self.assertEqual('/hijack/2/', reverse('login_with_id', kwargs={'userId': 2}))
+        self.assertEqual('/hijack/2/', reverse('login_with_id', kwargs={'user_id': 2}))
         self.assertEqual('/hijack/username/bob/', reverse('login_with_username', args=['bob']))
         self.assertEqual('/hijack/username/bob_too/', reverse('login_with_username', kwargs={'username':'bob_too'}))
         self.assertEqual('/hijack/email/bob@bobsburgers.com/', unquote(reverse('login_with_email', args=['bob@bobsburgers.com'])))
         self.assertEqual('/hijack/email/bob_too@bobsburgers.com/', unquote(reverse('login_with_email', kwargs={'email':'bob_too@bobsburgers.com'})))
-
-#    def test_hijack_

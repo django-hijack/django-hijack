@@ -14,16 +14,18 @@ from hijack.signals import post_superuser_logout
 
 
 def release_hijack(request):
-    if not request.session.get('hijack_history'):
+    hijack_history = request.session.get('hijack_history', False)
+
+    if not hijack_history:
         raise PermissionDenied
-    hijack_history = request.session['hijack_history']
-    if len(hijack_history):
+
+    if hijack_history:
         user_pk = hijack_history.pop()
         user = get_object_or_404(get_user_model(), pk=user_pk)
         backend = get_backends()[0]
         user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
         login(request, user)
-    if len(hijack_history):
+    if hijack_history:
         request.session['hijack_history'] = hijack_history
         request.session['is_hijacked_user'] = True
     else:
@@ -71,18 +73,3 @@ def logout_user(sender, **kwargs):
     user = kwargs['user']
     if hasattr(user, 'id'):
         post_superuser_logout.send(sender=None, user_id=user.pk)
-
-
-"""
-@receiver(post_superuser_logout)
-def unset_superuser(sender, **kwargs):
-    print kwargs['user_id']
-    #account = Account.objects.get(user_ptr_id = kwargs['user_id'])
-    #account.superuser_login = True
-
-@receiver(post_superuser_login)
-def set_superuser(sender, **kwargs):
-    print kwargs['user_id']
-    #account = Account.objects.get(user_ptr_id = kwargs['user_id'])
-    #account.superuser_login = True
-"""
