@@ -77,6 +77,18 @@ For advanced superusers, users can be hijacked directly from the address bar by 
 * example.com/hijack/email/``email-address``
 * example.com/hijack/username/``username``
 
+### Specify which user attributes are allowed to hijack on
+By default all of the above methods (user id, email and username) are allowed. If you want to allow only a subset of these
+you can set ALLOWED_HIJACKING_USER_ATTRIBUTES in your project settings. This will disable the other endpoints.
+The settings take a list of methods to allow, you can select
+from:
+
+* user_ui
+* email
+* username
+
+NOTE: The link on the admin page will change in the order listed above. Say that you have enabled *username* and *email* then
+the users email will be used for the hijack link in on the admin page.
 
 ### Notify superusers when working behalf of another user
 This option warns the superuser when working with another user as initally logged in. To activate this option perform
@@ -153,6 +165,9 @@ All configuration settings with their default value and description
     
     # Where to go when you hijack someone; default equals the LOGIN_REDIRECT_URL; which has the default '/accounts/profile/'
     REVERSE_HIJACK_LOGIN_REDIRECT_URL = LOGIN_REDIRECT_URL
+    
+    # Which methods of hijacking a user is allowed; default = ('user_id', 'email', 'username')
+    ALLOWED_HIJACKING_USER_ATTRIBUTES = ('user_id', 'email', 'username')
 
 
 ## Signals
