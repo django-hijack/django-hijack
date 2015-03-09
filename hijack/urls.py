@@ -14,7 +14,7 @@ hijacking_user_attributes = getattr(settings, "ALLOWED_HIJACKING_USER_ATTRIBUTES
 
 if not hijacking_user_attributes or 'email' in hijacking_user_attributes:
     urlpatterns += patterns('hijack.views',
-        url(r'^email/(?P<email>[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/$', 'login_with_email', name='login_with_email')
+        url(r'^email/(?P<email>[^@]+@[^@]+\.[^@]+)/$', 'login_with_email', name='login_with_email')
     )
 if not hijacking_user_attributes or 'username' in hijacking_user_attributes:
     urlpatterns += patterns('hijack.views',
