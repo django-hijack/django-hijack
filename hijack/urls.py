@@ -5,7 +5,7 @@ urlpatterns = patterns('hijack.views',
     url(r'^release-hijack/$', 'release_hijack', name='release_hijack'),
 )
 
-if getattr(settings, "HIJACK_NOTIFY_ADMIN", False):
+if getattr(settings, "HIJACK_NOTIFY_ADMIN", True):
     urlpatterns += patterns('hijack.views',
         url(r'^disable-hijack-warning/$', 'disable_hijack_warning', name='disable_hijack_warning'),
 )
