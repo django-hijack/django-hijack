@@ -13,6 +13,7 @@
 - [Usage and modes](#usage-and-modes)
     - [Hijack Button](#hijack-using-the-hijack-button-on-the-admin-site)
     - [Hijack over url](#hijack-by-calling-urls-in-the-browsers-address-bar)
+    - [Attribute specifications](#specify-which-user-attributes-are-allowed-to-hijack-on)
     - [Notify when logged in as a hijacked user](#notify-superusers-when-working-behalf-of-another-user)
     - [Release the hijack](#releasereverse-hijack)
         - [Hijack-History](#hijack-history)
