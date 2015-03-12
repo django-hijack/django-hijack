@@ -12,7 +12,7 @@ class HijackUserAdminMixin(object):
         hijack_methods = getattr(settings, 'ALLOWED_HIJACKING_USER_ATTRIBUTES', ('login_with_id',))
 
         if 'login_with_id' in hijack_methods:
-            hijack_url = reverse('login_with_id', args=(obj.id,))
+            hijack_url = reverse('login_with_id', args=(obj.pk,))
         elif 'login_with_email' in hijack_methods:
             hijack_url = reverse('login_with_email', args=(obj.email,))
         else:
