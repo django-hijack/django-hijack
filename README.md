@@ -84,7 +84,7 @@ you can set ALLOWED_HIJACKING_USER_ATTRIBUTES in your project settings. This wil
 The settings take a list of methods to allow, you can select
 from:
 
-* user_ui
+* user_id
 * email
 * username
 
