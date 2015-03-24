@@ -9,14 +9,17 @@ from django.core.urlresolvers import reverse
 class HijackUserAdminMixin(object):
 
     def hijack_field(self, obj):
-        hijack_methods = getattr(settings, 'ALLOWED_HIJACKING_USER_ATTRIBUTES', ('login_with_id',))
+        hijack_methods = getattr(settings, 'ALLOWED_HIJACKING_USER_ATTRIBUTES', ('user_id',))
 
-        if 'login_with_id' in hijack_methods:
+        if 'user_id' in hijack_methods:
             hijack_url = reverse('login_with_id', args=(obj.pk,))
-        elif 'login_with_email' in hijack_methods:
+        elif 'email' in hijack_methods:
             hijack_url = reverse('login_with_email', args=(obj.email,))
-        else:
+        elif 'username':
             hijack_url = reverse('login_with_username', args=(obj.username,))
+        else:
+            raise ImproperlyConfigured(
+                "`ALLOWED_HIJACKING_USER_ATTRIBUTES` needs to be properly defined")
 
         return '<a href="%s" class="button">Hijack %s</a>' % (hijack_url, obj)
     hijack_field.allow_tags = True
