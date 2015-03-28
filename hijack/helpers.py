@@ -41,20 +41,44 @@ def release_hijack(request):
     return HttpResponseRedirect(redirect_to)
 
 
+def check_hijack_permission(request, user):
+    """Checks if the user has the correct permission to Hijack another user.
+
+    By default only superusers are allowed to hijack.
+
+    An exception is made to allow staff members to hijack when
+    ALLOW_STAFF_TO_HIJACKUSER is enabled in the Django settings.
+
+    By default it prevents staff users from hijacking other staff users.
+    This can be disabled by enabling the ALLOW_STAFF_TO_HIJACK_STAFF_USER
+    setting in the Django settings.
+
+    Staff users can never hijack superusers.
+    """
+    ALLOW_STAFF_TO_HIJACKUSER = getattr(
+        settings, "ALLOW_STAFF_TO_HIJACKUSER", False)
+
+    ALLOW_STAFF_TO_HIJACK_STAFF_USER = getattr(
+        settings, "ALLOW_STAFF_TO_HIJACK_STAFF_USER", False)
+
+    if not request.user.is_superuser:
+        if ALLOW_STAFF_TO_HIJACKUSER:
+            if not request.user.is_staff or user.is_superuser:
+                raise PermissionDenied
+            elif user.is_staff and not ALLOW_STAFF_TO_HIJACK_STAFF_USER:
+                raise PermissionDenied
+        else:
+            raise PermissionDenied
+
+
 def login_user(request, user):
     ''' hijack mechanism '''
     hijack_history = [request.user.pk]
     if request.session.get('hijack_history'):
         hijack_history = request.session['hijack_history'] + hijack_history
-    if not request.user.is_superuser:
-        if getattr(settings, "ALLOW_STAFF_TO_HIJACKUSER", False):
-            # staff allowed, so check if user is staff
-            # staff can not hijack a superuser however
-            if not request.user.is_staff or user.is_superuser:
-                raise PermissionDenied
-        else:
-            # if user is not super user / staff he should be redirected to the admin login
-            raise PermissionDenied # pragma: no cover
+
+    check_hijack_permission(request, user)
+
     backend = get_backends()[0]
     user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
     login(request, user)

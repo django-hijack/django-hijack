@@ -136,7 +136,9 @@ follow these steps:
 ### Allow staff members to hijack other users
 This option allows staff members to hijack other users. In your project settings set ``ALLOW_STAFF_TO_HIJACKUSER`` to ``True``. The default is False.
 
-Staff members are **not allowed** to hijack admins/superusers. 
+Staff members are **not allowed** to hijack other staff members or admins/superusers.
+
+If you want staff members to be able hijack other staff members you should set ``ALLOW_STAFF_TO_HIJACK_STAFF_USER`` to ``True``. The default is also False.
 
 ### Django 1.4 - 1.8 compatibility with [django-compat](https://github.com/arteria/django-compat)
 
@@ -165,6 +167,9 @@ All configuration settings with their default value and description
     
     # Allow staff users to hijack; default = False
     ALLOW_STAFF_TO_HIJACKUSER = False
+
+    # Allow staff users to hijack other staff users; default = False
+    ALLOW_STAFF_TO_HIJACK_STAFF_USER = False
     
     # Where to go when you hijack someone; default equals the LOGIN_REDIRECT_URL; which has the default '/accounts/profile/'
     REVERSE_HIJACK_LOGIN_REDIRECT_URL = LOGIN_REDIRECT_URL
