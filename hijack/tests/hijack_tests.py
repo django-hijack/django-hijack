@@ -120,6 +120,19 @@ class HijackTests(TestCase):
         else:
             self.assertTrue('name="this_is_the_login_form"' in  str(response.content))
 
+    def test_staff_to_staff_hijacking_without_proper_setting(self):
+        self.client.login(username='Test1', password='Test1 pw')
+        with self.settings(ALLOW_STAFF_TO_HIJACKUSER=True):
+            response = self.client.get('/hijack/5/', follow=True)
+            self.assertEqual(response.status_code, 403)
+
+    def test_staff_to_staff_hijacking_with_proper_setting(self):
+        self.client.login(username='Test1', password='Test1 pw')
+        with self.settings(ALLOW_STAFF_TO_HIJACKUSER=True,
+                           ALLOW_STAFF_TO_HIJACK_STAFF_USER=True):
+            response = self.client.get('/hijack/5/', follow=True)
+            self.assertEqual(response.status_code, 200)
+
     def test_hijack_admin(self):
         from hijack.admin import HijackUserAdmin
 
