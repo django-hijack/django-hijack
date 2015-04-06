@@ -31,15 +31,9 @@ import os
 from setuptools import setup, find_packages
 import hijack as app
 
+dev_requires = ['flake8', ]
 
-dev_requires = [
-    'flake8',
-]
-
-install_requires = [
-    'django>=1.4,<1.9',
-    'django-compat>=1.0.1',
-]
+install_requires = ['django>=1.4,<1.9', 'django-compat>=1.0.1', ]
 
 
 def read(fname):
@@ -48,30 +42,24 @@ def read(fname):
     except IOError:
         return ''
 
-setup(
-    name="django-hijack",
-    version=app.__version__,
-    description=read('DESCRIPTION'),
-    long_description=read('README.md'),
-    license='The MIT License',
-    platforms=['OS Independent'],
-    keywords='django, hijack, support, customer support, debugging',
-    author='arteria GmbH',
-    author_email='admin@arteria.ch',
-    url="https://github.com/arteria/django-hijack",
-    packages=find_packages(),
-    include_package_data=True,
-    install_requires=install_requires,
-    extras_require={
-        'dev': dev_requires,
-    },
-    classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Framework :: Django',
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 3',
-    ],
 
-)
+setup(name="django-hijack",
+      version=app.__version__,
+      description=read('DESCRIPTION'),
+      long_description=read('README.md'),
+      license='The MIT License',
+      platforms=['OS Independent'],
+      keywords='django, hijack, support, customer support, debugging',
+      author='arteria GmbH',
+      author_email='admin@arteria.ch',
+      url="https://github.com/arteria/django-hijack",
+      packages=find_packages(),
+      include_package_data=True,
+      install_requires=install_requires,
+      extras_require={'dev': dev_requires, },
+      classifiers=['Development Status :: 5 - Production/Stable',
+                   'Framework :: Django',
+                   'License :: OSI Approved :: MIT License',
+                   'Programming Language :: Python',
+                   'Programming Language :: Python :: 2',
+                   'Programming Language :: Python :: 3', ], )

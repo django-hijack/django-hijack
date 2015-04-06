@@ -11,12 +11,9 @@ defining two routers ("default" and "south") does not work.
 """
 from .test_settings import *  # NOQA
 
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite',
-    }
+    'default': {'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': 'db.sqlite', }
 }
 
 INSTALLED_APPS.append('south', )

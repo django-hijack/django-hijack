@@ -9,6 +9,7 @@ from hijack.helpers import login_user
 from hijack.helpers import release_hijack as release_hijack_fx
 from compat import get_user_model
 
+
 @staff_member_required
 def login_with_id(request, user_id):
     # input(user_id) is unicode
@@ -36,7 +37,8 @@ def login_with_username(request, username):
 def release_hijack(request):
     return release_hijack_fx(request)
 
+
 @login_required
 def disable_hijack_warning(request):
-    request.session['is_hijacked_user']=False
-    return HttpResponseRedirect(request.GET.get('next','/'))
+    request.session['is_hijacked_user'] = False
+    return HttpResponseRedirect(request.GET.get('next', '/'))

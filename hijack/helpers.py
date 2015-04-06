@@ -23,7 +23,8 @@ def release_hijack(request):
         user_pk = hijack_history.pop()
         user = get_object_or_404(get_user_model(), pk=user_pk)
         backend = get_backends()[0]
-        user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
+        user.backend = "%s.%s" % (backend.__module__,
+                                  backend.__class__.__name__)
         login(request, user)
     if hijack_history:
         request.session['hijack_history'] = hijack_history
@@ -35,9 +36,11 @@ def release_hijack(request):
         except KeyError:
             pass
     request.session.modified = True
-    redirect_to = request.GET.get('next', getattr(
-        settings, 'REVERSE_HIJACK_LOGIN_REDIRECT_URL', getattr(
-        settings, 'LOGIN_REDIRECT_URL', '/')))
+    redirect_to = request.GET.get('next',
+                                  getattr(settings,
+                                          'REVERSE_HIJACK_LOGIN_REDIRECT_URL',
+                                          getattr(settings,
+                                                  'LOGIN_REDIRECT_URL', '/')))
     return HttpResponseRedirect(redirect_to)
 
 
@@ -55,8 +58,8 @@ def check_hijack_permission(request, user):
 
     Staff users can never hijack superusers.
     """
-    ALLOW_STAFF_TO_HIJACKUSER = getattr(
-        settings, "ALLOW_STAFF_TO_HIJACKUSER", False)
+    ALLOW_STAFF_TO_HIJACKUSER = getattr(settings, "ALLOW_STAFF_TO_HIJACKUSER",
+                                        False)
 
     ALLOW_STAFF_TO_HIJACK_STAFF_USER = getattr(
         settings, "ALLOW_STAFF_TO_HIJACK_STAFF_USER", False)
@@ -86,9 +89,11 @@ def login_user(request, user):
     request.session['is_hijacked_user'] = True
     request.session['hijack_history'] = hijack_history
     request.session.modified = True
-    redirect_to = request.GET.get('next', getattr(
-        settings, 'HIJACK_LOGIN_REDIRECT_URL', getattr(
-        settings, 'LOGIN_REDIRECT_URL', '/')))
+    redirect_to = request.GET.get('next',
+                                  getattr(settings,
+                                          'HIJACK_LOGIN_REDIRECT_URL',
+                                          getattr(settings,
+                                                  'LOGIN_REDIRECT_URL', '/')))
     return HttpResponseRedirect(redirect_to)
 
 
