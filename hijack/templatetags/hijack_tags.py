@@ -6,9 +6,13 @@ from django.template import RequestContext
 
 register = template.Library()
 
+
 @register.filter
 def hijackNotification(request):
     ans = ''
-    if getattr(settings, 'HIJACK_NOTIFY_ADMIN', True) and request and request.session.get('is_hijacked_user', False):
-        ans = render_to_string('hijack/notifications.html', {}, context_instance=RequestContext(request)) 
-    return mark_safe(ans) 
+    if getattr(settings, 'HIJACK_NOTIFY_ADMIN',
+               True) and request and request.session.get('is_hijacked_user',
+                                                         False):
+        ans = render_to_string('hijack/notifications.html', {},
+                               context_instance=RequestContext(request))
+    return mark_safe(ans)
