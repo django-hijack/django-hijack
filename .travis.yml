@@ -4,7 +4,7 @@ python:
     - "2.7"
     - "3.4"
 env:
-    - DJANGO='django==1.4.*'
+    - DJANGO=django==1.4.*
     - DJANGO=django==1.5.*
     - DJANGO=django==1.6.*
     - DJANGO=django==1.7.*
@@ -15,9 +15,9 @@ install:
     - pip install $DJANGO
 
 script:
-    python runtests.py
+    - python runtests.py
 
 matrix:
     exclude:
-        - python: 3.4
-          env: DJANGO='django==1.4.*'
+        - python: "3.4"
+          env: DJANGO=django==1.4.*
