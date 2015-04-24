@@ -4,16 +4,15 @@ python:
     - 2.7
     - 3.4
 env:
-    - DJANGO='django>=1.4,<1.5'
-    - DJANGO='django>=1.5,<1.6'
-    - DJANGO='django>=1.6,<1.7'
-    - DJANGO='django>=1.7,<1.8'
-    # django-nose does not jet support django > 1.8 (there is a PR with a fix)
-    # - DJANGO='django>=1.8.a,<1.9'
+    - DJANGO='django==1.4.*'
+    - DJANGO='django>=1.5.*'
+    - DJANGO='django>=1.6.*'
+    - DJANGO='django>=1.7.*'
+    - DJANGO='django>=1.8.*'
 
 install:
-    - pip install -r test_requirements.txt
-    - pip install $DJANGO --upgrade
+    - pip install -r requirements-test.txt
+    - pip install $DJANGO -I
 
 script:
     python runtests.py
@@ -21,7 +20,6 @@ script:
 matrix:
     exclude:
         - python: 3.4
-          env: DJANGO='django>=1.4,<1.5'
+          env: DJANGO='django>=1.4.*'
         - python: 3.4
-          env: DJANGO='django>=1.5,<1.6'
-
+          env: DJANGO='django>=1.5.*'
