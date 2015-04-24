@@ -20,6 +20,6 @@ script:
 matrix:
     exclude:
         - python: 3.4
-          env: DJANGO='django>=1.4.*'
+          env: DJANGO='django==1.4.*'
         - python: 3.4
-          env: DJANGO='django>=1.5.*'
+          env: DJANGO='django==1.5.*'
