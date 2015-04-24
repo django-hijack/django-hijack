@@ -4,7 +4,7 @@ python:
     - "2.7"
     - "3.4"
 env:
-    - DJANGO=django==1.4.*
+    - DJANGO='django==1.4.*'
     - DJANGO=django==1.5.*
     - DJANGO=django==1.6.*
     - DJANGO=django==1.7.*
@@ -20,4 +20,4 @@ script:
 matrix:
     exclude:
         - python: 3.4
-          env: DJANGO=django==1.4.*
+          env: DJANGO='django==1.4.*'
