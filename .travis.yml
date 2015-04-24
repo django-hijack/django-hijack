@@ -1,18 +1,18 @@
 language: python
 
 python:
-    - 2.7
-    - 3.4
+    - "2.7"
+    - "3.4"
 env:
-    - DJANGO='django==1.4.*'
-    - DJANGO='django>=1.5.*'
-    - DJANGO='django>=1.6.*'
-    - DJANGO='django>=1.7.*'
-    - DJANGO='django>=1.8.*'
+    - DJANGO=django==1.4.*
+    - DJANGO=django==1.5.*
+    - DJANGO=django==1.6.*
+    - DJANGO=django==1.7.*
+    - DJANGO=django==1.8.*
 
 install:
     - pip install -r requirements-test.txt
-    - pip install $DJANGO -I
+    - pip install $DJANGO
 
 script:
     python runtests.py
