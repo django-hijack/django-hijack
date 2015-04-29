@@ -4,7 +4,8 @@ from django.contrib.sessions.models import Session
 from django.conf import settings
 from django.contrib.auth.admin import UserAdmin
 from django.core.urlresolvers import reverse
-from django.utils.html import format_html
+
+from compat import format_html
 
 
 class HijackUserAdminMixin(object):
