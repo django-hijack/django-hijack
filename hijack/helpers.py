@@ -4,6 +4,7 @@ from django.core.exceptions import PermissionDenied
 from django.contrib.auth.signals import user_logged_out
 from django.contrib.auth import login, get_backends
 from django.dispatch import receiver
+from django.shortcuts import resolve_url
 
 from django.shortcuts import get_object_or_404
 
@@ -94,7 +95,7 @@ def login_user(request, user):
                                           'HIJACK_LOGIN_REDIRECT_URL',
                                           getattr(settings,
                                                   'LOGIN_REDIRECT_URL', '/')))
-    return HttpResponseRedirect(redirect_to)
+    return HttpResponseRedirect(resolve_url(redirect_to))
 
 
 @receiver(user_logged_out)
