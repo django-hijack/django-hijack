@@ -4,11 +4,11 @@ from django.core.exceptions import PermissionDenied
 from django.contrib.auth.signals import user_logged_out
 from django.contrib.auth import login, get_backends
 from django.dispatch import receiver
-from django.shortcuts import resolve_url
 
 from django.shortcuts import get_object_or_404
 
 from compat import get_user_model
+from compat import resolve_url
 
 from hijack.signals import post_superuser_login
 from hijack.signals import post_superuser_logout
@@ -42,7 +42,7 @@ def release_hijack(request):
                                           'REVERSE_HIJACK_LOGIN_REDIRECT_URL',
                                           getattr(settings,
                                                   'LOGIN_REDIRECT_URL', '/')))
-    return HttpResponseRedirect(redirect_to)
+    return HttpResponseRedirect(resolve_url(redirect_to))
 
 
 def check_hijack_permission(request, user):

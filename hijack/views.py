@@ -7,7 +7,9 @@ from django.http import HttpResponseBadRequest, HttpResponseRedirect
 
 from hijack.helpers import login_user
 from hijack.helpers import release_hijack as release_hijack_fx
+
 from compat import get_user_model
+from compat import resolve_url
 
 
 @staff_member_required
@@ -41,4 +43,4 @@ def release_hijack(request):
 @login_required
 def disable_hijack_warning(request):
     request.session['is_hijacked_user'] = False
-    return HttpResponseRedirect(request.GET.get('next', '/'))
+    return HttpResponseRedirect(resolve_url(request.GET.get('next', '/')))
