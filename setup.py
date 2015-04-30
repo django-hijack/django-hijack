@@ -33,7 +33,7 @@ import hijack as app
 
 dev_requires = ['flake8', ]
 
-install_requires = ['django>=1.4,<1.9', 'django-compat>=1.0.1', ]
+install_requires = ['django>=1.4,<1.9', 'django-compat>=1.0.4', ]
 
 
 def read(fname):
@@ -60,6 +60,13 @@ setup(name="django-hijack",
       classifiers=['Development Status :: 5 - Production/Stable',
                    'Framework :: Django',
                    'License :: OSI Approved :: MIT License',
+                   'Framework :: Django',
+                   'Framework :: Django :: 1.4',
+                   'Framework :: Django :: 1.5',
+                   'Framework :: Django :: 1.6',
+                   'Framework :: Django :: 1.7',
+                   'Framework :: Django :: 1.8',
+                   'Framework :: Django :: compat',
                    'Programming Language :: Python',
                    'Programming Language :: Python :: 2',
                    'Programming Language :: Python :: 3', ], )
