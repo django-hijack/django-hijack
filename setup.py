@@ -33,7 +33,7 @@ import hijack as app
 
 dev_requires = ['flake8', ]
 
-install_requires = ['django>=1.4,<1.9', 'django-compat>=1.0.4', ]
+install_requires = ['django>=1.4,<1.9', 'django-compat>=1.0.5', ]
 
 
 def read(fname):
