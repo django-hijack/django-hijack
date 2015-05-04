@@ -24,7 +24,7 @@ class HijackUserAdminMixin(object):
                 "`ALLOWED_HIJACKING_USER_ATTRIBUTES` needs to be "
                 "properly defined")
 
-        return format_html('<a href="{}" class="button">Hijack {}</a>',
+        return format_html(u'<a href="{}" class="button">Hijack {}</a>',
                            hijack_url, obj)
 
     hijack_field.allow_tags = True
