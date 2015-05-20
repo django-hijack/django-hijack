@@ -7,7 +7,7 @@ from django.dispatch import receiver
 
 from django.shortcuts import get_object_or_404
 
-from compat import get_user_model
+from compat import get_user_model, import_string
 from compat import resolve_url
 
 from hijack.signals import post_superuser_login
@@ -45,7 +45,7 @@ def release_hijack(request):
     return HttpResponseRedirect(resolve_url(redirect_to))
 
 
-def check_hijack_permission(request, user):
+def can_hijack(hijacker, hijacked):
     """Checks if the user has the correct permission to Hijack another user.
 
     By default only superusers are allowed to hijack.
@@ -59,20 +59,31 @@ def check_hijack_permission(request, user):
 
     Staff users can never hijack superusers.
     """
+
+    if hijacker.is_superuser:
+        return True
+
     ALLOW_STAFF_TO_HIJACKUSER = getattr(settings, "ALLOW_STAFF_TO_HIJACKUSER",
                                         False)
 
     ALLOW_STAFF_TO_HIJACK_STAFF_USER = getattr(
         settings, "ALLOW_STAFF_TO_HIJACK_STAFF_USER", False)
 
-    if not request.user.is_superuser:
-        if ALLOW_STAFF_TO_HIJACKUSER:
-            if not request.user.is_staff or user.is_superuser:
-                raise PermissionDenied
-            elif user.is_staff and not ALLOW_STAFF_TO_HIJACK_STAFF_USER:
-                raise PermissionDenied
-        else:
-            raise PermissionDenied
+    if hijacker.is_staff and ALLOW_STAFF_TO_HIJACKUSER:
+        if hijacked.is_staff and not ALLOW_STAFF_TO_HIJACK_STAFF_USER:
+            return False
+        return True
+
+    return False
+
+
+def check_hijack_permission(request, user):
+    func_dotted_path = getattr(settings, 'CUSTOM_HIJACK_HANDLER', None)
+    can_hijack_func = import_string(func_dotted_path) if func_dotted_path else can_hijack
+
+    can_hijack_ret = can_hijack_func(request.user, user)
+    if not can_hijack_ret:
+        raise PermissionDenied
 
 
 def login_user(request, user):
