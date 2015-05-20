@@ -199,7 +199,7 @@ You can catch a signal when a superuser logs in as another user. Here is an exam
 * Support for named URLs for the hijack button.
 * Handle signals in ``release_hijack(..)``, currently the signals are only triggered in ``login_user(..)`` and ``logout_user(..)``.
 * Graceful support for custom user models that do not feature username / email
-
+* RemoteUserMiddleware does not work currently, see [#72](https://github.com/arteria/django-hijack/issues/72) 
 ## FAQ, troubleshooting and hints
 
 ### Why does the hijack button not show up in the admin site, even if I set ``SHOW_HIJACKUSER_IN_ADMIN = True`` in my project settings?
