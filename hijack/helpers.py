@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.signals import user_logged_out
-from django.contrib.auth import login, get_backends
+from django.contrib.auth import login, load_backend, BACKEND_SESSION_KEY
 from django.dispatch import receiver
 
 from django.shortcuts import get_object_or_404
@@ -14,6 +14,12 @@ from hijack.signals import post_superuser_login
 from hijack.signals import post_superuser_logout
 
 
+def get_used_backend(request):
+    backend_str = request.session[BACKEND_SESSION_KEY]
+    backend = load_backend(backend_str)
+    return backend
+
+
 def release_hijack(request):
     hijack_history = request.session.get('hijack_history', False)
 
@@ -23,7 +29,7 @@ def release_hijack(request):
     if hijack_history:
         user_pk = hijack_history.pop()
         user = get_object_or_404(get_user_model(), pk=user_pk)
-        backend = get_backends()[0]
+        backend = get_used_backend(request)
         user.backend = "%s.%s" % (backend.__module__,
                                   backend.__class__.__name__)
         login(request, user)
@@ -83,7 +89,7 @@ def login_user(request, user):
 
     check_hijack_permission(request, user)
 
-    backend = get_backends()[0]
+    backend = get_used_backend(request)
     user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
     login(request, user)
     post_superuser_login.send(sender=None, user_id=user.pk)
