@@ -62,6 +62,19 @@ Add the ``hijack`` URLs to your ``urls.py``
         url(r'^hijack/', include('hijack.urls')),
     )
 
+To work with `REMOTE_USER` just place `'hijack.middleware.HijackRemoteUserMiddleware',`
+between `django.contrib.auth.middleware.AuthenticationMiddleware` and `django.contrib.auth.middleware.RemoteUserMiddleware`
+in `settings.MIDDLEWARE_CLASSES`
+
+    MIDDLEWARE_CLASSES = (
+        ...,
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'hijack.middleware.HijackRemoteUserMiddleware',
+        'django.contrib.auth.middleware.RemoteUserMiddleware',
+        ...,
+    )
+
+
 ## Usage and modes
 
 There are different possibilities to hijack a user and communicate with users.
@@ -199,7 +212,6 @@ You can catch a signal when a superuser logs in as another user. Here is an exam
 * Support for named URLs for the hijack button.
 * Handle signals in ``release_hijack(..)``, currently the signals are only triggered in ``login_user(..)`` and ``logout_user(..)``.
 * Graceful support for custom user models that do not feature username / email
-* RemoteUserMiddleware does not work currently, see [#72](https://github.com/arteria/django-hijack/issues/72) 
 
 
 ## FAQ, troubleshooting and hints
