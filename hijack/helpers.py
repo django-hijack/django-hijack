@@ -77,9 +77,15 @@ def can_hijack(hijacker, hijacked):
     return False
 
 
-def check_hijack_permission(request, user):
+def get_can_hijack_function():
     func_dotted_path = getattr(settings, 'CUSTOM_HIJACK_HANDLER', None)
     can_hijack_func = import_string(func_dotted_path) if func_dotted_path else can_hijack
+
+    return can_hijack_func
+
+
+def check_hijack_permission(request, user):
+    can_hijack_func = get_can_hijack_function()
 
     can_hijack_ret = can_hijack_func(request.user, user)
     if not can_hijack_ret:

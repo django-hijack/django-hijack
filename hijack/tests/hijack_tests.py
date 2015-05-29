@@ -8,6 +8,7 @@ from django.contrib.admin.sites import AdminSite
 
 from django.test import TestCase, override_settings
 from django.test.client import Client
+from hijack.templatetags.hijack_tags import can_hijack
 
 
 class HijackTests(TestCase):
@@ -98,7 +99,7 @@ class HijackTests(TestCase):
         self.assertRaises(self.client.get('/hijack/string/', follow=True))
 
     def test_hijack_helper_permission_denied(self):
-        # relese hijack before hijack
+        # release hijack before hijack
         self.client.login(username='Admin', password='Admin pw')
         response = self.client.get('/hijack/release-hijack/', follow=True)
         self.assertEqual(response.status_code, 403)
@@ -191,7 +192,7 @@ class HijackTests(TestCase):
 
     @override_settings(CUSTOM_HIJACK_HANDLER='hijack.tests.test_app.custom_hijack.can_hijack_yes')
     def test_hijack_always_yes(self):
-        # relese hijack before hijack
+        # release hijack before hijack
         self.client.login(username='Admin', password='Admin pw')
         response = self.client.get('/hijack/release-hijack/', follow=True)
         self.assertEqual(response.status_code, 403)
@@ -229,7 +230,7 @@ class HijackTests(TestCase):
 
     @override_settings(CUSTOM_HIJACK_HANDLER='hijack.tests.test_app.custom_hijack.can_hijack_no')
     def test_hijack_always_no(self):
-        # relese hijack before hijack
+        # release hijack before hijack
         self.client.login(username='Admin', password='Admin pw')
         response = self.client.get('/hijack/release-hijack/', follow=True)
         self.assertEqual(response.status_code, 403)
@@ -264,6 +265,11 @@ class HijackTests(TestCase):
         setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
         response = self.client.get('/hijack/5/', follow=True)
         self.assertEqual(response.status_code, 403)
+
+    def test_can_hijack_filter(self):
+        admin1 = User.objects.get(pk=1)
+        admin2 = User.objects.get(pk=5)
+        self.assertEqual(can_hijack(admin1, admin2), True)
 
 
 @override_settings(CUSTOM_HIJACK_HANDLER='hijack.tests.test_app.custom_hijack.can_hijack_default')
