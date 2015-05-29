@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/arteria/django-hijack.png?label=ready&title=Ready)](https://waffle.io/arteria/django-hijack)
 # Django Hijack
 
 [![Build Status](https://travis-ci.org/arteria/django-hijack.svg?branch=master)](https://travis-ci.org/arteria/django-hijack)
