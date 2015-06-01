@@ -6,7 +6,8 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.admin.sites import AdminSite
 
-from django.test import TestCase, override_settings
+from django.test import TestCase
+from django.test.utils import override_settings
 from django.test.client import Client
 from hijack.templatetags.hijack_tags import can_hijack
 
