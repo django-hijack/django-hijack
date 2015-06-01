@@ -19,6 +19,7 @@
         - [Hijack-History](#hijack-history)
     - [Notify user when they were hijacked](#notify-users-when-they-were-hijacked)
     - [Allow staff to hijack](#allow-staff-members-to-hijack-other-users)
+    - [Custom hijack function](#custom-hijack-function)
     - [Django 1.4 to 1.8 compatibility with django-compat](#django-14---18-compatibility-with-django-compat)
     - [Custom user models](#support-for-custom-user-models)
 - [Settings](#settings)
