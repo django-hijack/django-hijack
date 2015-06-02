@@ -19,6 +19,7 @@
         - [Hijack-History](#hijack-history)
     - [Notify user when they were hijacked](#notify-users-when-they-were-hijacked)
     - [Allow staff to hijack](#allow-staff-members-to-hijack-other-users)
+    - [Custom hijack function](#custom-hijack-function)
     - [Django 1.4 to 1.8 compatibility with django-compat](#django-14---18-compatibility-with-django-compat)
     - [Custom user models](#support-for-custom-user-models)
 - [Settings](#settings)
@@ -153,6 +154,22 @@ Staff members are **not allowed** to hijack other staff members or admins/superu
 
 If you want staff members to be able hijack other staff members you should set ``ALLOW_STAFF_TO_HIJACK_STAFF_USER`` to ``True``. The default is also False.
 
+
+### Custom hijack function
+
+This feature gives you fine control over the hijack permissions system. In your project settings set ``CUSTOM_HIJACK_HANDLER`` to a dotted path referencing your function.
+
+    CUSTOM_HIJACK_HANDLER = 'path.to.my_custom_can_hijack_function'
+
+Then you can define your conditions to permit a user to hijack another one:
+
+    def my_custom_can_hijack_function(hijacker, hijacked):
+        if condition:
+            return True
+
+        return False
+
+
 ### Django 1.4 - 1.8 compatibility with [django-compat](https://github.com/arteria/django-compat)
 
 All critical imports are carried out with the [compat library](https://github.com/arteria/django-compat) that gives the compatibility for django 1.4 to 1.8
@@ -190,6 +207,8 @@ All configuration settings with their default value and description
     # Which methods of hijacking a user is allowed; default = ('user_id', 'email', 'username')
     ALLOWED_HIJACKING_USER_ATTRIBUTES = ('user_id', 'email', 'username')
 
+    # Define a custom function to determine which user can hijack another user
+    CUSTOM_HIJACK_HANDLER = 'path.to.my_custom_can_hijack_function'
 
 ## Signals
 

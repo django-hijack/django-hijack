@@ -1,13 +1,15 @@
-from django.test import TestCase
+from six.moves.urllib.parse import unquote
+
+from django import VERSION
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.admin.sites import AdminSite
-from six.moves.urllib.parse import unquote
 
-from django import VERSION
-
+from django.test import TestCase
+from django.test.utils import override_settings
 from django.test.client import Client
+from hijack.templatetags.hijack_tags import can_hijack
 
 
 class HijackTests(TestCase):
@@ -98,7 +100,7 @@ class HijackTests(TestCase):
         self.assertRaises(self.client.get('/hijack/string/', follow=True))
 
     def test_hijack_helper_permission_denied(self):
-        # relese hijack before hijack
+        # release hijack before hijack
         self.client.login(username='Admin', password='Admin pw')
         response = self.client.get('/hijack/release-hijack/', follow=True)
         self.assertEqual(response.status_code, 403)
@@ -140,7 +142,7 @@ class HijackTests(TestCase):
 
         setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
         response = self.client.get('/hijack/1/', )
-        print(response.status_code)
+
         if VERSION >= (1, 7):
             self.assertEqual(response.status_code, 302)
         else:
@@ -188,3 +190,89 @@ class HijackTests(TestCase):
         self.assertEqual('/hijack/email/bob_too@bobsburgers.com/', unquote(
             reverse('login_with_email',
                     kwargs={'email': 'bob_too@bobsburgers.com'})))
+
+    @override_settings(CUSTOM_HIJACK_HANDLER='hijack.tests.test_app.custom_hijack.can_hijack_yes')
+    def test_hijack_always_yes(self):
+        # release hijack before hijack
+        self.client.login(username='Admin', password='Admin pw')
+        response = self.client.get('/hijack/release-hijack/', follow=True)
+        self.assertEqual(response.status_code, 403)
+
+        # hijack another admin user
+        response = self.client.get('/hijack/5/', follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        # check permision for hijack
+        self.client.login(username='Test1', password='Test1 pw')
+
+        setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', False)
+        delattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER')
+        response = self.client.get('/hijack/1/', follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', False)
+        response = self.client.get('/hijack/1/', follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        # staff users should not be able to hijack admins
+        setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
+        response = self.client.get('/hijack/1/', follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        # normal users should be ok
+        setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
+        response = self.client.get('/hijack/3/', follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        # other staff users should be ok
+        setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
+        response = self.client.get('/hijack/5/', follow=True)
+        self.assertEqual(response.status_code, 200)
+
+    @override_settings(CUSTOM_HIJACK_HANDLER='hijack.tests.test_app.custom_hijack.can_hijack_no')
+    def test_hijack_always_no(self):
+        # release hijack before hijack
+        self.client.login(username='Admin', password='Admin pw')
+        response = self.client.get('/hijack/release-hijack/', follow=True)
+        self.assertEqual(response.status_code, 403)
+
+        # hijack another admin user
+        response = self.client.get('/hijack/5/', follow=True)
+        self.assertEqual(response.status_code, 403)
+
+        # check permision for hijack
+        self.client.login(username='Test1', password='Test1 pw')
+
+        setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', False)
+        delattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER')
+        response = self.client.get('/hijack/1/', follow=True)
+        self.assertEqual(response.status_code, 403)
+
+        setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', False)
+        response = self.client.get('/hijack/1/', follow=True)
+        self.assertEqual(response.status_code, 403)
+
+        # staff users should not be able to hijack admins
+        setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
+        response = self.client.get('/hijack/1/', follow=True)
+        self.assertEqual(response.status_code, 403)
+
+        # normal users should be ok
+        setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
+        response = self.client.get('/hijack/3/', follow=True)
+        self.assertEqual(response.status_code, 403)
+
+        # other staff users should be ok
+        setattr(settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
+        response = self.client.get('/hijack/5/', follow=True)
+        self.assertEqual(response.status_code, 403)
+
+    def test_can_hijack_filter(self):
+        admin1 = User.objects.get(pk=1)
+        admin2 = User.objects.get(pk=5)
+        self.assertEqual(can_hijack(admin1, admin2), True)
+
+
+@override_settings(CUSTOM_HIJACK_HANDLER='hijack.tests.test_app.custom_hijack.can_hijack_default')
+class DefaultCustomHijackTests(HijackTests):
+    pass
