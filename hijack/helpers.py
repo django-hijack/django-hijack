@@ -65,6 +65,8 @@ def can_hijack(hijacker, hijacked):
 
     Staff users can never hijack superusers.
     """
+    if hijacked.is_superuser and not hijacker.is_superuser:
+        return False
 
     if hijacker.is_superuser:
         return True
