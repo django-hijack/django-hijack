@@ -18,8 +18,9 @@ def login_with_id(request, user_id):
     try:
         user_id = int(user_id)
     except ValueError:
-        return HttpResponseBadRequest('user_id must be an integer value.')
-    user = get_object_or_404(get_user_model(), pk=user_id)
+        user = get_object_or_404(get_user_model(), username=user_id)
+    else:
+        user = get_object_or_404(get_user_model(), pk=user_id)
     return login_user(request, user)
 
 

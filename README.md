@@ -92,6 +92,11 @@ For advanced superusers, users can be hijacked directly from the address bar by 
 * example.com/hijack/email/``email-address``
 * example.com/hijack/username/``username``
 
+If you do not want to specify what piece of information of the user you are providing, you can also simply hijack by typing ``email`` and ``username`` right after ``hijack/``:
+
+* example.com/hijack/``email-address``
+* example.com/hijack/``username``
+
 ### Specify which user attributes are allowed to hijack on
 By default all of the above methods (user id, email and username) are allowed. If you want to allow only a subset of these
 you can set ALLOWED_HIJACKING_USER_ATTRIBUTES in your project settings. This will disable the other endpoints.
