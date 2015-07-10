@@ -162,6 +162,13 @@ class HijackTests(TestCase):
             response = self.client.get('/hijack/5/', follow=True)
             self.assertEqual(response.status_code, 200)
 
+    def test_staff_to_admin_hijacking_never_allowed(self):
+        # a staff user should never hijack an admin
+        self.client.login(username='Test1', password='Test1 pw')
+        with self.settings(ALLOW_STAFF_TO_HIJACK_STAFF_USER=True):
+            response = self.client.get('/hijack/1/', follow=True)
+            self.assertEqual(response.status_code, 403)
+
     def test_hijack_admin(self):
         from hijack.admin import HijackUserAdmin
 
