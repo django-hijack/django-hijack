@@ -5,7 +5,6 @@ python:
     - "3.4"
 env:
     - DJANGO=django==1.4.*
-    - DJANGO=django==1.5.*
     - DJANGO=django==1.6.*
     - DJANGO=django==1.7.*
     - DJANGO=django==1.8.*
