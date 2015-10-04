@@ -102,7 +102,7 @@ def check_hijack_permission(request, user):
 
 def login_user(request, user):
     ''' hijack mechanism '''
-    hijack_history = [request.user.pk]
+    hijack_history = [request.user._meta.pk.value_to_string(request.user)]
     if request.session.get('hijack_history'):
         hijack_history = request.session['hijack_history'] + hijack_history
 
