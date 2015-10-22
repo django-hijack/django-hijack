@@ -18,3 +18,6 @@ class HijackRemoteUserMiddleware(object):
             username = request.user.get_username()
             if username != remote_username:
                 request.META[self.header] = username
+                
+    def authenticate(self, *args, **kwargs):
+        return None
