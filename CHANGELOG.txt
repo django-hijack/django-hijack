@@ -1,8 +1,22 @@
 === (ongoing) ===
 
+=== (1.0.10) ===
+- Bugfixes
+- Allow hijacking users with negative IDs
+
+=== (1.0.9) ===
+- Allow email usernames in login_with_username
+- Dropped support for django 1.5
+
+=== (1.0.8) ===
+- Added RemoteUser support
+- Fixed hide button to redirect to correct full path
+- Custom hijack function
+
+=== (1.0.7) ===
+- Security update
 
 === (1.0.6) ===
-
 - Do not allow staff users to hijack superusers
 - Add setting to choose which user attributes can be used for hijacking a user
 - Use a more liberal/naive approach to regex checking for an email
@@ -11,12 +25,10 @@
 - Only include 'disable-hijack-warning' url if HIJACK_NOTIFY_ADMIN is enabled  
 
 === (1.0.5) ===
-
 - Fix an error related to django-compat on Django 1.7.x (get_user_model)
 - Updated dependencies to django-compat 1.0.1
 
 === (1.0.4) ===
-
 - Python3 support
 - Tests
 
