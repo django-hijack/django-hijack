@@ -25,6 +25,6 @@ if not hijacking_user_attributes or 'username' in hijacking_user_attributes:
                                 view='login_with_username',
                                 name='login_with_username', ), )
 if not hijacking_user_attributes or 'user_id' in hijacking_user_attributes:
-    urlpatterns += patterns('hijack.views', url(r'^(?P<user_id>\w+)/$',
+    urlpatterns += patterns('hijack.views', url(r'^(?P<user_id>[\w-]+)/$',
                                                 view='login_with_id',
                                                 name='login_with_id', ), )
