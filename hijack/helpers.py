@@ -113,7 +113,10 @@ def login_user(request, user):
 
     backend = get_used_backend(request)
     user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
+    last_login = user.last_login  # Save last_login to reset it after hijack login
     login(request, user)
+    user.last_login = last_login
+    user.save(update_fields=['last_login'])
     post_superuser_login.send(sender=None, user_id=user.pk)
     request.session['is_hijacked_user'] = True
     request.session['hijack_history'] = hijack_history

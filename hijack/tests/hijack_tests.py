@@ -288,6 +288,23 @@ class HijackTests(TestCase):
         admin2 = User.objects.get(pk=5)
         self.assertEqual(can_hijack(admin1, admin2), True)
 
+    def test_last_login_not_changed(self):
+        self.assertIsNone(self.test1.last_login)
+        self.client.login(username='Admin', password='Admin pw')
+        self.client.get('/hijack/%d/' % self.test1.pk, follow=True)
+        self.client.logout()
+        self.assertIsNone(self.test1.last_login)
+
+        self.client.login(username='Test1', password='Test1 pw')
+        self.client.logout()
+        last_login = User.objects.get(pk=self.test1.pk).last_login
+        self.assertIsNotNone(last_login)
+
+        self.client.login(username='Admin', password='Admin pw')
+        self.client.get('/hijack/%d/' % self.test1.pk, follow=True)
+        self.client.logout()
+        self.assertEqual(last_login, User.objects.get(pk=self.test1.pk).last_login)
+
 
 @override_settings(CUSTOM_HIJACK_HANDLER='hijack.tests.test_app.custom_hijack.can_hijack_default')
 class DefaultCustomHijackTests(HijackTests):
