@@ -17,7 +17,7 @@ install:
     - pip install coveralls
 
 script:
-    coverage run --source=hijack runtests.py
+    coverage run runtests.py
 
 after_success:
     coveralls

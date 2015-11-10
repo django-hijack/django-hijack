@@ -24,10 +24,7 @@ STATIC_ROOT = os.path.join(APP_ROOT, '../app_static')
 MEDIA_ROOT = os.path.join(APP_ROOT, '../app_media')
 STATICFILES_DIRS = (os.path.join(APP_ROOT, 'static'), )
 
-NOSE_ARGS = [
-    '--with-coverage', '--cover-package=hijack',
-    # ,hijack.tests.test_app',
-]
+NOSE_ARGS = []
 
 TEMPLATE_DIRS = (os.path.join(APP_ROOT, 'tests/test_app/templates'), )
 
@@ -56,17 +53,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     'django.core.context_processors.request', )
 
-COVERAGE_REPORT_HTML_OUTPUT_DIR = os.path.join(
-    os.path.join(APP_ROOT, 'tests/coverage'))
-COVERAGE_MODULE_EXCLUDES = ['tests$',
-                            'settings$',
-                            'urls$',
-                            'locale$',
-                            'migrations',
-                            'fixtures',
-                            'admin$',
-                            'django_extensions', ]
-
 EXTERNAL_APPS = ['django.contrib.admin',
                  'django.contrib.admindocs',
                  'django.contrib.auth',
@@ -82,6 +68,5 @@ EXTERNAL_APPS = ['django.contrib.admin',
 INTERNAL_APPS = ['hijack', 'hijack.tests.test_app', ]
 
 INSTALLED_APPS = EXTERNAL_APPS + INTERNAL_APPS
-COVERAGE_MODULE_EXCLUDES += EXTERNAL_APPS
 
 SECRET_KEY = 'foobar'
