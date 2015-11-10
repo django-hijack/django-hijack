@@ -1,15 +1,14 @@
 from django.http import HttpResponseRedirect
-from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.signals import user_logged_out
 from django.contrib.auth import login, load_backend, BACKEND_SESSION_KEY
 from django.dispatch import receiver
-
 from django.shortcuts import get_object_or_404
 
 from compat import get_user_model, import_string
 from compat import resolve_url
 
+from hijack import settings as hijack_settings
 from hijack.signals import post_superuser_login
 from hijack.signals import post_superuser_logout
 
@@ -43,11 +42,7 @@ def release_hijack(request):
         except KeyError:
             pass
     request.session.modified = True
-    redirect_to = request.GET.get('next',
-                                  getattr(settings,
-                                          'REVERSE_HIJACK_LOGIN_REDIRECT_URL',
-                                          getattr(settings,
-                                                  'LOGIN_REDIRECT_URL', '/')))
+    redirect_to = request.GET.get('next', hijack_settings.REVERSE_HIJACK_LOGIN_REDIRECT_URL)
     return HttpResponseRedirect(resolve_url(redirect_to))
 
 
@@ -74,14 +69,8 @@ def can_hijack(hijacker, hijacked):
     if hijacker.is_superuser:
         return True
 
-    ALLOW_STAFF_TO_HIJACKUSER = getattr(settings, "ALLOW_STAFF_TO_HIJACKUSER",
-                                        False)
-
-    ALLOW_STAFF_TO_HIJACK_STAFF_USER = getattr(
-        settings, "ALLOW_STAFF_TO_HIJACK_STAFF_USER", False)
-
-    if hijacker.is_staff and ALLOW_STAFF_TO_HIJACKUSER:
-        if hijacked.is_staff and not ALLOW_STAFF_TO_HIJACK_STAFF_USER:
+    if hijacker.is_staff and hijack_settings.ALLOW_STAFF_TO_HIJACKUSER:
+        if hijacked.is_staff and not hijack_settings.ALLOW_STAFF_TO_HIJACK_STAFF_USER:
             return False
         return True
 
@@ -89,7 +78,7 @@ def can_hijack(hijacker, hijacked):
 
 
 def get_can_hijack_function():
-    func_dotted_path = getattr(settings, 'CUSTOM_HIJACK_HANDLER', None)
+    func_dotted_path = hijack_settings.CUSTOM_HIJACK_HANDLER
     can_hijack_func = import_string(func_dotted_path) if func_dotted_path else can_hijack
 
     return can_hijack_func
@@ -121,11 +110,7 @@ def login_user(request, user):
     request.session['is_hijacked_user'] = True
     request.session['hijack_history'] = hijack_history
     request.session.modified = True
-    redirect_to = request.GET.get('next',
-                                  getattr(settings,
-                                          'HIJACK_LOGIN_REDIRECT_URL',
-                                          getattr(settings,
-                                                  'LOGIN_REDIRECT_URL', '/')))
+    redirect_to = request.GET.get('next', hijack_settings.HIJACK_LOGIN_REDIRECT_URL)
     return HttpResponseRedirect(resolve_url(redirect_to))
 
 

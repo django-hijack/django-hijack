@@ -1,18 +1,19 @@
 from django.core.exceptions import ImproperlyConfigured
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.sessions.models import Session
-from django.conf import settings
 from django.contrib.auth.admin import UserAdmin
 from django.core.urlresolvers import reverse
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.translation import ugettext as _
 
+from hijack import settings as hijack_settings
+
 
 class HijackUserAdminMixin(object):
     def hijack_field(self, obj):
-        hijack_methods = getattr(settings, 'ALLOWED_HIJACKING_USER_ATTRIBUTES',
-                                 ('user_id', ))
+        hijack_methods = hijack_settings.ALLOWED_HIJACKING_USER_ATTRIBUTES or ('user_id',)
 
         if 'user_id' in hijack_methods:
             hijack_url = reverse('login_with_id', args=(obj.pk, ))
@@ -43,7 +44,7 @@ class HijackUserAdmin(HijackUserAdminMixin, UserAdmin):
     search_fields = ('username', 'first_name', 'last_name', 'email', )
 
 # By default show a Hijack button in the admin panel for the User model.
-if getattr(settings, "SHOW_HIJACKUSER_IN_ADMIN", True):
+if hijack_settings.SHOW_HIJACKUSER_IN_ADMIN:
     default_user_model = 'auth.User'
     custom_user_model = getattr(settings, 'AUTH_USER_MODEL',
                                 default_user_model)
@@ -64,5 +65,5 @@ class SessionAdmin(admin.ModelAdmin):
     list_display = ['session_key', '_session_data', 'expire_date']
 
 
-if getattr(settings, "SHOW_SESSIONS_IN_ADMIN", False):
+if hijack_settings.SHOW_SESSIONS_IN_ADMIN:
     admin.site.register(Session, SessionAdmin)

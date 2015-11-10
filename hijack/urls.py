@@ -1,18 +1,19 @@
 from compat import patterns, url
-from django.conf import settings
+
+from hijack import settings as hijack_settings
+
 
 urlpatterns = patterns('hijack.views',
                        url(r'^release-hijack/$', 'release_hijack',
                            name='release_hijack'), )
 
-if getattr(settings, "HIJACK_NOTIFY_ADMIN", True):
+if hijack_settings.HIJACK_NOTIFY_ADMIN:
     urlpatterns += patterns('hijack.views',
                             url(r'^disable-hijack-warning/$',
                                 view='disable_hijack_warning',
                                 name='disable_hijack_warning', ), )
 
-hijacking_user_attributes = getattr(settings,
-                                    "ALLOWED_HIJACKING_USER_ATTRIBUTES", False)
+hijacking_user_attributes = hijack_settings.ALLOWED_HIJACKING_USER_ATTRIBUTES
 
 if not hijacking_user_attributes or 'email' in hijacking_user_attributes:
     urlpatterns += patterns('hijack.views',
