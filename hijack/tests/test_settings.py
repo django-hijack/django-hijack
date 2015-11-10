@@ -70,3 +70,7 @@ INTERNAL_APPS = ['hijack', 'hijack.tests.test_app', ]
 INSTALLED_APPS = EXTERNAL_APPS + INTERNAL_APPS
 
 SECRET_KEY = 'foobar'
+
+LANGUAGE_CODE = 'en-us'
+USE_I18N = True
+USE_L10N = True

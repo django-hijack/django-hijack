@@ -4,8 +4,9 @@ from django.contrib.sessions.models import Session
 from django.conf import settings
 from django.contrib.auth.admin import UserAdmin
 from django.core.urlresolvers import reverse
-
-from compat import format_html
+from django.template import Context
+from django.template.loader import get_template
+from django.utils.translation import ugettext as _
 
 
 class HijackUserAdminMixin(object):
@@ -24,11 +25,15 @@ class HijackUserAdminMixin(object):
                 "`ALLOWED_HIJACKING_USER_ATTRIBUTES` needs to be "
                 "properly defined")
 
-        return format_html(u'<a href="{}" class="button">Hijack {}</a>',
-                           hijack_url, obj)
+        button_template = get_template('hijack/admin_button.html')
+        button_context = Context({
+            'hijack_url': hijack_url,
+            'username': str(obj),
+        })
+        return button_template.render(button_context)
 
     hijack_field.allow_tags = True
-    hijack_field.short_description = 'Hijack User'
+    hijack_field.short_description = _('Hijack user')
 
 
 class HijackUserAdmin(HijackUserAdminMixin, UserAdmin):

@@ -69,7 +69,7 @@ class HijackTests(TestCase):
             (response.context['user'].username) in str(response.content))
 
         response = self.client.get('/hijack/release-hijack/', follow=True)
-        self.assertEqual(response.context['user'].username, 'Admin')
+        self.assertEqual(response.context['username'], 'Admin')
 
         response = self.client.get('/hijack/3/', follow=True)
         self.assertTrue(

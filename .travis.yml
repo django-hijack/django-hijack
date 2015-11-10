@@ -25,7 +25,9 @@ after_success:
 
 matrix:
     exclude:
-        - python: "3.*"
+        - python: "3.4"
+          env: DJANGO=django==1.4.*
+        - python: "3.5"
           env: DJANGO=django==1.4.*
         - python: "3.5"
           env: DJANGO=django==1.6.*
