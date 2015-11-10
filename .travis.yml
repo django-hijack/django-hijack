@@ -14,9 +14,13 @@ sudo: false
 install:
     - pip install -r requirements-test.txt
     - pip install $DJANGO
+    - pip install coveralls
 
 script:
-    - python runtests.py
+    coverage run --source=hijack runtests.py
+
+after_success:
+    coveralls
 
 matrix:
     exclude:
