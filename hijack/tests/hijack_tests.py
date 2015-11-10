@@ -97,7 +97,8 @@ class HijackTests(TestCase):
 
     def test_hijack_view_error(self):
         self.client.login(username='Admin', password='Admin pw')
-        self.assertRaises(self.client.get('/hijack/string/', follow=True))
+        response = self.client.get('/hijack/string/', follow=True)
+        self.assertEqual(response.status_code, 400)
 
     def test_hijack_helper_permission_denied(self):
         # release hijack before hijack
