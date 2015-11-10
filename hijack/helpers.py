@@ -63,8 +63,11 @@ def can_hijack(hijacker, hijacked):
     This can be disabled by enabling the ALLOW_STAFF_TO_HIJACK_STAFF_USER
     setting in the Django settings.
 
-    Staff users can never hijack superusers.
+    Staff users can never hijack superusers. Also, hijacked users must have is_active==True.
     """
+    if not hijacked.is_active:
+        return False
+
     if hijacked.is_superuser and not hijacker.is_superuser:
         return False
 

@@ -14,43 +14,43 @@ from hijack.templatetags.hijack_tags import can_hijack
 
 class HijackTests(TestCase):
     def setUp(self):
-        admin_user, _ = User.objects.get_or_create(pk=1,
+        self.admin_user, _ = User.objects.get_or_create(pk=1,
                                                    username='Admin',
                                                    email='admin@test.ch',
                                                    is_superuser=True,
                                                    is_staff=True, )
         if _:
-            admin_user.set_password('Admin pw')
-            admin_user.save()
-        admin_user2, _ = User.objects.get_or_create(pk=4,
+            self.admin_user.set_password('Admin pw')
+            self.admin_user.save()
+        self.admin_user2, _ = User.objects.get_or_create(pk=4,
                                                     username='Admin2',
                                                     email='admin2@test.ch',
                                                     is_superuser=True,
                                                     is_staff=True, )
         if _:
-            admin_user2.set_password('Admin2 pw')
-            admin_user2.save()
-        test1, _ = User.objects.get_or_create(pk=2,
+            self.admin_user2.set_password('Admin2 pw')
+            self.admin_user2.save()
+        self.test1, _ = User.objects.get_or_create(pk=2,
                                               username='Test1',
                                               email='user1@test.ch',
                                               is_staff=True)
         if _:
-            test1.set_password('Test1 pw')
-            test1.save()
-        test2, _ = User.objects.get_or_create(pk=3,
+            self.test1.set_password('Test1 pw')
+            self.test1.save()
+        self.test2, _ = User.objects.get_or_create(pk=3,
                                               username='Test2',
                                               email='user2@test.ch',
                                               is_staff=False)
         if _:
-            test2.set_password('Test2 pw')
-            test2.save()
-        test3, _ = User.objects.get_or_create(pk=5,
+            self.test2.set_password('Test2 pw')
+            self.test2.save()
+        self.test3, _ = User.objects.get_or_create(pk=5,
                                               username='Test3',
                                               email='user3@test.ch',
                                               is_staff=True, )
         if _:
-            test3.set_password('Test1 pw')
-            test3.save()
+            self.test3.set_password('Test1 pw')
+            self.test3.save()
 
         self.client = Client()
 
@@ -149,6 +149,14 @@ class HijackTests(TestCase):
         else:
             self.assertTrue(
                 'name="this_is_the_login_form"' in str(response.content))
+
+    def test_hijacking_inactive_user(self):
+        self.client.login(username='Admin', password='Admin pw')
+        self.test1.is_active = False
+        self.test1.save()
+        response = self.client.get('/hijack/%d/' % self.test1.id, follow=True)
+        self.assertEqual(response.status_code, 403)
+        self.client.logout()
 
     def test_staff_to_staff_hijacking_without_proper_setting(self):
         self.client.login(username='Test1', password='Test1 pw')
