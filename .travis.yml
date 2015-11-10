@@ -28,7 +28,9 @@ matrix:
         - python: "3.*"
           env: DJANGO=django==1.4.*
         - python: "3.5"
-          env: DJANGO=django<=1.8.*
+          env: DJANGO=django==1.6.*
+        - python: "3.5"
+          env: DJANGO=django==1.7.*
     allow_failures:
         - env: DJANGO=django==1.4.*
         - env: DJANGO=django==1.6.*
