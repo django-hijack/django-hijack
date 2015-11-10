@@ -116,7 +116,7 @@ def login_user(request, user):
     last_login = user.last_login  # Save last_login to reset it after hijack login
     login(request, user)
     user.last_login = last_login
-    user.save(update_fields=['last_login'])
+    user.save()
     post_superuser_login.send(sender=None, user_id=user.pk)
     request.session['is_hijacked_user'] = True
     request.session['hijack_history'] = hijack_history
