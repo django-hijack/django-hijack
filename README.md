@@ -21,7 +21,7 @@
     - [Notify user when they were hijacked](#notify-users-when-they-were-hijacked)
     - [Allow staff to hijack](#allow-staff-members-to-hijack-other-users)
     - [Custom hijack function](#custom-hijack-function)
-    - [Django 1.4 to 1.8 compatibility with django-compat](#django-14---18-compatibility-with-django-compat)
+    - [Django 1.7 to 1.8 compatibility with django-compat](#django-14---18-compatibility-with-django-compat)
     - [Custom user models](#support-for-custom-user-models)
 - [Settings](#settings)
 - [Signals](#signals)
@@ -171,9 +171,10 @@ Then you can define your conditions to permit a user to hijack another one:
         return False
 
 
-### Django 1.4 - 1.8 compatibility with [django-compat](https://github.com/arteria/django-compat)
+### Django 1.7 - 1.8 compatibility with [django-compat](https://github.com/arteria/django-compat)
 
-All critical imports are carried out with the [compat library](https://github.com/arteria/django-compat) that gives the compatibility for django 1.4 to 1.8
+All critical imports are carried out with the [compat library](https://github.com/arteria/django-compat) that ensures compatibility with Django 1.7 and 1.8.
+The app is also tested with Django 1.4 and 1.6. However, those tests are allowed to fail and full compatibility is not guaranteed.
 
 ### Support for custom user models
 
