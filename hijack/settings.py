@@ -6,7 +6,8 @@ SHOW_HIJACKUSER_IN_ADMIN = getattr(settings, 'SHOW_HIJACKUSER_IN_ADMIN', True)
 SHOW_SESSIONS_IN_ADMIN = getattr(settings, 'SHOW_SESSIONS_IN_ADMIN', False)
 HIJACK_NOTIFY_ADMIN = getattr(settings, "HIJACK_NOTIFY_ADMIN", True)
 
-ALLOWED_HIJACKING_USER_ATTRIBUTES = getattr(settings, 'ALLOWED_HIJACKING_USER_ATTRIBUTES', ())
+ALLOWED_HIJACKING_USER_ATTRIBUTES = getattr(settings, 'ALLOWED_HIJACKING_USER_ATTRIBUTES',
+                                            ('user_id', 'email', 'username'))
 
 ALLOW_STAFF_TO_HIJACKUSER = getattr(settings, "ALLOW_STAFF_TO_HIJACKUSER", False)
 ALLOW_STAFF_TO_HIJACK_STAFF_USER = getattr(settings, "ALLOW_STAFF_TO_HIJACK_STAFF_USER", False)

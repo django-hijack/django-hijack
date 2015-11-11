@@ -303,3 +303,48 @@ class HijackTests(TestCase):
 @override_settings(CUSTOM_HIJACK_HANDLER='hijack.tests.test_app.custom_hijack.can_hijack_default')
 class DefaultCustomHijackTests(HijackTests):
     pass
+
+if VERSION >= (1, 7):
+    from django.core.checks import Error
+    from hijack import checks
+    from hijack.apps import HijackConfig
+
+
+    class ChecksTests(TestCase):
+
+        def test_check_allowed_hijacking_user_attributes(self):
+            errors = checks.check_allowed_hijacking_user_attributes(HijackConfig)
+            self.assertFalse(errors)
+
+            with SettingsOverride(hijack_settings, ALLOWED_HIJACKING_USER_ATTRIBUTES=('username',)):
+                errors = checks.check_allowed_hijacking_user_attributes(HijackConfig)
+                self.assertFalse(errors)
+
+            with SettingsOverride(hijack_settings, ALLOWED_HIJACKING_USER_ATTRIBUTES=('username', 'email')):
+                errors = checks.check_allowed_hijacking_user_attributes(HijackConfig)
+                self.assertFalse(errors)
+
+            with SettingsOverride(hijack_settings, ALLOWED_HIJACKING_USER_ATTRIBUTES=('other',)):
+                errors = checks.check_allowed_hijacking_user_attributes(HijackConfig)
+                expected_errors = [
+                    Error(
+                        'Setting ALLOWED_HIJACKING_USER_ATTRIBUTES needs to be '
+                        'subset of (user_id, email, username)',
+                        hint=None,
+                        obj=hijack_settings.ALLOWED_HIJACKING_USER_ATTRIBUTES,
+                        id='hijack.E001',
+                    )
+                ]
+                self.assertEqual(errors, expected_errors)
+
+        def test_check_show_hijackuser_in_admin_with_custom_user_model(self):
+            errors = checks.check_show_hijackuser_in_admin_with_custom_user_model(HijackConfig)
+            self.assertFalse(errors)
+
+            with SettingsOverride(hijack_settings, SHOW_HIJACKUSER_IN_ADMIN=False):
+                errors = checks.check_show_hijackuser_in_admin_with_custom_user_model(HijackConfig)
+                self.assertFalse(errors)
+
+            with SettingsOverride(hijack_settings, SHOW_HIJACKUSER_IN_ADMIN=True):
+                errors = checks.check_show_hijackuser_in_admin_with_custom_user_model(HijackConfig)
+                self.assertFalse(errors)

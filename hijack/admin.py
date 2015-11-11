@@ -1,5 +1,5 @@
-from django.core.exceptions import ImproperlyConfigured
-from django.conf import settings
+# -*- coding: utf-8 -*-
+from compat import get_user_model
 from django.contrib import admin
 from django.contrib.sessions.models import Session
 from django.contrib.auth.admin import UserAdmin
@@ -13,18 +13,14 @@ from hijack import settings as hijack_settings
 
 class HijackUserAdminMixin(object):
     def hijack_field(self, obj):
-        hijack_methods = hijack_settings.ALLOWED_HIJACKING_USER_ATTRIBUTES or ('user_id',)
+        hijack_attributes = hijack_settings.ALLOWED_HIJACKING_USER_ATTRIBUTES
 
-        if 'user_id' in hijack_methods:
+        if 'user_id' in hijack_attributes:
             hijack_url = reverse('login_with_id', args=(obj.pk, ))
-        elif 'email' in hijack_methods:
+        elif 'email' in hijack_attributes:
             hijack_url = reverse('login_with_email', args=(obj.email, ))
-        elif 'username':
-            hijack_url = reverse('login_with_username', args=(obj.username, ))
         else:
-            raise ImproperlyConfigured(
-                "`ALLOWED_HIJACKING_USER_ATTRIBUTES` needs to be "
-                "properly defined")
+            hijack_url = reverse('login_with_username', args=(obj.username, ))
 
         button_template = get_template('hijack/admin_button.html')
         button_context = Context({
@@ -45,17 +41,9 @@ class HijackUserAdmin(HijackUserAdminMixin, UserAdmin):
 
 # By default show a Hijack button in the admin panel for the User model.
 if hijack_settings.SHOW_HIJACKUSER_IN_ADMIN:
-    default_user_model = 'auth.User'
-    custom_user_model = getattr(settings, 'AUTH_USER_MODEL',
-                                default_user_model)
-    if custom_user_model != default_user_model:
-        raise ImproperlyConfigured(
-            "`SHOW_HIJACKUSER_IN_ADMIN` does not work with a custom user"
-            " model. Instead, mix in the `HijackUserAdminMixin` yourself")
-    from django.contrib.auth.models import User
-
-    admin.site.unregister(User)
-    admin.site.register(User, HijackUserAdmin)
+    UserModel = get_user_model()
+    admin.site.unregister(UserModel)
+    admin.site.register(UserModel, HijackUserAdmin)
 
 
 class SessionAdmin(admin.ModelAdmin):
