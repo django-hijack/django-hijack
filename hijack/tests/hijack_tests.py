@@ -338,13 +338,13 @@ if VERSION >= (1, 7):
                 self.assertEqual(errors, expected_errors)
 
         def test_check_show_hijackuser_in_admin_with_custom_user_model(self):
-            errors = checks.check_show_hijackuser_in_admin_with_custom_user_model(HijackConfig)
-            self.assertFalse(errors)
+            warnings = checks.check_show_hijackuser_in_admin_with_custom_user_model(HijackConfig)
+            self.assertFalse(warnings)
 
             with SettingsOverride(hijack_settings, SHOW_HIJACKUSER_IN_ADMIN=False):
-                errors = checks.check_show_hijackuser_in_admin_with_custom_user_model(HijackConfig)
-                self.assertFalse(errors)
+                warnings = checks.check_show_hijackuser_in_admin_with_custom_user_model(HijackConfig)
+                self.assertFalse(warnings)
 
             with SettingsOverride(hijack_settings, SHOW_HIJACKUSER_IN_ADMIN=True):
-                errors = checks.check_show_hijackuser_in_admin_with_custom_user_model(HijackConfig)
-                self.assertFalse(errors)
+                warnings = checks.check_show_hijackuser_in_admin_with_custom_user_model(HijackConfig)
+                self.assertFalse(warnings)
