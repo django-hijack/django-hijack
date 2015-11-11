@@ -19,6 +19,10 @@ if not hijacking_user_attributes or 'email' in hijacking_user_attributes:
                             url(r'^email/(?P<email>[^@]+@[^@]+\.[^@]+)/$',
                                 view='login_with_email',
                                 name='login_with_email', ), )
+    urlpatterns += patterns('hijack.views',
+                            url(r'^(?P<email>[^@]+@[^@]+\.[^@]+)/$',
+                                view='login_with_email',
+                                name='login_with_email', ), )
 if not hijacking_user_attributes or 'username' in hijacking_user_attributes:
     urlpatterns += patterns('hijack.views',
                             url(r'^username/(?P<username>.*)/$',
