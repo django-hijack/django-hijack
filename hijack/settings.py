@@ -18,3 +18,4 @@ REVERSE_HIJACK_LOGIN_REDIRECT_URL = getattr(settings, 'REVERSE_HIJACK_LOGIN_REDI
                                             getattr(settings, 'LOGIN_REDIRECT_URL', '/'))
 
 CUSTOM_HIJACK_HANDLER = getattr(settings, 'CUSTOM_HIJACK_HANDLER', None)
+HIJACK_DECORATOR = getattr(settings, 'HIJACK_DECORATOR', 'django.contrib.admin.views.decorators.staff_member_required')

@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.admin.sites import AdminSite
 
 from django.test import TestCase
+from django.test.utils import override_settings
 from django.test.client import Client
 
 from hijack import settings as hijack_settings
@@ -301,6 +302,18 @@ class HijackTests(TestCase):
         self.client.get('/hijack/%d/' % self.test1.pk, follow=True)
         self.client.logout()
         self.assertEqual(last_login, User.objects.get(pk=self.test1.pk).last_login)
+
+    def test_custom_decorator(self):
+        with SettingsOverride(hijack_settings,
+                              CUSTOM_HIJACK_HANDLER='hijack.tests.test_app.custom_hijack.can_hijack_yes',
+                              HIJACK_DECORATOR='django.contrib.auth.decorators.login_required'):
+            self.client.login(username='Test2', password='Test2 pw')
+            response = self.client.get('/hijack/1/', follow=True)
+            self.assertEqual(response.status_code, 200)
+            self.assertFalse('Log in' in str(response.content))
+            self.assertTrue('on behalf of Admin' in str(response.content))
+            self.client.get('/hijack/release-hijack/', follow=True)
+            self.client.logout()
 
 
 @override_settings(CUSTOM_HIJACK_HANDLER='hijack.tests.test_app.custom_hijack.can_hijack_default')
