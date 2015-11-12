@@ -9,6 +9,7 @@ env:
     - DJANGO=django==1.6.*
     - DJANGO=django==1.7.*
     - DJANGO=django==1.8.*
+    - DJANGO=django==1.9b1
 
 sudo: false
 

@@ -53,17 +53,20 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     'django.core.context_processors.request', )
 
-EXTERNAL_APPS = ['django.contrib.admin',
-                 'django.contrib.admindocs',
-                 'django.contrib.auth',
-                 'django.contrib.contenttypes',
-                 'django.contrib.messages',
-                 'django.contrib.sessions',
-                 'django.contrib.staticfiles',
-                 'django.contrib.sitemaps',
-                 'django.contrib.sites',
-                 'django_jasmine',
-                 'django_nose', ]
+EXTERNAL_APPS = [
+    'django.contrib.admin',
+    'django.contrib.admindocs',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.messages',
+    'django.contrib.sessions',
+    'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
+    'django.contrib.sites',
+    'django_jasmine',
+    'django_nose',
+    'compat',
+]
 
 INTERNAL_APPS = ['hijack', 'hijack.tests.test_app', ]
 
