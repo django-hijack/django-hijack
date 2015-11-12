@@ -21,4 +21,7 @@ class SettingsOverride(object):
 
     def __exit__(self, _type, value, traceback):
         for key, value in list(self.old.items()):
-            setattr(self.settings_module, key, value)
+            if value is not None:
+                setattr(self.settings_module, key, value)
+            else:
+                delattr(self.settings_module, key)

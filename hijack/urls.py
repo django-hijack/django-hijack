@@ -7,13 +7,13 @@ urlpatterns = patterns('hijack.views',
                        url(r'^release-hijack/$', 'release_hijack',
                            name='release_hijack'), )
 
-if hijack_settings.HIJACK_NOTIFY_ADMIN:
+if hijack_settings.HIJACK_DISPLAY_WARNING:
     urlpatterns += patterns('hijack.views',
                             url(r'^disable-hijack-warning/$',
                                 view='disable_hijack_warning',
                                 name='disable_hijack_warning', ), )
 
-hijacking_user_attributes = hijack_settings.ALLOWED_HIJACKING_USER_ATTRIBUTES
+hijacking_user_attributes = hijack_settings.HIJACK_URL_ALLOWED_ATTRIBUTES
 
 if 'email' in hijacking_user_attributes:
     urlpatterns += patterns('hijack.views',

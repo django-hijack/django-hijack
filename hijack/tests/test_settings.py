@@ -14,8 +14,8 @@ DATABASES = {
 
 #  LOGIN_REDIRECT_URL = 'hello'
 HIJACK_LOGIN_REDIRECT_URL = "/hello"
-REVERSE_HIJACK_LOGIN_REDIRECT_URL = '/admin/auth/user/'
-HIJACK_NOTIFY_ADMIN = True
+HIJACK_LOGOUT_REDIRECT_URL = '/admin/auth/user/'
+HIJACK_DISPLAY_WARNING = True
 
 ROOT_URLCONF = 'hijack.tests.urls'
 

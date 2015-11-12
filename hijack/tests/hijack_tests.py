@@ -1,9 +1,10 @@
 from six.moves.urllib.parse import unquote
 
 from django import VERSION
-from django.core.urlresolvers import reverse
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.admin.sites import AdminSite
+from django.core.urlresolvers import reverse
 
 from django.test import TestCase
 from django.test.utils import override_settings
@@ -103,11 +104,11 @@ class HijackTests(TestCase):
         # As staff user
         self.client.login(username='Test1', password='Test1 pw')
 
-        with SettingsOverride(hijack_settings, ALLOW_STAFF_TO_HIJACKUSER=False):
+        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=False):
             response = self.client.get('/hijack/1/', follow=True)
             self.assertEqual(response.status_code, 403)
 
-        with SettingsOverride(hijack_settings, ALLOW_STAFF_TO_HIJACKUSER=True):
+        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=True):
             # staff users should not be able to hijack admins
             response = self.client.get('/hijack/1/', follow=True)
             self.assertEqual(response.status_code, 403)
@@ -122,8 +123,8 @@ class HijackTests(TestCase):
             self.client.get('/hijack/release-hijack/', follow=True)
 
         with SettingsOverride(hijack_settings,
-                              ALLOW_STAFF_TO_HIJACKUSER=True,
-                              ALLOW_STAFF_TO_HIJACK_STAFF_USER=True):
+                              HIJACK_AUTHORIZE_STAFF=True,
+                              HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF=True):
             # staff users should not be able to hijack admins
             response = self.client.get('/hijack/1/', follow=True)
             self.assertEqual(response.status_code, 403)
@@ -156,21 +157,21 @@ class HijackTests(TestCase):
 
     def test_staff_to_staff_hijacking_without_proper_setting(self):
         self.client.login(username='Test1', password='Test1 pw')
-        with SettingsOverride(hijack_settings, ALLOW_STAFF_TO_HIJACKUSER=True):
+        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=True):
             response = self.client.get('/hijack/5/', follow=True)
             self.assertEqual(response.status_code, 403)
 
     def test_staff_to_staff_hijacking_with_proper_setting(self):
         self.client.login(username='Test1', password='Test1 pw')
-        with SettingsOverride(hijack_settings, ALLOW_STAFF_TO_HIJACKUSER=True,
-                           ALLOW_STAFF_TO_HIJACK_STAFF_USER=True):
+        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=True,
+                           HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF=True):
             response = self.client.get('/hijack/5/', follow=True)
             self.assertEqual(response.status_code, 200)
 
     def test_staff_to_admin_hijacking_never_allowed(self):
         # a staff user should never hijack an admin
         self.client.login(username='Test1', password='Test1 pw')
-        with SettingsOverride(hijack_settings, ALLOW_STAFF_TO_HIJACK_STAFF_USER=True):
+        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF=True):
             response = self.client.get('/hijack/1/', follow=True)
             self.assertEqual(response.status_code, 403)
 
@@ -204,7 +205,7 @@ class HijackTests(TestCase):
                     kwargs={'email': 'bob_too@bobsburgers.com'})))
 
     def test_hijack_always_yes(self):
-        with SettingsOverride(hijack_settings, CUSTOM_HIJACK_HANDLER='hijack.tests.test_app.custom_hijack.can_hijack_yes'):
+        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZATION_CHECK='hijack.tests.test_app.custom_hijack.can_hijack_yes'):
             # release hijack before hijack
             self.client.login(username='Admin', password='Admin pw')
             response = self.client.get('/hijack/release-hijack/', follow=True)
@@ -217,32 +218,32 @@ class HijackTests(TestCase):
             # check permision for hijack
             self.client.login(username='Test1', password='Test1 pw')
 
-            setattr(hijack_settings, 'ALLOW_STAFF_TO_HIJACKUSER', False)
-            delattr(hijack_settings, 'ALLOW_STAFF_TO_HIJACKUSER')
+            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', False)
+            delattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF')
             response = self.client.get('/hijack/1/', follow=True)
             self.assertEqual(response.status_code, 200)
 
-            setattr(hijack_settings, 'ALLOW_STAFF_TO_HIJACKUSER', False)
+            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', False)
             response = self.client.get('/hijack/1/', follow=True)
             self.assertEqual(response.status_code, 200)
 
             # staff users should not be able to hijack admins
-            setattr(hijack_settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
+            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', True)
             response = self.client.get('/hijack/1/', follow=True)
             self.assertEqual(response.status_code, 200)
 
             # normal users should be ok
-            setattr(hijack_settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
+            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', True)
             response = self.client.get('/hijack/3/', follow=True)
             self.assertEqual(response.status_code, 200)
 
             # other staff users should be ok
-            setattr(hijack_settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
+            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', True)
             response = self.client.get('/hijack/5/', follow=True)
             self.assertEqual(response.status_code, 200)
 
     def test_hijack_always_no(self):
-        with SettingsOverride(hijack_settings, CUSTOM_HIJACK_HANDLER='hijack.tests.test_app.custom_hijack.can_hijack_no'):
+        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZATION_CHECK='hijack.tests.test_app.custom_hijack.can_hijack_no'):
             # release hijack before hijack
             self.client.login(username='Admin', password='Admin pw')
             response = self.client.get('/hijack/release-hijack/', follow=True)
@@ -256,27 +257,27 @@ class HijackTests(TestCase):
             # check permision for hijack
             self.client.login(username='Test1', password='Test1 pw')
 
-            setattr(hijack_settings, 'ALLOW_STAFF_TO_HIJACKUSER', False)
-            delattr(hijack_settings, 'ALLOW_STAFF_TO_HIJACKUSER')
+            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', False)
+            delattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF')
             response = self.client.get('/hijack/1/', follow=True)
             self.assertEqual(response.status_code, 403)
 
-            setattr(hijack_settings, 'ALLOW_STAFF_TO_HIJACKUSER', False)
+            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', False)
             response = self.client.get('/hijack/1/', follow=True)
             self.assertEqual(response.status_code, 403)
 
             # staff users should not be able to hijack admins
-            setattr(hijack_settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
+            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', True)
             response = self.client.get('/hijack/1/', follow=True)
             self.assertEqual(response.status_code, 403)
 
             # normal users should be ok
-            setattr(hijack_settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
+            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', True)
             response = self.client.get('/hijack/3/', follow=True)
             self.assertEqual(response.status_code, 403)
 
             # other staff users should be ok
-            setattr(hijack_settings, 'ALLOW_STAFF_TO_HIJACKUSER', True)
+            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', True)
             response = self.client.get('/hijack/5/', follow=True)
             self.assertEqual(response.status_code, 403)
 
@@ -297,7 +298,7 @@ class HijackTests(TestCase):
 
     def test_custom_decorator(self):
         with SettingsOverride(hijack_settings,
-                              CUSTOM_HIJACK_HANDLER='hijack.tests.test_app.custom_hijack.can_hijack_yes',
+                              HIJACK_AUTHORIZATION_CHECK='hijack.tests.test_app.custom_hijack.can_hijack_yes',
                               HIJACK_DECORATOR='django.contrib.auth.decorators.login_required'):
             self.client.login(username='Test2', password='Test2 pw')
             response = self.client.get('/hijack/1/', follow=True)
@@ -324,51 +325,64 @@ class HijackTests(TestCase):
         self.client.logout()
 
 
-@override_settings(CUSTOM_HIJACK_HANDLER='hijack.tests.test_app.custom_hijack.can_hijack_default')
-class DefaultCustomHijackTests(HijackTests):
-    pass
+# @override_settings(HIJACK_AUTHORIZATION_CHECK='hijack.tests.test_app.custom_hijack.can_hijack_default')
+# class DefaultCustomHijackTests(HijackTests):
+#     pass
 
 if VERSION >= (1, 7):
-    from django.core.checks import Error
+    from django.core.checks import Error, Warning
     from hijack import checks
     from hijack.apps import HijackConfig
 
 
     class ChecksTests(TestCase):
 
-        def test_check_allowed_hijacking_user_attributes(self):
-            errors = checks.check_allowed_hijacking_user_attributes(HijackConfig)
+        def test_check_url_allowed_attributes(self):
+            errors = checks.check_url_allowed_attributes(HijackConfig)
             self.assertFalse(errors)
 
-            with SettingsOverride(hijack_settings, ALLOWED_HIJACKING_USER_ATTRIBUTES=('username',)):
-                errors = checks.check_allowed_hijacking_user_attributes(HijackConfig)
+            with SettingsOverride(hijack_settings, HIJACK_URL_ALLOWED_ATTRIBUTES=('username',)):
+                errors = checks.check_url_allowed_attributes(HijackConfig)
                 self.assertFalse(errors)
 
-            with SettingsOverride(hijack_settings, ALLOWED_HIJACKING_USER_ATTRIBUTES=('username', 'email')):
-                errors = checks.check_allowed_hijacking_user_attributes(HijackConfig)
+            with SettingsOverride(hijack_settings, HIJACK_URL_ALLOWED_ATTRIBUTES=('username', 'email')):
+                errors = checks.check_url_allowed_attributes(HijackConfig)
                 self.assertFalse(errors)
 
-            with SettingsOverride(hijack_settings, ALLOWED_HIJACKING_USER_ATTRIBUTES=('other',)):
-                errors = checks.check_allowed_hijacking_user_attributes(HijackConfig)
+            with SettingsOverride(hijack_settings, HIJACK_URL_ALLOWED_ATTRIBUTES=('other',)):
+                errors = checks.check_url_allowed_attributes(HijackConfig)
                 expected_errors = [
                     Error(
-                        'Setting ALLOWED_HIJACKING_USER_ATTRIBUTES needs to be '
+                        'Setting HIJACK_URL_ALLOWED_ATTRIBUTES needs to be '
                         'subset of (user_id, email, username)',
                         hint=None,
-                        obj=hijack_settings.ALLOWED_HIJACKING_USER_ATTRIBUTES,
+                        obj=hijack_settings.HIJACK_URL_ALLOWED_ATTRIBUTES,
                         id='hijack.E001',
                     )
                 ]
                 self.assertEqual(errors, expected_errors)
 
-        def test_check_show_hijackuser_in_admin_with_custom_user_model(self):
-            warnings = checks.check_show_hijackuser_in_admin_with_custom_user_model(HijackConfig)
+        def test_check_display_admin_button_with_custom_user_model(self):
+            warnings = checks.check_display_admin_button_with_custom_user_model(HijackConfig)
             self.assertFalse(warnings)
 
-            with SettingsOverride(hijack_settings, SHOW_HIJACKUSER_IN_ADMIN=False):
-                warnings = checks.check_show_hijackuser_in_admin_with_custom_user_model(HijackConfig)
+            with SettingsOverride(hijack_settings, HIJACK_DISPLAY_ADMIN_BUTTON=False):
+                warnings = checks.check_display_admin_button_with_custom_user_model(HijackConfig)
                 self.assertFalse(warnings)
 
-            with SettingsOverride(hijack_settings, SHOW_HIJACKUSER_IN_ADMIN=True):
-                warnings = checks.check_show_hijackuser_in_admin_with_custom_user_model(HijackConfig)
+            with SettingsOverride(hijack_settings, HIJACK_DISPLAY_ADMIN_BUTTON=True):
+                warnings = checks.check_display_admin_button_with_custom_user_model(HijackConfig)
                 self.assertFalse(warnings)
+
+        def test_check_legacy_settings(self):
+            with SettingsOverride(settings, SHOW_HIJACKUSER_IN_ADMIN=False):
+                warnings = checks.check_legacy_settings(HijackConfig)
+                expected_warnings = [
+                    Warning(
+                        'Deprecation warning: Setting "SHOW_HIJACKUSER_IN_ADMIN" has been renamed to "HIJACK_DISPLAY_ADMIN_BUTTON"',
+                        hint=None,
+                        obj=None,
+                        id='hijack.W002'
+                    )
+                ]
+                self.assertEqual(warnings, expected_warnings)

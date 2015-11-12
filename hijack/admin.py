@@ -13,7 +13,7 @@ from hijack import settings as hijack_settings
 
 class HijackUserAdminMixin(object):
     def hijack_field(self, obj):
-        hijack_attributes = hijack_settings.ALLOWED_HIJACKING_USER_ATTRIBUTES
+        hijack_attributes = hijack_settings.HIJACK_URL_ALLOWED_ATTRIBUTES
 
         if 'user_id' in hijack_attributes:
             hijack_url = reverse('login_with_id', args=(obj.pk, ))
@@ -41,7 +41,7 @@ class HijackUserAdmin(HijackUserAdminMixin, UserAdmin):
     search_fields = ('username', 'first_name', 'last_name', 'email', )
 
 # By default show a Hijack button in the admin panel for the User model.
-if hijack_settings.SHOW_HIJACKUSER_IN_ADMIN:
+if hijack_settings.HIJACK_DISPLAY_ADMIN_BUTTON:
     UserModel = get_user_model()
     admin.site.unregister(UserModel)
     admin.site.register(UserModel, HijackUserAdmin)

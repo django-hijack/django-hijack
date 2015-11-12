@@ -1,23 +1,67 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
 
+SETTINGS = (
+    {
+        'name': 'HIJACK_DISPLAY_ADMIN_BUTTON',
+        'default': True,
+        'legacy_name': 'SHOW_HIJACKUSER_IN_ADMIN',
+    },
+    {
+        'name': 'HIJACK_DISPLAY_WARNING',
+        'default': True,
+        'legacy_name': 'HIJACK_NOTIFY_ADMIN',
+    },
+    {
+        'name': 'HIJACK_URL_ALLOWED_ATTRIBUTES',
+        'default': ('user_id', 'email', 'username'),
+        'legacy_name': 'ALLOWED_HIJACKING_USER_ATTRIBUTES',
+    },
+    {
+        'name': 'HIJACK_AUTHORIZE_STAFF',
+        'default': False,
+        'legacy_name': 'ALLOW_STAFF_TO_HIJACKUSER',
+    },
+    {
+        'name': 'HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF',
+        'default': False,
+        'legacy_name': 'ALLOW_STAFF_TO_HIJACK_STAFF_USER',
+    },
+    {
+        'name': 'HIJACK_LOGIN_REDIRECT_URL',
+        'default': getattr(settings, 'LOGIN_REDIRECT_URL', '/'),
+        'legacy_name': None,
+    },
+    {
+        'name': 'HIJACK_LOGOUT_REDIRECT_URL',
+        'default': getattr(settings, 'LOGIN_REDIRECT_URL', '/'),
+        'legacy_name': 'REVERSE_HIJACK_LOGIN_REDIRECT_URL',
+    },
+    {
+        'name': 'HIJACK_AUTHORIZATION_CHECK',
+        'default': 'hijack.helpers.is_authorized',
+        'legacy_name': 'CUSTOM_HIJACK_HANDLER',
+    },
+    {
+        'name': 'HIJACK_DECORATOR',
+        'default': 'django.contrib.admin.views.decorators.staff_member_required',
+        'legacy_name': None,
+    },
+    {
+        'name': 'HIJACK_USE_BOOTSTRAP',
+        'default': False,
+        'legacy_name': None,
+    },
+)
 
-SHOW_HIJACKUSER_IN_ADMIN = getattr(settings, 'SHOW_HIJACKUSER_IN_ADMIN', True)
+for setting in SETTINGS:
+    if setting['legacy_name']:
+        default = getattr(settings, setting['legacy_name'], setting['default'])
+    else:
+        default = setting['default']
+    value = getattr(settings, setting['name'], default)
+    globals()[setting['name']] = value
+
+
+# Other settings
 SHOW_SESSIONS_IN_ADMIN = getattr(settings, 'SHOW_SESSIONS_IN_ADMIN', False)
-HIJACK_NOTIFY_ADMIN = getattr(settings, "HIJACK_NOTIFY_ADMIN", True)
-
-ALLOWED_HIJACKING_USER_ATTRIBUTES = getattr(settings, 'ALLOWED_HIJACKING_USER_ATTRIBUTES',
-                                            ('user_id', 'email', 'username'))
-
-ALLOW_STAFF_TO_HIJACKUSER = getattr(settings, "ALLOW_STAFF_TO_HIJACKUSER", False)
-ALLOW_STAFF_TO_HIJACK_STAFF_USER = getattr(settings, "ALLOW_STAFF_TO_HIJACK_STAFF_USER", False)
-
-HIJACK_LOGIN_REDIRECT_URL = getattr(settings, 'HIJACK_LOGIN_REDIRECT_URL',
-                                    getattr(settings, 'LOGIN_REDIRECT_URL', '/'))
-REVERSE_HIJACK_LOGIN_REDIRECT_URL = getattr(settings, 'REVERSE_HIJACK_LOGIN_REDIRECT_URL',
-                                            getattr(settings, 'LOGIN_REDIRECT_URL', '/'))
-
-CUSTOM_HIJACK_HANDLER = getattr(settings, 'CUSTOM_HIJACK_HANDLER', None)
-HIJACK_DECORATOR = getattr(settings, 'HIJACK_DECORATOR', 'django.contrib.admin.views.decorators.staff_member_required')
-
-HIJACK_USE_BOOTSTRAP  = getattr(settings, 'HIJACK_USE_BOOTSTRAP', False)

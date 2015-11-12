@@ -45,19 +45,19 @@ def release_hijack(request):
         except KeyError:
             pass
     request.session.modified = True
-    return redirect_to_next(request, default_url=hijack_settings.REVERSE_HIJACK_LOGIN_REDIRECT_URL)
+    return redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGOUT_REDIRECT_URL)
 
 
-def can_hijack(hijacker, hijacked):
+def is_authorized(hijacker, hijacked):
     """Checks if the user has the correct permission to Hijack another user.
 
     By default only superusers are allowed to hijack.
 
     An exception is made to allow staff members to hijack when
-    ALLOW_STAFF_TO_HIJACKUSER is enabled in the Django settings.
+    HIJACK_AUTHORIZE_STAFF is enabled in the Django settings.
 
     By default it prevents staff users from hijacking other staff users.
-    This can be disabled by enabling the ALLOW_STAFF_TO_HIJACK_STAFF_USER
+    This can be disabled by enabling the HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF
     setting in the Django settings.
 
     Staff users can never hijack superusers. Also, hijacked users must have is_active==True.
@@ -71,26 +71,18 @@ def can_hijack(hijacker, hijacked):
     if hijacker.is_superuser:
         return True
 
-    if hijacker.is_staff and hijack_settings.ALLOW_STAFF_TO_HIJACKUSER:
-        if hijacked.is_staff and not hijack_settings.ALLOW_STAFF_TO_HIJACK_STAFF_USER:
+    if hijacker.is_staff and hijack_settings.HIJACK_AUTHORIZE_STAFF:
+        if hijacked.is_staff and not hijack_settings.HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF:
             return False
         return True
 
     return False
 
 
-def get_can_hijack_function():
-    func_dotted_path = hijack_settings.CUSTOM_HIJACK_HANDLER
-    can_hijack_func = import_string(func_dotted_path) if func_dotted_path else can_hijack
-
-    return can_hijack_func
-
-
-def check_hijack_permission(request, user):
-    can_hijack_func = get_can_hijack_function()
-
-    can_hijack_ret = can_hijack_func(request.user, user)
-    if not can_hijack_ret:
+def check_hijack_authorization(request, user):
+    check_authorization = import_string(hijack_settings.HIJACK_AUTHORIZATION_CHECK)
+    is_authorized = check_authorization(request.user, user)
+    if not is_authorized:
         raise PermissionDenied
 
 
@@ -100,7 +92,7 @@ def login_user(request, user):
     if request.session.get('hijack_history'):
         hijack_history = request.session['hijack_history'] + hijack_history
 
-    check_hijack_permission(request, user)
+    check_hijack_authorization(request, user)
 
     backend = get_used_backend(request)
     user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)

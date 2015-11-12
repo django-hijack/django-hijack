@@ -7,18 +7,51 @@ from django.contrib.admin.views.decorators import staff_member_required
 from compat import import_string
 from hijack import settings as hijack_settings
 
-def check_allowed_hijacking_user_attributes(app_configs, **kwargs):
+
+def check_display_admin_button_with_custom_user_model(app_configs, **kwargs):
+    warnings = []
+    if hijack_settings.HIJACK_DISPLAY_ADMIN_BUTTON \
+            and settings.AUTH_USER_MODEL != default_auth_user_model:
+        warnings.append(
+            Warning(
+                'Setting HIJACK_DISPLAY_ADMIN_BUTTON, which is True by default, '
+                'does not work with a custom user model. '
+                'Mix HijackUserAdminMixin into your custom UserAdmin or set HIJACK_DISPLAY_ADMIN_BUTTON to False.',
+                hint=None,
+                obj=settings.AUTH_USER_MODEL,
+                id='hijack.W001',
+            )
+        )
+    return warnings
+
+def check_legacy_settings(app_configs, **kwargs):
+    warnings = []
+    for setting in hijack_settings.SETTINGS:
+        legacy_name = setting['legacy_name']
+        if legacy_name and hasattr(settings, legacy_name):
+            warnings.append(
+                Warning(
+                    'Deprecation warning: Setting "%s" has been renamed to "%s"'
+                    % (legacy_name, setting['name']),
+                    hint=None,
+                    obj=None,
+                    id='hijack.W002',
+                )
+            )
+    return warnings
+
+def check_url_allowed_attributes(app_configs, **kwargs):
     errors = []
     required_attributes = [
         'user_id',
         'email',
         'username',
     ]
-    set_attributes = hijack_settings.ALLOWED_HIJACKING_USER_ATTRIBUTES
+    set_attributes = hijack_settings.HIJACK_URL_ALLOWED_ATTRIBUTES
     if not any(attribute in set_attributes for attribute in required_attributes):
         errors.append(
             Error(
-                'Setting ALLOWED_HIJACKING_USER_ATTRIBUTES needs to be subset of (%s)'
+                'Setting HIJACK_URL_ALLOWED_ATTRIBUTES needs to be subset of (%s)'
                     % ', '.join(required_attributes),
                 hint=None,
                 obj=set_attributes,
@@ -27,32 +60,16 @@ def check_allowed_hijacking_user_attributes(app_configs, **kwargs):
         )
     return errors
 
-def check_show_hijackuser_in_admin_with_custom_user_model(app_configs, **kwargs):
-    warnings = []
-    if hijack_settings.SHOW_HIJACKUSER_IN_ADMIN \
-            and settings.AUTH_USER_MODEL != default_auth_user_model:
-        warnings.append(
-            Warning(
-                'Setting SHOW_HIJACKUSER_IN_ADMIN, which is True by default, '
-                'does not work with a custom user model. '
-                'Mix HijackUserAdminMixin into your custom UserAdmin or set SHOW_HIJACKUSER_IN_ADMIN to False.',
-                hint=None,
-                obj=settings.AUTH_USER_MODEL,
-                id='hijack.W001',
-            )
-        )
-    return warnings
-
-def check_custom_hijack_handler_importable(app_configs, **kwargs):
+def check_custom_authorization_check_importable(app_configs, **kwargs):
     errors = []
-    handler = hijack_settings.CUSTOM_HIJACK_HANDLER
+    handler = hijack_settings.HIJACK_AUTHORIZATION_CHECK
     try:
         if handler != staff_member_required:
             import_string(handler)
     except ImportError:
         errors.append(
             Error(
-                'Setting CUSTOM_HIJACK_HANDLER cannot be imported',
+                'Setting HIJACK_AUTHORIZATION_CHECK cannot be imported',
                 hint=None,
                 obj=handler,
                 id='hijack.E002',
@@ -79,9 +96,10 @@ def check_hijack_decorator_importable(app_configs, **kwargs):
 
 def register_checks():
     for check in [
-        check_allowed_hijacking_user_attributes,
-        check_show_hijackuser_in_admin_with_custom_user_model,
-        check_custom_hijack_handler_importable,
+        check_display_admin_button_with_custom_user_model,
+        check_legacy_settings,
+        check_url_allowed_attributes,
+        check_custom_authorization_check_importable,
         check_hijack_decorator_importable,
     ]:
         register(check)
