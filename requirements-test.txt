@@ -8,5 +8,5 @@ fabric
 factory_boy
 mock
 selenium
-django-compat
+#django-compat
 six
