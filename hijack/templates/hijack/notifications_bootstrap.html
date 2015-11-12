@@ -1,0 +1,8 @@
+{% load url from compat %}
+{% load i18n %}
+
+<div id="hijacked-warning" class="alert hijacked-warning hijacked-warning-boostrap" role="alert">
+    {% blocktrans with user=request.user%}You are currently working on behalf of {{ user }}.{% endblocktrans %}
+    <a href="{% url 'release_hijack' %}" type=button" class="btn btn-default btn-sm django-hijack-button-bootstrap">{% blocktrans with user=request.user %}release {{ user }}{% endblocktrans %}</a>
+    <a href="{% url 'disable_hijack_warning' %}?next={{ request.path }}" type="button" class="close" data-dismiss="alert">×</a>
+</div>

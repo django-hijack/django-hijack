@@ -11,13 +11,17 @@ register = template.Library()
 
 @register.filter
 def hijackNotification(request):
+    if hijack_settings.HIJACK_USE_BOOTSTRAP:
+        template_name = 'hijack/notifications_bootstrap.html'
+    else:
+        template_name = 'hijack/notifications.html'
     ans = ''
     if (hijack_settings.HIJACK_NOTIFY_ADMIN and
             request and
             request.session.get('is_hijacked_user', False) and
             request.session.get('display_hijack_warning', False)
         ):
-        ans = render_to_string('hijack/notifications.html', {},
+        ans = render_to_string(template_name, {},
                                context_instance=RequestContext(request))
     return mark_safe(ans)
 

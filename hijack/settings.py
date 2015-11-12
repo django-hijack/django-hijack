@@ -19,3 +19,5 @@ REVERSE_HIJACK_LOGIN_REDIRECT_URL = getattr(settings, 'REVERSE_HIJACK_LOGIN_REDI
 
 CUSTOM_HIJACK_HANDLER = getattr(settings, 'CUSTOM_HIJACK_HANDLER', None)
 HIJACK_DECORATOR = getattr(settings, 'HIJACK_DECORATOR', 'django.contrib.admin.views.decorators.staff_member_required')
+
+HIJACK_USE_BOOTSTRAP  = getattr(settings, 'HIJACK_USE_BOOTSTRAP', False)

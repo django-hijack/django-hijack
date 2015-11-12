@@ -1,8 +1,8 @@
 {% load url from compat %}
 {% load i18n %}
 
-<div id="hijacked-warning" >
+<div id="hijacked-warning" class="hijacked-warning hijacked-warning-default">
     <span style="padding-top: 4px; float: left;"><b>{% blocktrans with user=request.user%}You are currently working on behalf of {{ user }}.{% endblocktrans %}</b></span>
-    <span style="float: right; margin-right: 15px;"><a href="{% url 'release_hijack' %}" class="django-hijack-button">{% blocktrans with user=request.user %}release {{ user }}{% endblocktrans %}</a>
-    <a href="{% url 'disable_hijack_warning' %}?next={{ request.path }}" class="django-hijack-button">{% trans "hide" %}</a></span>
+    <span style="float: right; margin-right: 15px;"><a href="{% url 'release_hijack' %}" class="django-hijack-button-default">{% blocktrans with user=request.user %}release {{ user }}{% endblocktrans %}</a>
+    <a href="{% url 'disable_hijack_warning' %}?next={{ request.path }}" class="django-hijack-button-default">{% trans "hide" %}</a></span>
 </div>
