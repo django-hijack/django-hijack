@@ -35,10 +35,12 @@ def release_hijack(request):
     if hijack_history:
         request.session['hijack_history'] = hijack_history
         request.session['is_hijacked_user'] = True
+        request.session['display_hijack_warning'] = True
     else:
         try:
             del request.session['hijack_history']
             del request.session['is_hijacked_user']
+            del request.session['display_hijack_warning']
         except KeyError:
             pass
     request.session.modified = True
@@ -107,8 +109,9 @@ def login_user(request, user):
     user.last_login = last_login
     user.save()
     post_superuser_login.send(sender=None, user_id=user.pk)
-    request.session['is_hijacked_user'] = True
     request.session['hijack_history'] = hijack_history
+    request.session['is_hijacked_user'] = True
+    request.session['display_hijack_warning'] = True
     request.session.modified = True
     redirect_to = request.GET.get('next', hijack_settings.HIJACK_LOGIN_REDIRECT_URL)
     return HttpResponseRedirect(resolve_url(redirect_to))

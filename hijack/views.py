@@ -42,5 +42,5 @@ def release_hijack(request):
 
 @login_required
 def disable_hijack_warning(request):
-    request.session['is_hijacked_user'] = False
+    request.session['display_hijack_warning'] = False
     return HttpResponseRedirect(resolve_url(request.GET.get('next', '/')))

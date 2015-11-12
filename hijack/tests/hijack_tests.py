@@ -76,14 +76,6 @@ class HijackTests(TestCase):
         self.assertTrue(
             'on behalf of %s' %
             (response.context['user'].username) in str(response.content))
-
-        response = self.client.get(
-            '/hijack/disable-hijack-warning/?next=/hello',
-            follow=True)
-        self.assertFalse(
-            'on behalf of %s' %
-            (response.context['user'].username) in str(response.content))
-
         self.client.logout()
 
     def test_hijack_email(self):
@@ -314,6 +306,22 @@ class HijackTests(TestCase):
             self.assertTrue('on behalf of Admin' in str(response.content))
             self.client.get('/hijack/release-hijack/', follow=True)
             self.client.logout()
+
+    def test_disable_hijack_warning(self):
+        self.client.login(username='Admin', password='Admin pw')
+        response = self.client.get('/hijack/2/', follow=True)
+        self.assertTrue('on behalf of Test1' in str(response.content))
+        self.assertTrue(self.client.session['is_hijacked_user'])
+        self.assertTrue(self.client.session['display_hijack_warning'])
+
+        response = self.client.get('/hijack/disable-hijack-warning/?next=/hello', follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse('on behalf of Test1' in str(response.content))
+        self.assertTrue(self.client.session['is_hijacked_user'])
+        self.assertFalse(self.client.session['display_hijack_warning'])
+
+        self.client.get('/hijack/release-hijack/')
+        self.client.logout()
 
 
 @override_settings(CUSTOM_HIJACK_HANDLER='hijack.tests.test_app.custom_hijack.can_hijack_default')
