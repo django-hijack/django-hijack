@@ -1,9 +1,10 @@
-from django.http import HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.signals import user_logged_out
 from django.contrib.auth import login, load_backend, BACKEND_SESSION_KEY
 from django.dispatch import receiver
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.utils.http import is_safe_url
 
 from compat import get_user_model, import_string
 from compat import resolve_url
@@ -44,8 +45,7 @@ def release_hijack(request):
         except KeyError:
             pass
     request.session.modified = True
-    redirect_to = request.GET.get('next', hijack_settings.REVERSE_HIJACK_LOGIN_REDIRECT_URL)
-    return HttpResponseRedirect(resolve_url(redirect_to))
+    return redirect_to_next(request, default_url=hijack_settings.REVERSE_HIJACK_LOGIN_REDIRECT_URL)
 
 
 def can_hijack(hijacker, hijacked):
@@ -113,8 +113,7 @@ def login_user(request, user):
     request.session['is_hijacked_user'] = True
     request.session['display_hijack_warning'] = True
     request.session.modified = True
-    redirect_to = request.GET.get('next', hijack_settings.HIJACK_LOGIN_REDIRECT_URL)
-    return HttpResponseRedirect(resolve_url(redirect_to))
+    return redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGIN_REDIRECT_URL)
 
 
 @receiver(user_logged_out)
@@ -123,3 +122,9 @@ def logout_user(sender, **kwargs):
     user = kwargs['user']
     if hasattr(user, 'id'):
         post_superuser_logout.send(sender=None, user_id=user.pk)
+
+def redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGIN_REDIRECT_URL):
+    redirect_to = request.GET.get('next', '')
+    if not is_safe_url(redirect_to):
+        redirect_to = default_url
+    return HttpResponseRedirect(resolve_url(redirect_to))
