@@ -12,10 +12,9 @@ DATABASES = {
                 'NAME': ':memory:', }
 }
 
-#  LOGIN_REDIRECT_URL = 'hello'
-HIJACK_LOGIN_REDIRECT_URL = "/hello"
-HIJACK_LOGOUT_REDIRECT_URL = '/admin/auth/user/'
-HIJACK_DISPLAY_WARNING = True
+LOGIN_REDIRECT_URL = '/hello'
+HIJACK_LOGIN_REDIRECT_URL = '/hello'
+HIJACK_LOGOUT_REDIRECT_URL = '/hello'
 
 ROOT_URLCONF = 'hijack.tests.urls'
 

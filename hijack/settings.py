@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.conf import settings
+from django.conf import settings as django_settings
 
 SETTINGS = (
     {
@@ -29,12 +29,12 @@ SETTINGS = (
     },
     {
         'name': 'HIJACK_LOGIN_REDIRECT_URL',
-        'default': getattr(settings, 'LOGIN_REDIRECT_URL', '/'),
+        'default': getattr(django_settings, 'LOGIN_REDIRECT_URL', '/'),
         'legacy_name': None,
     },
     {
         'name': 'HIJACK_LOGOUT_REDIRECT_URL',
-        'default': getattr(settings, 'LOGIN_REDIRECT_URL', '/'),
+        'default': getattr(django_settings, 'LOGIN_REDIRECT_URL', '/'),
         'legacy_name': 'REVERSE_HIJACK_LOGIN_REDIRECT_URL',
     },
     {
@@ -56,12 +56,12 @@ SETTINGS = (
 
 for setting in SETTINGS:
     if setting['legacy_name']:
-        default = getattr(settings, setting['legacy_name'], setting['default'])
+        default = getattr(django_settings, setting['legacy_name'], setting['default'])
     else:
         default = setting['default']
-    value = getattr(settings, setting['name'], default)
+    value = getattr(django_settings, setting['name'], default)
     globals()[setting['name']] = value
 
 
 # Other settings
-SHOW_SESSIONS_IN_ADMIN = getattr(settings, 'SHOW_SESSIONS_IN_ADMIN', False)
+SHOW_SESSIONS_IN_ADMIN = getattr(django_settings, 'SHOW_SESSIONS_IN_ADMIN', False)

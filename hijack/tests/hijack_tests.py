@@ -1,335 +1,239 @@
-from six.moves.urllib.parse import unquote
+import sys
 
-from django import VERSION
+import django
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.contrib.admin.sites import AdminSite
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.test import TestCase, Client
 
-from django.test import TestCase
-from django.test.utils import override_settings
-from django.test.client import Client
-
+from hijack.admin import HijackUserAdmin
+from hijack.helpers import is_authorized
 from hijack import settings as hijack_settings
 from hijack.tests.utils import SettingsOverride
-from hijack.templatetags.hijack_tags import can_hijack
 
 class HijackTests(TestCase):
+
     def setUp(self):
-        self.admin_user, _ = User.objects.get_or_create(pk=1,
-                                                   username='Admin',
-                                                   email='admin@test.ch',
-                                                   is_superuser=True,
-                                                   is_staff=True, )
-        if _:
-            self.admin_user.set_password('Admin pw')
-            self.admin_user.save()
-        self.admin_user2, _ = User.objects.get_or_create(pk=4,
-                                                    username='Admin2',
-                                                    email='admin2@test.ch',
-                                                    is_superuser=True,
-                                                    is_staff=True, )
-        if _:
-            self.admin_user2.set_password('Admin2 pw')
-            self.admin_user2.save()
-        self.test1, _ = User.objects.get_or_create(pk=2,
-                                              username='Test1',
-                                              email='user1@test.ch',
-                                              is_staff=True)
-        if _:
-            self.test1.set_password('Test1 pw')
-            self.test1.save()
-        self.test2, _ = User.objects.get_or_create(pk=3,
-                                              username='Test2',
-                                              email='user2@test.ch',
-                                              is_staff=False)
-        if _:
-            self.test2.set_password('Test2 pw')
-            self.test2.save()
-        self.test3, _ = User.objects.get_or_create(pk=5,
-                                              username='Test3',
-                                              email='user3@test.ch',
-                                              is_staff=True, )
-        if _:
-            self.test3.set_password('Test1 pw')
-            self.test3.save()
+        self.superuser_username = 'superuser'
+        self.superuser_email = 'superuser@example.com'
+        self.superuser_password = 'superuser_pw'
+        self.superuser = User.objects.create_superuser(self.superuser_username, self.superuser_email, self.superuser_password)
+
+        self.staff_user_username = 'staff_user'
+        self.staff_user_email = 'staff_user@example.com'
+        self.staff_user_password = 'staff_user_pw'
+        self.staff_user = User.objects.create_user(self.staff_user_username, self.staff_user_email, self.staff_user_password)
+        self.staff_user.is_staff = True
+        self.staff_user.save()
+
+        self.user_username = 'user'
+        self.user_email = 'user@example.com'
+        self.user_password = 'user_pw'
+        self.user = User.objects.create_user(self.user_username, self.user_email, self.user_password)
 
         self.client = Client()
+        self.client.login(username=self.superuser_username, password=self.superuser_password)
 
-    def test_login(self):
-        self.assertFalse(self.client.login(username='name', password='pw'))
-        self.assertTrue(self.client.login(username='Admin',
-                                          password='Admin pw'))
-        self.assertTrue(self.client.login(username='Test2',
-                                          password='Test2 pw'))
-
-    def test_hijack_simple(self):
-        self.client.login(username='Admin', password='Admin pw')
-        response = self.client.get('/hijack/2/', follow=True)
-        self.assertTrue(
-            'on behalf of %s' %
-            (response.context['user'].username) in str(response.content))
-
-        response = self.client.get('/hijack/release-hijack/', follow=True)
-        self.assertEqual(response.context['username'], 'Admin')
-
-        response = self.client.get('/hijack/3/', follow=True)
-        self.assertTrue(
-            'on behalf of %s' %
-            (response.context['user'].username) in str(response.content))
+    def tearDown(self):
         self.client.logout()
 
-    def test_hijack_email(self):
-        self.client.login(username='Admin', password='Admin pw')
-        response = self.client.get('/hijack/email/user2@test.ch/', follow=True)
-        self.assertEqual(response.context['user'].username, 'Test2')
+    def test_basic_hijack(self):
+        client = Client()
+        client.login(username=self.superuser_username, password=self.superuser_password)
+        hijacked_response = client.get('/hijack/%d/' % self.user.id, follow=True)
+        self.assertEqual(hijacked_response.status_code, 200)
+        hijack_released_response = client.get('/hijack/release-hijack/', follow=True)
+        self.assertEqual(hijack_released_response.status_code, 200)
+        client.logout()
 
-    def test_hijack_username(self):
-        self.client.login(username='Admin', password='Admin pw')
-        response = self.client.get('/hijack/username/Test1/', follow=True)
-        self.assertEqual(response.context['user'].username, 'Test1')
+    def assertHijackSuccess(self, response):
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(self.client.session['is_hijacked_user'])
+        self.assertTrue('hijacked-warning' in str(response.content))
+        self.assertFalse('Log in' in str(response.content))
 
-    def test_hijack_view_error(self):
-        self.client.login(username='Admin', password='Admin pw')
-        response = self.client.get('/hijack/string/', follow=True)
+    def assertHijackPermissionDenied(self, response):
+        self.assertEqual(response.status_code, 403)
+        self.assertFalse(getattr(self.client.session, 'is_hijacked_user', False))
+        self.assertFalse('hijacked-warning' in str(response.content))
+
+    def _hijack(self, user_id):
+        return self.client.get('/hijack/%d/' % user_id, follow=True)
+
+    def _release_hijack(self):
+        response = self.client.get('/hijack/release-hijack/', follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse('hijacked-warning' in str(response.content))
+        return response
+
+    def test_hijack_urls(self):
+        self.assertEqual('/hijack/disable-hijack-warning/', reverse('disable_hijack_warning'))
+        self.assertEqual('/hijack/release-hijack/', reverse('release_hijack'))
+        self.assertEqual('/hijack/1/', reverse('login_with_id', args=[1]))
+        self.assertEqual('/hijack/2/', reverse('login_with_id', kwargs={'user_id': 2}))
+        self.assertEqual('/hijack/username/bob/', reverse('login_with_username', args=['bob']))
+        self.assertEqual('/hijack/username/bob_too/', reverse('login_with_username', kwargs={'username': 'bob_too'}))
+        self.assertEqual('/hijack/email/bob@bobsburgers.com/', reverse('login_with_email', args=['bob@bobsburgers.com']))
+        self.assertEqual('/hijack/email/bob_too@bobsburgers.com/', reverse('login_with_email', kwargs={'email': 'bob_too@bobsburgers.com'}))
+
+    def test_hijack_url_user_id(self):
+        response = self.client.get('/hijack/%d/' % self.user.id, follow=True)
+        self.assertHijackSuccess(response)
+        self._release_hijack()
+        response = self.client.get('/hijack/%s/' % self.user.username, follow=True)
         self.assertEqual(response.status_code, 400)
+        response = self.client.get('/hijack/-1/', follow=True)
+        self.assertEqual(response.status_code, 404)
 
-    def test_hijack_helper_permission_denied(self):
-        # release hijack before hijack
-        self.client.login(username='Admin', password='Admin pw')
+    def test_hijack_url_username(self):
+        response = self.client.get('/hijack/username/%s/' % self.user_username, follow=True)
+        self.assertHijackSuccess(response)
+        self._release_hijack()
+        response = self.client.get('/hijack/username/dfjakhdl/', follow=True)
+        self.assertEqual(response.status_code, 404)
+
+    def test_hijack_url_email(self):
+        response = self.client.get('/hijack/email/%s/' % self.user_email, follow=True)
+        self.assertHijackSuccess(response)
+        self._release_hijack()
+        response = self.client.get('/hijack/email/dfjak@hdl.com/', follow=True)
+        self.assertEqual(response.status_code, 404)
+
+    def test_hijack_permission_denied(self):
+        self.client.logout()
+        self.client.login(username=self.staff_user_username, password=self.staff_user_password)
+        response = self._hijack(self.superuser.id)
+        self.assertHijackPermissionDenied(response)
+        response = self._hijack(self.staff_user.id)
+        self.assertHijackPermissionDenied(response)
+        response = self._hijack(self.user.id)
+        self.assertHijackPermissionDenied(response)
+        self.client.login(username=self.superuser_username, password=self.superuser_password)
+
+    def test_release_before_hijack(self):
         response = self.client.get('/hijack/release-hijack/', follow=True)
-        self.assertEqual(response.status_code, 403)
+        self.assertHijackPermissionDenied(response)
+
+    def test_last_login_time_not_changed(self):
         self.client.logout()
-
-        # As staff user
-        self.client.login(username='Test1', password='Test1 pw')
-
-        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=False):
-            response = self.client.get('/hijack/1/', follow=True)
-            self.assertEqual(response.status_code, 403)
-
-        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=True):
-            # staff users should not be able to hijack admins
-            response = self.client.get('/hijack/1/', follow=True)
-            self.assertEqual(response.status_code, 403)
-
-            # staff users should not be able to hijack other staff users
-            response = self.client.get('/hijack/5/', follow=True)
-            self.assertEqual(response.status_code, 403)
-
-            # normal users should be ok
-            response = self.client.get('/hijack/3/', follow=True)
-            self.assertEqual(response.status_code, 200)
-            self.client.get('/hijack/release-hijack/', follow=True)
-
-        with SettingsOverride(hijack_settings,
-                              HIJACK_AUTHORIZE_STAFF=True,
-                              HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF=True):
-            # staff users should not be able to hijack admins
-            response = self.client.get('/hijack/1/', follow=True)
-            self.assertEqual(response.status_code, 403)
-
-            # staff users should be ok
-            response = self.client.get('/hijack/5/', follow=True)
-            self.assertEqual(response.status_code, 200)
-            self.client.get('/hijack/release-hijack/', follow=True)
-
-            # normal users should be ok
-            response = self.client.get('/hijack/3/', follow=True)
-            self.assertEqual(response.status_code, 200)
-            self.client.get('/hijack/release-hijack/', follow=True)
-
+        self.client.login(username=self.user_username, password=self.user_password)
         self.client.logout()
+        last_non_hijack_login = User.objects.get(id=self.user.id).last_login
+        self.assertIsNotNone(last_non_hijack_login)
+        self.client.login(username=self.superuser_username, password=self.superuser_password)
+        response = self._hijack(self.user.id)
+        self.assertHijackSuccess(response)
+        self._release_hijack()
+        self.assertEqual(User.objects.get(id=self.user.id).last_login, last_non_hijack_login)
 
-        # As non-staff user
-        self.client.login(username='Test2', password='Test2 pw')
-        for pk in range(1, 6):
-            response = self.client.get('/hijack/%d/' % pk, )
-            self.assertEqual(response.status_code, 403)
-
-    def test_hijacking_inactive_user(self):
-        self.client.login(username='Admin', password='Admin pw')
-        self.test1.is_active = False
-        self.test1.save()
-        response = self.client.get('/hijack/%d/' % self.test1.id, follow=True)
-        self.assertEqual(response.status_code, 403)
-        self.client.logout()
-
-    def test_staff_to_staff_hijacking_without_proper_setting(self):
-        self.client.login(username='Test1', password='Test1 pw')
-        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=True):
-            response = self.client.get('/hijack/5/', follow=True)
-            self.assertEqual(response.status_code, 403)
-
-    def test_staff_to_staff_hijacking_with_proper_setting(self):
-        self.client.login(username='Test1', password='Test1 pw')
-        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=True,
-                           HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF=True):
-            response = self.client.get('/hijack/5/', follow=True)
-            self.assertEqual(response.status_code, 200)
-
-    def test_staff_to_admin_hijacking_never_allowed(self):
-        # a staff user should never hijack an admin
-        self.client.login(username='Test1', password='Test1 pw')
-        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF=True):
-            response = self.client.get('/hijack/1/', follow=True)
-            self.assertEqual(response.status_code, 403)
-
-    def test_hijack_admin(self):
-        from hijack.admin import HijackUserAdmin
-
+    def test_admin(self):
         ua = HijackUserAdmin(User, AdminSite())
         self.assertEqual(ua.list_display,
                          ('username', 'email', 'first_name', 'last_name',
                           'last_login', 'date_joined', 'is_staff',
                           'hijack_field', ))
 
-    def test_hijack_urls(self):
-        self.assertEqual('/hijack/disable-hijack-warning/',
-                         reverse('disable_hijack_warning'))
-        self.assertEqual('/hijack/release-hijack/', reverse('release_hijack'))
-        self.assertEqual('/hijack/1/', reverse('login_with_id', args=[1]))
-        self.assertEqual('/hijack/2/', reverse('login_with_id',
-                                               kwargs={'user_id': 2}))
-        self.assertEqual('/hijack/username/bob/',
-                         reverse('login_with_username',
-                                 args=['bob']))
-        self.assertEqual('/hijack/username/bob_too/',
-                         reverse('login_with_username',
-                                 kwargs={'username': 'bob_too'}))
-        self.assertEqual('/hijack/email/bob@bobsburgers.com/',
-                         unquote(reverse('login_with_email',
-                                         args=['bob@bobsburgers.com'])))
-        self.assertEqual('/hijack/email/bob_too@bobsburgers.com/', unquote(
-            reverse('login_with_email',
-                    kwargs={'email': 'bob_too@bobsburgers.com'})))
-
-    def test_hijack_always_yes(self):
-        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZATION_CHECK='hijack.tests.test_app.custom_hijack.can_hijack_yes'):
-            # release hijack before hijack
-            self.client.login(username='Admin', password='Admin pw')
-            response = self.client.get('/hijack/release-hijack/', follow=True)
-            self.assertEqual(response.status_code, 403)
-
-            # hijack another admin user
-            response = self.client.get('/hijack/5/', follow=True)
-            self.assertEqual(response.status_code, 200)
-
-            # check permision for hijack
-            self.client.login(username='Test1', password='Test1 pw')
-
-            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', False)
-            delattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF')
-            response = self.client.get('/hijack/1/', follow=True)
-            self.assertEqual(response.status_code, 200)
-
-            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', False)
-            response = self.client.get('/hijack/1/', follow=True)
-            self.assertEqual(response.status_code, 200)
-
-            # staff users should not be able to hijack admins
-            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', True)
-            response = self.client.get('/hijack/1/', follow=True)
-            self.assertEqual(response.status_code, 200)
-
-            # normal users should be ok
-            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', True)
-            response = self.client.get('/hijack/3/', follow=True)
-            self.assertEqual(response.status_code, 200)
-
-            # other staff users should be ok
-            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', True)
-            response = self.client.get('/hijack/5/', follow=True)
-            self.assertEqual(response.status_code, 200)
-
-    def test_hijack_always_no(self):
-        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZATION_CHECK='hijack.tests.test_app.custom_hijack.can_hijack_no'):
-            # release hijack before hijack
-            self.client.login(username='Admin', password='Admin pw')
-            response = self.client.get('/hijack/release-hijack/', follow=True)
-            self.assertEqual(response.status_code, 403)
-
-            # hijack another admin user
-            response = self.client.get('/hijack/5/', follow=True)
-            self.assertEqual(response.status_code, 403)
-            self.client.logout()
-
-            # check permision for hijack
-            self.client.login(username='Test1', password='Test1 pw')
-
-            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', False)
-            delattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF')
-            response = self.client.get('/hijack/1/', follow=True)
-            self.assertEqual(response.status_code, 403)
-
-            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', False)
-            response = self.client.get('/hijack/1/', follow=True)
-            self.assertEqual(response.status_code, 403)
-
-            # staff users should not be able to hijack admins
-            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', True)
-            response = self.client.get('/hijack/1/', follow=True)
-            self.assertEqual(response.status_code, 403)
-
-            # normal users should be ok
-            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', True)
-            response = self.client.get('/hijack/3/', follow=True)
-            self.assertEqual(response.status_code, 403)
-
-            # other staff users should be ok
-            setattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF', True)
-            response = self.client.get('/hijack/5/', follow=True)
-            self.assertEqual(response.status_code, 403)
-
-    def test_can_hijack_filter(self):
-        admin1 = User.objects.get(pk=1)
-        admin2 = User.objects.get(pk=5)
-        self.assertEqual(can_hijack(admin1, admin2), True)
-
-    def test_last_login_not_changed(self):
-        self.client.login(username='Test1', password='Test1 pw')
-        self.client.logout()
-        last_login = User.objects.get(pk=self.test1.pk).last_login
-        self.assertIsNotNone(last_login)
-        self.client.login(username='Admin', password='Admin pw')
-        self.client.get('/hijack/%d/' % self.test1.pk, follow=True)
-        self.client.logout()
-        self.assertEqual(last_login, User.objects.get(pk=self.test1.pk).last_login)
-
-    def test_custom_decorator(self):
-        with SettingsOverride(hijack_settings,
-                              HIJACK_AUTHORIZATION_CHECK='hijack.tests.test_app.custom_hijack.can_hijack_yes',
-                              HIJACK_DECORATOR='django.contrib.auth.decorators.login_required'):
-            self.client.login(username='Test2', password='Test2 pw')
-            response = self.client.get('/hijack/1/', follow=True)
-            self.assertEqual(response.status_code, 200)
-            self.assertFalse('Log in' in str(response.content))
-            self.assertTrue('on behalf of Admin' in str(response.content))
-            self.client.get('/hijack/release-hijack/', follow=True)
-            self.client.logout()
-
     def test_disable_hijack_warning(self):
-        self.client.login(username='Admin', password='Admin pw')
-        response = self.client.get('/hijack/2/', follow=True)
-        self.assertTrue('on behalf of Test1' in str(response.content))
+        response = self._hijack(self.user.id)
+        self.assertTrue('hijacked-warning' in str(response.content))
         self.assertTrue(self.client.session['is_hijacked_user'])
         self.assertTrue(self.client.session['display_hijack_warning'])
 
         response = self.client.get('/hijack/disable-hijack-warning/?next=/hello', follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertFalse('on behalf of Test1' in str(response.content))
+        self.assertFalse('hijacked-warning' in str(response.content))
         self.assertTrue(self.client.session['is_hijacked_user'])
         self.assertFalse(self.client.session['display_hijack_warning'])
+        self._release_hijack()
 
-        self.client.get('/hijack/release-hijack/')
-        self.client.logout()
+    def test_permissions(self):
+        self.assertTrue(self.superuser.is_superuser)
+        self.assertTrue(self.superuser.is_staff)
+        self.assertFalse(self.staff_user.is_superuser)
+        self.assertTrue(self.staff_user.is_staff)
+        self.assertFalse(self.user.is_superuser)
+        self.assertFalse(self.user.is_staff)
+
+    def test_settings(self):
+        self.assertTrue(hasattr(hijack_settings, 'HIJACK_DISPLAY_ADMIN_BUTTON'))
+        self.assertTrue(hijack_settings.HIJACK_DISPLAY_ADMIN_BUTTON)
+        self.assertTrue(hasattr(hijack_settings, 'HIJACK_DISPLAY_WARNING'))
+        self.assertTrue(hijack_settings.HIJACK_DISPLAY_WARNING)
+        self.assertTrue(hasattr(hijack_settings, 'HIJACK_URL_ALLOWED_ATTRIBUTES'))
+        self.assertEqual(hijack_settings.HIJACK_URL_ALLOWED_ATTRIBUTES, ('user_id', 'email', 'username'))
+        self.assertTrue(hasattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF'))
+        self.assertFalse(hijack_settings.HIJACK_AUTHORIZE_STAFF)
+        self.assertTrue(hasattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF'))
+        self.assertFalse(hijack_settings.HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF)
+        self.assertTrue(hasattr(hijack_settings, 'HIJACK_LOGIN_REDIRECT_URL'))
+        self.assertEqual(hijack_settings.HIJACK_LOGIN_REDIRECT_URL, '/hello')
+        self.assertTrue(hasattr(hijack_settings, 'HIJACK_LOGOUT_REDIRECT_URL'))
+        self.assertEqual(hijack_settings.HIJACK_LOGOUT_REDIRECT_URL, '/hello')
+        self.assertTrue(hasattr(hijack_settings, 'HIJACK_AUTHORIZATION_CHECK'))
+        self.assertEqual(hijack_settings.HIJACK_AUTHORIZATION_CHECK, 'hijack.helpers.is_authorized')
+        self.assertTrue(hasattr(hijack_settings, 'HIJACK_DECORATOR'))
+        self.assertEqual(hijack_settings.HIJACK_DECORATOR, 'django.contrib.admin.views.decorators.staff_member_required')
+        self.assertTrue(hasattr(hijack_settings, 'HIJACK_USE_BOOTSTRAP'))
+        self.assertFalse(hijack_settings.HIJACK_USE_BOOTSTRAP)
+
+    def test_settings_override(self):
+        self.assertTrue(hijack_settings.HIJACK_DISPLAY_ADMIN_BUTTON)
+        with SettingsOverride(hijack_settings, HIJACK_DISPLAY_ADMIN_BUTTON=False):
+            self.assertFalse(hijack_settings.HIJACK_DISPLAY_ADMIN_BUTTON)
+        self.assertTrue(hijack_settings.HIJACK_DISPLAY_ADMIN_BUTTON)
+
+    def test_is_authorized(self):
+        self.assertFalse(hijack_settings.HIJACK_AUTHORIZE_STAFF)
+        self.assertFalse(hijack_settings.HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF)
+        self.assertTrue(is_authorized(self.superuser, self.superuser))
+        self.assertTrue(is_authorized(self.superuser, self.staff_user))
+        self.assertTrue(is_authorized(self.superuser, self.user))
+        self.assertFalse(is_authorized(self.staff_user, self.superuser))
+        self.assertFalse(is_authorized(self.staff_user, self.staff_user))
+        self.assertFalse(is_authorized(self.staff_user, self.user))
+        self.assertFalse(is_authorized(self.user, self.superuser))
+        self.assertFalse(is_authorized(self.user, self.staff_user))
+        self.assertFalse(is_authorized(self.user, self.user))
+
+    def test_is_authorized_staff_authorized(self):
+        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=True):
+            self.assertTrue(hijack_settings.HIJACK_AUTHORIZE_STAFF)
+            self.assertFalse(hijack_settings.HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF)
+            self.assertTrue(is_authorized(self.superuser, self.superuser))
+            self.assertTrue(is_authorized(self.superuser, self.staff_user))
+            self.assertTrue(is_authorized(self.superuser, self.user))
+            self.assertFalse(is_authorized(self.staff_user, self.superuser))
+            self.assertFalse(is_authorized(self.staff_user, self.staff_user))
+            self.assertTrue(is_authorized(self.staff_user, self.user))
+            self.assertFalse(is_authorized(self.user, self.superuser))
+            self.assertFalse(is_authorized(self.user, self.staff_user))
+            self.assertFalse(is_authorized(self.user, self.user))
+
+    def test_is_authorized_staff_authorized_to_hijack_staff(self):
+        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=True, HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF=True):
+            self.assertTrue(hijack_settings.HIJACK_AUTHORIZE_STAFF)
+            self.assertTrue(hijack_settings.HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF)
+            self.assertTrue(is_authorized(self.superuser, self.superuser))
+            self.assertTrue(is_authorized(self.superuser, self.staff_user))
+            self.assertTrue(is_authorized(self.superuser, self.user))
+            self.assertFalse(is_authorized(self.staff_user, self.superuser))
+            self.assertTrue(is_authorized(self.staff_user, self.staff_user))
+            self.assertTrue(is_authorized(self.staff_user, self.user))
+            self.assertFalse(is_authorized(self.user, self.superuser))
+            self.assertFalse(is_authorized(self.user, self.staff_user))
+            self.assertFalse(is_authorized(self.user, self.user))
+
+    def test_is_authorized_to_hijack_inactive_user(self):
+        self.user.is_active = False
+        self.user.save()
+        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=True, HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF=True):
+            self.assertFalse(is_authorized(self.superuser, self.user))
+            self.assertFalse(is_authorized(self.staff_user, self.user))
+            self.assertFalse(is_authorized(self.user, self.user))
 
 
-# @override_settings(HIJACK_AUTHORIZATION_CHECK='hijack.tests.test_app.custom_hijack.can_hijack_default')
-# class DefaultCustomHijackTests(HijackTests):
-#     pass
-
-if VERSION >= (1, 7):
+if django.VERSION >= (1, 7):
     from django.core.checks import Error, Warning
     from hijack import checks
     from hijack.apps import HijackConfig

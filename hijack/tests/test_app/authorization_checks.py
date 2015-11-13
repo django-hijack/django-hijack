@@ -6,9 +6,9 @@ def can_hijack_default(hijacker, hijacked):
     return is_authorized(hijacker, hijacked)
 
 
-def can_hijack_yes(hijacker, hijacked):
+def everybody_can_hijack(hijacker, hijacked):
     return True
 
 
-def can_hijack_no(hijacker, hijacked):
+def nobody_can_hijack(hijacker, hijacked):
     return False
