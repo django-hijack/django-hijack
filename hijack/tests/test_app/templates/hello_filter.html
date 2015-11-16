@@ -1,5 +1,5 @@
 {% load hijack_tags %}
-Notification tag:
-{% hijack_notification %}
+Notification filter:
+{{ request|hijackNotification }}
 <h1>Hello</h1>
 <p>{{ user }}</p>

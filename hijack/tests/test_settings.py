@@ -13,8 +13,8 @@ DATABASES = {
 }
 
 LOGIN_REDIRECT_URL = '/hello'
-HIJACK_LOGIN_REDIRECT_URL = '/hello'
-HIJACK_LOGOUT_REDIRECT_URL = '/hello'
+HIJACK_LOGIN_REDIRECT_URL = '/hello/'
+HIJACK_LOGOUT_REDIRECT_URL = '/hello/'
 
 ROOT_URLCONF = 'hijack.tests.urls'
 

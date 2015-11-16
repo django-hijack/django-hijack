@@ -57,7 +57,7 @@ To set up the notification bar, add the following lines to your base.html / to t
 ...
 
 <!-- Directly after <body> -->
-{{ request | hijackNotification }}
+{% hijack_notification %}
 
 ...
 ```

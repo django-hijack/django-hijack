@@ -6,4 +6,4 @@ admin.autodiscover()
 
 urlpatterns = patterns('', url(r'^hijack/', include('hijack.urls')),
                        url(r'^admin/', include(admin.site.urls)),
-                       url(r'^hello$', include('hijack.tests.test_app.urls')))
+                       url(r'^hello/', include('hijack.tests.test_app.urls')))

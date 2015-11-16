@@ -9,8 +9,19 @@ from hijack import settings as hijack_settings
 register = template.Library()
 
 
+# Deprecated. Use the template tag below
 @register.filter
 def hijackNotification(request):
+    return _render_hijack_notification(request)
+
+
+@register.simple_tag(takes_context=True)
+def hijack_notification(context):
+    request = context['request']
+    return _render_hijack_notification(request)
+
+
+def _render_hijack_notification(request):
     if hijack_settings.HIJACK_USE_BOOTSTRAP:
         template_name = 'hijack/notifications_bootstrap.html'
     else:

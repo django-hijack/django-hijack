@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.template import Template, Context
 from django.test import TestCase, Client
 from compat import unquote_plus
 
@@ -141,7 +142,7 @@ class HijackTests(TestCase):
         self.assertTrue(self.client.session['is_hijacked_user'])
         self.assertTrue(self.client.session['display_hijack_warning'])
 
-        response = self.client.get('/hijack/disable-hijack-warning/?next=/hello', follow=True)
+        response = self.client.get('/hijack/disable-hijack-warning/?next=/hello/', follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertFalse('hijacked-warning' in str(response.content))
         self.assertTrue(self.client.session['is_hijacked_user'])
@@ -168,9 +169,9 @@ class HijackTests(TestCase):
         self.assertTrue(hasattr(hijack_settings, 'HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF'))
         self.assertFalse(hijack_settings.HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF)
         self.assertTrue(hasattr(hijack_settings, 'HIJACK_LOGIN_REDIRECT_URL'))
-        self.assertEqual(hijack_settings.HIJACK_LOGIN_REDIRECT_URL, '/hello')
+        self.assertEqual(hijack_settings.HIJACK_LOGIN_REDIRECT_URL, '/hello/')
         self.assertTrue(hasattr(hijack_settings, 'HIJACK_LOGOUT_REDIRECT_URL'))
-        self.assertEqual(hijack_settings.HIJACK_LOGOUT_REDIRECT_URL, '/hello')
+        self.assertEqual(hijack_settings.HIJACK_LOGOUT_REDIRECT_URL, '/hello/')
         self.assertTrue(hasattr(hijack_settings, 'HIJACK_AUTHORIZATION_CHECK'))
         self.assertEqual(hijack_settings.HIJACK_AUTHORIZATION_CHECK, 'hijack.helpers.is_authorized')
         self.assertTrue(hasattr(hijack_settings, 'HIJACK_DECORATOR'))
@@ -232,6 +233,22 @@ class HijackTests(TestCase):
             self.assertFalse(is_authorized(self.superuser, self.user))
             self.assertFalse(is_authorized(self.staff_user, self.user))
             self.assertFalse(is_authorized(self.user, self.user))
+
+    def test_notification_tag(self):
+        response = self._hijack(self.user.id)
+        self.assertHijackSuccess(response)
+        response = self.client.get('/hello/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('Notification tag' in str(response.content))
+        self.assertTrue('hijacked-warning' in str(response.content))
+
+    def test_notification_filter(self):
+        response = self._hijack(self.user.id)
+        self.assertHijackSuccess(response)
+        response = self.client.get('/hello/filter/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('Notification filter' in str(response.content))
+        self.assertTrue('hijacked-warning' in str(response.content))
 
 
 if django.VERSION >= (1, 7):
