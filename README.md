@@ -8,211 +8,192 @@
 
 ![Screenshot of the warning seen while hijacking another user.](docs/hijacker-screenshot.png)
 
-[django-hijack](https://github.com/arteria/django-hijack) allows superusers to hijack (=login as) and work on behalf of other users without knowing their credentials.
-
-## Table of contents
-
-- [Installation](#installation)
-- [Usage and modes](#usage-and-modes)
-    - [Hijack Button](#hijack-using-the-hijack-button-on-the-admin-site)
-    - [Hijack over url](#hijack-by-calling-urls-in-the-browsers-address-bar)
-    - [Attribute specifications](#specify-which-user-attributes-are-allowed-to-hijack-on)
-    - [Notify when logged in as a hijacked user](#notify-superusers-when-working-behalf-of-another-user)
-    - [Release the hijack](#releasereverse-hijack)
-        - [Hijack-History](#hijack-history)
-    - [Notify user when they were hijacked](#notify-users-when-they-were-hijacked)
-    - [Allow staff to hijack](#allow-staff-members-to-hijack-other-users)
-    - [Custom hijack function](#custom-hijack-function)
-    - [Django 1.7 to 1.9 compatibility with django-compat](#django-14---19-compatibility-with-django-compat)
-    - [Custom user models](#support-for-custom-user-models)
-- [Settings](#settings)
-- [Signals](#signals)
-    - [Hijacked](#superuser-logs-in)
-- [TODOs, issues, planned features](#todos-issues-and-planned-features)
-- [FAQ, troubleshooting and hints](#faq-troubleshooting-and-hints)
-    - [SHOW_HIJACKUSER_IN_ADMIN not working](#why-does-the-hijack-button-not-show-up-in-the-admin-site-even-if-i-set-show_hijackuser_in_admin--true-in-my-project-settings)
-- [Similar projects](#similar-projects)
-- [Contribute](#contribute)
+Django Hijack allows admins to log in and work on behalf of normal users without having to know their credentials.
 
 ## Installation
 
-To get the latest stable release from PyPi
+Get the latest stable release from PyPi:
 
     pip install django-hijack
 
-To get the latest commit from GitHub
+In your ``settings.py``, add ``hijack`` and the dependency `compat` to your installed apps:
 
-    pip install -e git+git://github.com/arteria/django-hijack.git#egg=hijack-master
+```python
+INSTALLED_APPS = (
+    ...,
+    'hijack',
+    'compat',
+)
+```
 
+Finally, add the Django Hijack URLs to ``urls.py``:
 
-In your ``settings.py`` add ``hijack`` to your ``INSTALLED_APPS`` and define ``LOGIN_REDIRECT_URL``
+```python
+urlpatterns = patterns('',
+    ...
+    url(r'^hijack/', include('hijack.urls')),
+)
+```
 
-    INSTALLED_APPS = (
-        ...,
-        'hijack',
-        'compat',
-    )
+### After installing
 
-You can specify a `HIJACK_LOGIN_REDIRECT_URL` and a `REVERSE_HIJACK_LOGIN_REDIRECT_URL`. This settings are used to redirect to a specific url after hijacking or releasing the user. Default for both is the django `LOGIN_REDIRECT_URL`.
+#### Setting redirect URLs
+You should specify a `HIJACK_LOGIN_REDIRECT_URL` and a `HIJACK_LOGOUT_REDIRECT_URL`. 
+Admins are redirected there after hijacking or releasing a user. 
+Both settings default to `LOGIN_REDIRECT_URL`.
 
-    HIJACK_LOGIN_REDIRECT_URL = "/profile/"  # where you want to be redirected to, after hijacking the user.
-    REVERSE_HIJACK_LOGIN_REDIRECT_URL = "/admin/"  # where you want to be redirected to, after releasing the user.
+```python
+# settings.py
+HIJACK_LOGIN_REDIRECT_URL = '/profile/'  # Where admins are redirected to after hijacking a user
+HIJACK_LOGOUT_REDIRECT_URL = '/admin/auth/user/'  # Where admins are redirected to after releasing a user
+```
 
+#### Notification bar
+It is strongly recommended to display a notification bar to admins hijacking another user. This reduces the risk of an admin hijacking someone inadvertently or forgetting to release the user afterwards.
+Setting up the notification bar requires the following steps:
 
-Add the ``hijack`` URLs to your ``urls.py``
+* Add `django.core.context_processors.request` to your template context processors
+* Add the following lines to your base.html:
 
-    urlpatterns = patterns('',
-        ...
-        url(r'^hijack/', include('hijack.urls')),
-    )
+```html
+<!-- At the top -->
+{% load staticfiles %}
+{% load hijack_tags %}
 
-To work with `REMOTE_USER` just place `'hijack.middleware.HijackRemoteUserMiddleware',`
-between `django.contrib.auth.middleware.AuthenticationMiddleware` and `django.contrib.auth.middleware.RemoteUserMiddleware`
-in `settings.MIDDLEWARE_CLASSES`
+...
 
-    MIDDLEWARE_CLASSES = (
-        ...,
-        'django.contrib.auth.middleware.AuthenticationMiddleware',
-        'hijack.middleware.HijackRemoteUserMiddleware',
-        'django.contrib.auth.middleware.RemoteUserMiddleware',
-        ...,
-    )
+<!-- In the head -->
+<link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}" />
 
+...
 
-## Usage and modes
+<!-- Directly after <body> -->
+{{ request | hijackNotification }}
 
-There are different possibilities to hijack a user and communicate with users.
+...
+```
+* Make sure that ``django.contrib.staticfiles`` is included in your ``INSTALLED_APPS``, and do not forget to run ``python manage.py collectstatic``.
 
-###  Hijack using the 'Hijack Button' on the admin site
-Go to Users in the admin backend and push the `Hijack` button to hijack a user. This is the default mode and base version
-of django-hijack. To disable the `Hijack` button on the admin site (by not registrating the HijackUserAdmin) set ``SHOW_HIJACKUSER_IN_ADMIN = False`` in your project settings. If you are using a custom user model, you will have to add support for displaying the button yourself to your own `CustomUserAdmin`. Simply mix in the `hijack.admin.HijackUserAdminMixin`, and add `hijack_field` to `list_display`.
+#### Remote users
+To work with `REMOTE_USER`,  place `'hijack.middleware.HijackRemoteUserMiddleware'`
+between `'django.contrib.auth.middleware.AuthenticationMiddleware'` and `'django.contrib.auth.middleware.RemoteUserMiddleware'`:
 
+```python
+# settings.py
+MIDDLEWARE_CLASSES = (
+    ...,
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'hijack.middleware.HijackRemoteUserMiddleware',
+    'django.contrib.auth.middleware.RemoteUserMiddleware',
+    ...,
+)
+```
+
+## Django 1.7 - 1.9 compatibility with [django-compat](https://github.com/arteria/django-compat)
+All critical imports are carried out with the [compat library](https://github.com/arteria/django-compat) that ensures compatibility with Django 1.7 to 1.9.
+The app is also tested with Django 1.4 and 1.6. However, those tests are allowed to fail, and the package may not be fully compatible with those versions.
+
+## Usage
+
+Superusers can hijack a user by clicking the "Hijack" button in the Users admin or more directly by sending a GET request to a `/hijack/...` URL.
+If the hijacking is successful, you are redirected to the `HIJACK_LOGIN_REDIRECT_URL` 
+and a yellow notification bar is displayed at the top of the landing page.
+
+### Hijack button
+
+By default, Django Hijack displays a button in the Django admin's user list, which usually is located at `/admin/auth/user/`. 
+For instance, if you would like to hijack a user with the username "Max", click on the button named "Hijack Max".
+You can hide the buttons by setting `HIJACK_DISPLAY_ADMIN_BUTTON = False` in your project settings.
 
 ### Hijack by calling URLs in the browser's address bar
-For advanced superusers, users can be hijacked directly from the address bar by typing:
+Alternatively, you can hijack a user directly from the address bar by specifying their ID, username, or e-mail address.
 
-* example.com/hijack/``user-id``
-* example.com/hijack/email/``email-address``
-* example.com/hijack/username/``username``
+* `example.com/hijack/<user-id>` 
+* `example.com/hijack/username/<username>`
+* `example.com/hijack/email/<email-address>`
 
-### Specify which user attributes are allowed to hijack on
-By default all of the above methods (user id, email and username) are allowed. If you want to allow only a subset of these
-you can set ALLOWED_HIJACKING_USER_ATTRIBUTES in your project settings. This will disable the other endpoints.
-The settings take a list of methods to allow, you can select
-from:
+### Ending the hijack
+In order to end the hijack and switch back to your admin account, push the "Release" button in the yellow notification bar:
 
-* user_id
-* email
-* username
+![Screenshot of the release button in the notification bar](docs/release-button.png)
 
-NOTE: The link on the admin page will change in the order listed above. Say that you have enabled *username* and *email* then
-the users email will be used for the hijack link in on the admin page.
-
-### Notify superusers when working behalf of another user
-This option warns the superuser when working with another user as initally logged in. To activate this option perform
-the following steps:
-
-* In your base.html add ``{% load hijack_tags %}``, ``{%  load staticfiles %}`` and
-* load the styles using ``<link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}" />``.
-* Place ``{{ request|hijackNotification }}`` just after your opening body tag.
-* In your project settings add ``HIJACK_NOTIFY_ADMIN = True``. The default is True.
-* You need to add ``django.core.context_processors.request`` to your template context processors to be able to use requests and sessions in the templates.
-* Make sure that ``django.contrib.staticfiles`` is included in your ``INSTALLED_APPS``.
-* Do not forget to run ``python manage.py collectstatic``.
-
-### Release/reverse hijack
-
-In the visual notification for the superuser (or staff if ``ALLOW_STAFF_TO_HIJACKUSER`` is True), when working on behalf of other users, there
-is a link to release the hijacked user and switch back. After releasing you are redirected to `LOGIN_REDIRECT_URL` or to the URL defined in `REVERSE_HIJACK_LOGIN_REDIRECT_URL`.
-
-    REVERSE_HIJACK_LOGIN_REDIRECT_URL = '/admin/auth/user/'
-
-The release/reverse hijack will be executed when the URL `/hijack/release-hijack/` is called (or whatever is linked to the URL with name = "release_hijack").
-
-#### Hijack history
-If you (A) hijack a superuser (B) and then you hijack another user (C), the release will go backwards through the
- list of hijacked users one by one. After the first release you then are superuser (B), after the second you are superuser (A).
+As an alternative, navigate directly to `/hijack/release-hijack/`.
+After releasing, you are redirected to the `HIJACK_LOGOUT_REDIRECT_URL`.
 
 
+## Advanced configuration
 
-### Notify users when they were hijacked
-NOTE: This use case is not fully implemented yet!
+### Notification bar
+Make sure that you have followed the steps in the "Installation" section. Django Hijack will then
+display a yellow notification bar that warns admins when they are in the process of hijacking someone.
+The template used for the notification bar is named "hijack/notifications.html", or "hijack/notifications_bootstrap.html" 
+if Bootstrap is enabled.
 
-This option allows to notify and inform users when they were hijacked by a superuser. To activate this option
-follow these steps:
+#### Bootstrap
+If your project uses Bootstrap, you may want to set `HIJACK_USE_BOOTSTRAP = True` in your project settings.
+Django Hijack will use a Bootstrap notification bar that does not overlap with the default navbar.
 
-* In your base.html add ``{% load hijack_tags %}``, ``{%  load staticfiles %}`` and
-* load the styles using ``<link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}" />``.
-* Place ``{{ request|hijackNotification }}`` just after your opening body tag.
-* In your project settings add ``HIJACK_NOTIFY_USER = True``. The default is False (= silent mode)
-* You need to add ``django.core.context_processors.request`` to your template context processors to be able to use requests and sessions in the templates.
-* Make sure that ``django.contrib.staticfiles`` is included in your ``INSTALLED_APPS``.
-* Do not forget to run ``python manage.py collectstatic``.
+#### Disabling the notification bar
+You may temporarily disable the notification bar by setting `HIJACK_DISPLAY_WARNING = False`. 
 
+### Permissions
+By default, only superusers are allowed to hijack other users.
+Django Hijack gives you a variety of options to extend the group of authorized users.
 
-### Allow staff members to hijack other users
-This option allows staff members to hijack other users. In your project settings set ``ALLOW_STAFF_TO_HIJACKUSER`` to ``True``. The default is False.
+#### Staff members
+Set `HIJACK_AUTHORIZE_STAFF = True` in your project settings to authorize staff members to hijack non-staff users.
+If you want staff to be able to hijack other staff as well, enable `HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF`.
+Note that there is no option to authorize staff members to hijack superusers as this would undermine the distinction between staff users and superusers.
 
-Staff members are **not allowed** to hijack other staff members or admins/superusers.
+#### Custom authorization function
+Advanced Django developers might want to define their own check whether a user may hijack another user. This can be achieved by 
+setting `HIJACK_AUTHORIZATION_CHECK` to the dotted path of a function which accepts two User 
+objects – `hijacker` and `hijacked` – and returns a Boolean value. Example:
 
-If you want staff members to be able hijack other staff members you should set ``ALLOW_STAFF_TO_HIJACK_STAFF_USER`` to ``True``. The default is also False.
+```python
+# settings.py
+HIJACK_AUTHORIZATION_CHECK = 'mysite.utils.my_authorization_check'
+```
 
-
-### Custom hijack function
-
-This feature gives you fine control over the hijack permissions system. In your project settings set ``CUSTOM_HIJACK_HANDLER`` to a dotted path referencing your function.
-
-    CUSTOM_HIJACK_HANDLER = 'path.to.my_custom_can_hijack_function'
-
-Then you can define your conditions to permit a user to hijack another one:
-
-    def my_custom_can_hijack_function(hijacker, hijacked):
-        if condition:
-            return True
-
+```python
+# mysite.utils.py
+def my_authorization_check(hijacker, hijacked):
+    """
+    Checks if a user is authorized to hijack another user
+    """
+    if my_condition:
+        return True
+    else:
         return False
+```
 
+:warning: The setting `HIJACK_AUTHORIZATION_CHECK` overrides the other hijack authorization settings. Defining a custom authorization function can have dangerous
+effects on your application's authorization system. Potentially, it might allow any user to impersonate 
+any other user and to take advantage of all their permissions.
 
-### Django 1.7 - 1.9 compatibility with [django-compat](https://github.com/arteria/django-compat)
+#### Custom view decorator
+Django Hijack's views are decorated by Django's `staff_member_required` decorator. If you have written your own 
+authorization function, or haven't installed `django.contrib.admin`, you may want to override this behaviour by 
+setting `HIJACK_DECORATOR` to the dotted path of a custom decorator. Example:
 
-All critical imports are carried out with the [compat library](https://github.com/arteria/django-compat) that ensures compatibility with Django 1.7 to 1.9
-The app is also tested with Django 1.4 and 1.6. However, those tests are allowed to fail and full compatibility is not guaranteed.
+```python
+HIJACK_DECORATOR = 'mysite.decorators.mydecorator'
+```
 
-### Support for custom user models
+#### Custom user models
+Django Hijack supports custom user models. Just modify your custom UserAdmin class as shown in this example:
 
-django-hijack supports custom user models, all you need to do is to add the hijack button to your custom user `admin.py`. Import HijackUserAdminMixin from hijack admin and add ``hijack_field`` to your ``list_display``.
+```python
+# mysite/admin.py
+from hijack.admin import HijackUserAdminMixin
 
-    # .. imports ..
-    from hijack.admin import HijackUserAdminMixin
+class MyCustomUserAdmin(UserAdmin, HijackUserAdminMixin):
+    list_display = (
+        ...
+        'hijack_field',  # Hijack button
+    )
+```
 
-    class CustomUserAdmin(UserAdmin, HijackUserAdminMixin):
-        # .. code ..
-        list_display = ('email', 'first_name', 'last_name', 'is_staff', 'hijack_field')
-
-## Settings
-
-All configuration settings with their default value and description
-
-    # Hijack button in admin user view; default = True
-    SHOW_HIJACKUSER_IN_ADMIN = True
-    
-    # Notification for the admin if he is working for an other user; default = True
-    HIJACK_NOTIFY_ADMIN = True
-    
-    # Allow staff users to hijack; default = False
-    ALLOW_STAFF_TO_HIJACKUSER = False
-
-    # Allow staff users to hijack other staff users; default = False
-    ALLOW_STAFF_TO_HIJACK_STAFF_USER = False
-    
-    # Where to go when you hijack someone; default equals the LOGIN_REDIRECT_URL; which has the default '/accounts/profile/'
-    REVERSE_HIJACK_LOGIN_REDIRECT_URL = LOGIN_REDIRECT_URL
-    
-    # Which methods of hijacking a user is allowed; default = ('user_id', 'email', 'username')
-    ALLOWED_HIJACKING_USER_ATTRIBUTES = ('user_id', 'email', 'username')
-
-    # Define a custom function to determine which user can hijack another user
-    CUSTOM_HIJACK_HANDLER = 'path.to.my_custom_can_hijack_function'
 
 ## Signals
 
@@ -227,11 +208,11 @@ You can catch a signal when a superuser logs in as another user. Here is an exam
         print "Superuser hijacked userID %s" % kwargs['user_id']
 
 
-# TODOs, issues and planned features
-* Handle hijack using URLs on non unique email addresses.
+# TODOs, issues, and planned features
+* Handle hijack using URLs on non-unique email addresses.
 * unset_superuser example for signals
-* Store info in user's profile (see #3 comments, Use case: 'Notify users when they were hijacked', see above)
-* "got it" Link in notification to remove notification and flag from session. This is useful if hijack is used to switch between users and ``HIJACK_NOTIFY_ADMIN`` is True.
+* Store info in user's profile (see #3 comments, Use case: 'Notify users when they were hijacked')
+* "got it" Link in notification to remove notification and flag from session. This is useful if hijack is used to switch between users and ``HIJACK_DISPLAY_WARNING`` is True.
 * Support for named URLs for the hijack button.
 * Handle signals in ``release_hijack(..)``, currently the signals are only triggered in ``login_user(..)`` and ``logout_user(..)``.
 * Graceful support for custom user models that do not feature username / email
@@ -239,9 +220,9 @@ You can catch a signal when a superuser logs in as another user. Here is an exam
 
 ## FAQ, troubleshooting and hints
 
-### Why does the hijack button not show up in the admin site, even if I set ``SHOW_HIJACKUSER_IN_ADMIN = True`` in my project settings?
+### Why does the hijack button not show up in the admin site, even if I set ``HIJACK_DISPLAY_ADMIN_BUTTON = True`` in my project settings?
 
-If your ``UserAdmin`` object is already registered in the admin site through another app (here is an example of a Facebook profile, https://github.com/philippeowagner/django_facebook_oauth/blob/master/facebook/admin.py#L8), you could disable the registration of django-hijack by settings ``SHOW_HIJACKUSER_IN_ADMIN = False`` in your project settings.
+If your ``UserAdmin`` object is already registered in the admin site through another app (here is an example of a Facebook profile, https://github.com/philippeowagner/django_facebook_oauth/blob/master/facebook/admin.py#L8), you can disable the registration of django-hijack by settings ``HIJACK_DISPLAY_ADMIN_BUTTON = False`` in your project settings.
 
 Afterwards create a new ``UserAdmin`` class derived from ``HijackUserAdmin``. The Facebook example would look like this:
 
@@ -268,7 +249,7 @@ Afterwards create a new ``UserAdmin`` class derived from ``HijackUserAdmin``. Th
 
 ## Similar projects
 
-Similar projects can be found and compared in the [user-switching](https://www.djangopackages.com/grids/g/user-switching/) or the [support gird](https://www.djangopackages.com/grids/g/support-apps/) of djangopackages.
+Similar projects can be found and compared in the [user-switching](https://www.djangopackages.com/grids/g/user-switching/) or the [support gird](https://www.djangopackages.com/grids/g/support-apps/) categories of Django Packages.
 
 
 ## Contribute
