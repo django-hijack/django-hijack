@@ -10,7 +10,8 @@
 
 With Django Hijack, admins can log in and work on behalf of other users without having to know their credentials.
 
-Documentation: http://django-hijack.readthedocs.org
+## Docs
+See http://django-hijack.readthedocs.org.
 
 ## Testimonials
 
