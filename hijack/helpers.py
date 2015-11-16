@@ -65,11 +65,11 @@ def is_authorized(hijacker, hijacked):
     if not hijacked.is_active:
         return False
 
-    if hijacked.is_superuser and not hijacker.is_superuser:
-        return False
-
     if hijacker.is_superuser:
         return True
+
+    if hijacked.is_superuser:
+        return False
 
     if hijacker.is_staff and hijack_settings.HIJACK_AUTHORIZE_STAFF:
         if hijacked.is_staff and not hijack_settings.HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF:
