@@ -291,3 +291,24 @@ if django.VERSION >= (1, 7):
                     )
                 ]
                 self.assertEqual(warnings, expected_warnings)
+
+        def test_check_staff_authorization_settings(self):
+            errors = checks.check_staff_authorization_settings(HijackConfig)
+            self.assertFalse(errors)
+            with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=True):
+                errors = checks.check_staff_authorization_settings(HijackConfig)
+                self.assertFalse(errors)
+            with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=True, HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF=True):
+                errors = checks.check_staff_authorization_settings(HijackConfig)
+                self.assertFalse(errors)
+            with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=False, HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF=True):
+                errors = checks.check_staff_authorization_settings(HijackConfig)
+                expected_errors = [
+                    Error(
+                        'Setting HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF may not be True if HIJACK_AUTHORIZE_STAFF is False.',
+                        hint=None,
+                        obj=None,
+                        id='hijack.E004',
+                    )
+                ]
+                self.assertEqual(errors, expected_errors)

@@ -94,6 +94,19 @@ def check_hijack_decorator_importable(app_configs, **kwargs):
         )
     return errors
 
+def check_staff_authorization_settings(app_configs, **kwargs):
+    errors = []
+    if hijack_settings.HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF and not hijack_settings.HIJACK_AUTHORIZE_STAFF:
+        errors.append(
+            Error(
+                'Setting HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF may not be True if HIJACK_AUTHORIZE_STAFF is False.',
+                hint=None,
+                obj=None,
+                id='hijack.E004',
+            )
+        )
+    return errors
+
 def register_checks():
     for check in [
         check_display_admin_button_with_custom_user_model,
@@ -101,5 +114,6 @@ def register_checks():
         check_url_allowed_attributes,
         check_custom_authorization_check_importable,
         check_hijack_decorator_importable,
+        check_staff_authorization_settings,
     ]:
         register(check)
