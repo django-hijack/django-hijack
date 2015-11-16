@@ -6,6 +6,7 @@ from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase, Client
+from compat import unquote_plus
 
 from hijack.admin import HijackUserAdmin
 from hijack.helpers import is_authorized
@@ -74,8 +75,8 @@ class HijackTests(TestCase):
         self.assertEqual('/hijack/2/', reverse('login_with_id', kwargs={'user_id': 2}))
         self.assertEqual('/hijack/username/bob/', reverse('login_with_username', args=['bob']))
         self.assertEqual('/hijack/username/bob_too/', reverse('login_with_username', kwargs={'username': 'bob_too'}))
-        self.assertEqual('/hijack/email/bob@bobsburgers.com/', reverse('login_with_email', args=['bob@bobsburgers.com']))
-        self.assertEqual('/hijack/email/bob_too@bobsburgers.com/', reverse('login_with_email', kwargs={'email': 'bob_too@bobsburgers.com'}))
+        self.assertEqual('/hijack/email/bob@bobsburgers.com/', unquote_plus(reverse('login_with_email', args=['bob@bobsburgers.com'])))
+        self.assertEqual('/hijack/email/bob_too@bobsburgers.com/', unquote_plus(reverse('login_with_email', kwargs={'email': 'bob_too@bobsburgers.com'})))
 
     def test_hijack_url_user_id(self):
         response = self.client.get('/hijack/%d/' % self.user.id, follow=True)
