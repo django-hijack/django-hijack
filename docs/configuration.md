@@ -10,7 +10,7 @@ If your project uses Bootstrap, you may want to set `HIJACK_USE_BOOTSTRAP = True
 Django Hijack will use a Bootstrap notification bar that does not overlap with the default navbar.
 
 ## Disabling the notification bar
-You may temporarily disable the notification bar by setting `HIJACK_DISPLAY_WARNING = False`. 
+You can temporarily disable the notification bar by setting `HIJACK_DISPLAY_WARNING = False`. 
 
 # Permissions
 By default, only superusers are allowed to hijack other users.
@@ -19,6 +19,7 @@ Django Hijack gives you a variety of options to extend the group of authorized u
 ## Staff members
 Set `HIJACK_AUTHORIZE_STAFF = True` in your project settings to authorize staff members to hijack non-staff users.
 If you want staff to be able to hijack other staff as well, enable `HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF`.
+
 Note that there is no option to authorize staff members to hijack superusers as this would undermine the distinction between staff users and superusers.
 
 ## Custom authorization function
@@ -43,9 +44,9 @@ def my_authorization_check(hijacker, hijacked):
         return False
 ```
 
-:warning: The setting `HIJACK_AUTHORIZATION_CHECK` overrides the other hijack authorization settings. Defining a custom authorization function can have dangerous
+**Warning: The setting `HIJACK_AUTHORIZATION_CHECK` overrides the other hijack authorization settings. Defining a custom authorization function can have dangerous
 effects on your application's authorization system. Potentially, it might allow any user to impersonate 
-any other user and to take advantage of all their permissions.
+any other user and to take advantage of all their permissions.**
 
 ## Custom view decorator
 Django Hijack's views are decorated by Django's `staff_member_required` decorator. If you have written your own 
@@ -54,7 +55,6 @@ setting `HIJACK_DECORATOR` to the dotted path of a custom decorator. Example:
 
 ```python
 HIJACK_DECORATOR = 'mysite.decorators.mydecorator'
-
 ```
 
 # Remote users
@@ -85,3 +85,27 @@ class MyCustomUserAdmin(UserAdmin, HijackUserAdminMixin):
         'hijack_field',  # Hijack button
     )
 ```
+
+# Settings overview
+## `HIJACK_DISPLAY_ADMIN_BUTTON`
+Hide or display the "Hijack" buttons in the admin backend. Default: `True`.
+## `HIJACK_DISPLAY_WARNING`
+Hide or display the yellow notificiation bar show to hijackers. Default: `True`.
+## `HIJACK_USE_BOOTSTRAP`
+Whether a Bootstrap-optimized notification bar is used.
+## `HIJACK_URL_ALLOWED_ATTRIBUTES`
+User attributes by which a user can be hijacked over a URL. Default: `('user_id', 'email', 'username')`.
+May be changed to a subset of the default value.
+## `HIJACK_AUTHORIZE_STAFF`
+Whether staff members are allowed to hijack. Default: `False`.
+## `HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF`
+Whether staff members are allowed to hijack other staff members. Default: `False`.
+May not be True if `HIJACK_AUTHORIZE_STAFF` is disabled.
+## `HIJACK_LOGIN_REDIRECT_URL`
+URL a hijacker is redirected to when starting hijack.
+## `HIJACK_LOGOUT_REDIRECT_URL`
+URL a hijacker is redirected to when ending hijack.
+## `HIJACK_AUTHORIZATION_CHECK`
+Dotted path of a function checking whether `hijacker` is allowed to hijack `hijacked`
+## `HIJACK_DECORATOR`
+Dotted path of the decorator prepended to the hijack views.

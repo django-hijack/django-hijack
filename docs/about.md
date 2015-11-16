@@ -13,7 +13,7 @@ All critical imports are carried out with the [compat library](https://github.co
 The app is also tested with Django 1.4 and 1.6. However, the tests are allowed to fail, and the package may not be fully compatible with those versions.
 
 # Similar projects
-Similar projects can be found and compared in the [user-switching](https://www.djangopackages.com/grids/g/user-switching/) or the [support gird](https://www.djangopackages.com/grids/g/support-apps/) categories of Django Packages.
+Similar projects can be found and compared in the [user-switching](https://www.djangopackages.com/grids/g/user-switching/) or the [support](https://www.djangopackages.com/grids/g/support-apps/) grids at Django Packages.
 
 
 # Contributing

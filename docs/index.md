@@ -1,4 +1,4 @@
-With Django Hijack, admins can log in and work on behalf of other users without having to know their credentials.
+*With Django Hijack, admins can log in and work on behalf of other users without having to know their credentials.*
 
 # Installation
 
@@ -63,6 +63,9 @@ Setting up the notification bar requires the following steps:
 ...
 ```
 * Make sure that ``django.contrib.staticfiles`` is included in your ``INSTALLED_APPS``, and do not forget to run ``python manage.py collectstatic``.
+
+If your project uses Bootstrap, you may want to set `HIJACK_USE_BOOTSTRAP = True` in your project settings.
+Django Hijack will use a Bootstrap notification bar that does not overlap with the default navbar.
 
 # Usage
 
