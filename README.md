@@ -9,4 +9,5 @@
 ![Screenshot of the warning seen while hijacking another user.](docs/hijacker-screenshot.png)
 
 Django Hijack allows admins to log in and work on behalf of normal users without having to know their credentials.
-Documentation: django-hijack.rtfd.org.
+
+Documentation: http://django-hijack.rtfd.org
