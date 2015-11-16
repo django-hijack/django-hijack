@@ -19,10 +19,10 @@ INSTALLED_APPS = (
 Finally, add the Django Hijack URLs to ``urls.py``:
 
 ```python
-urlpatterns = patterns('',
+urlpatterns = [
     ...
     url(r'^hijack/', include('hijack.urls')),
-)
+]
 ```
 
 ## After installing
@@ -39,11 +39,10 @@ HIJACK_LOGOUT_REDIRECT_URL = '/admin/auth/user/'  # Where admins are redirected 
 ```
 
 ### Setting up the notification bar
-We strongly recommend to display a notification bar to everyone who is hijacking another user. This reduces the risk of an admin hijacking someone inadvertently or forgetting to release the user afterwards.
-Setting up the notification bar requires the following steps:
+We strongly recommend to display a notification bar to everyone who is hijacking another user.
+This reduces the risk of an admin hijacking someone inadvertently or forgetting to release the user afterwards.
 
-* Add `django.template.context_processors.request` to your template context processors.
-* Add the following lines to your base.html:
+To set up the notification bar, add the following lines to your base.html / to the template in which want the notification bar to be displayed.
 
 ```html
 <!-- At the top -->
@@ -62,7 +61,6 @@ Setting up the notification bar requires the following steps:
 
 ...
 ```
-* Make sure that ``django.contrib.staticfiles`` is included in your ``INSTALLED_APPS``, and do not forget to run ``python manage.py collectstatic``.
 
 If your project uses Bootstrap, you may want to set `HIJACK_USE_BOOTSTRAP = True` in your project settings.
 Django Hijack will use a Bootstrap notification bar that does not overlap with the default navbar.

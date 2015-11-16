@@ -1,7 +1,5 @@
 
 # Notification bar
-Make sure that you have followed the steps in the "Installation" section. Django Hijack will then
-display a yellow notification bar that warns admins when they are in the process of hijacking someone.
 The template used for the notification bar is named "hijack/notifications.html", or "hijack/notifications_bootstrap.html" 
 if Bootstrap is enabled.
 
@@ -92,7 +90,7 @@ Hide or display the "Hijack" buttons in the admin backend. Default: `True`.
 ## `HIJACK_DISPLAY_WARNING`
 Hide or display the yellow notificiation bar show to hijackers. Default: `True`.
 ## `HIJACK_USE_BOOTSTRAP`
-Whether a Bootstrap-optimized notification bar is used.
+Whether a Bootstrap-optimized notification bar is used. Default: `False`.
 ## `HIJACK_URL_ALLOWED_ATTRIBUTES`
 User attributes by which a user can be hijacked over a URL. Default: `('user_id', 'email', 'username')`.
 May be changed to a subset of the default value.
@@ -102,10 +100,10 @@ Whether staff members are allowed to hijack. Default: `False`.
 Whether staff members are allowed to hijack other staff members. Default: `False`.
 May not be True if `HIJACK_AUTHORIZE_STAFF` is disabled.
 ## `HIJACK_LOGIN_REDIRECT_URL`
-URL a hijacker is redirected to when starting hijack.
+URL a hijacker is redirected to when starting a hijack. Default: `settings.LOGIN_REDIRECT_URL`.
 ## `HIJACK_LOGOUT_REDIRECT_URL`
-URL a hijacker is redirected to when ending hijack.
+URL a hijacker is redirected to when ending a hijack. Default: `settings.LOGIN_REDIRECT_URL`.
 ## `HIJACK_AUTHORIZATION_CHECK`
-Dotted path of a function checking whether `hijacker` is allowed to hijack `hijacked`
+Dotted path of a function checking whether `hijacker` is allowed to hijack `hijacked`. Default: `'hijack.helpers.is_authorized'`.
 ## `HIJACK_DECORATOR`
-Dotted path of the decorator prepended to the hijack views.
+Dotted path of the decorator applied to the hijack views. Default: `'django.contrib.admin.views.decorators.staff_member_required'`.
