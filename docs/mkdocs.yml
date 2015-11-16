@@ -1,0 +1,8 @@
+site_name: Django Hijack
+repo_url: https://github.com/arteria/django-hijack/
+pages:
+- Overview: index.md
+- Configuration: configuration.md
+- Troubleshooting: troubleshooting.md
+- About: about.md
+theme: readthedocs
