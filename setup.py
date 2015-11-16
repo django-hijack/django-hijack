@@ -33,8 +33,6 @@ import hijack as app
 
 dev_requires = ['flake8', ]
 
-install_requires = ['django>=1.4,<1.10', 'django-compat>=1.0.5', ]
-
 
 def read(fname):
     try:
@@ -55,7 +53,7 @@ setup(name="django-hijack",
       url="https://github.com/arteria/django-hijack",
       packages=find_packages(),
       include_package_data=True,
-      install_requires=install_requires,
+      install_requires=open('requirements.txt').read().split('\n'),
       extras_require={'dev': dev_requires, },
       classifiers=['Development Status :: 5 - Production/Stable',
                    'Framework :: Django',
