@@ -61,7 +61,3 @@ for setting in SETTINGS:
         default = setting['default']
     value = getattr(django_settings, setting['name'], default)
     globals()[setting['name']] = value
-
-
-# Other settings
-SHOW_SESSIONS_IN_ADMIN = getattr(django_settings, 'SHOW_SESSIONS_IN_ADMIN', False)

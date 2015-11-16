@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from compat import get_user_model
 from django.contrib import admin
-from django.contrib.sessions.models import Session
 from django.contrib.auth.admin import UserAdmin
 from django.core.urlresolvers import reverse
 from django.template import Context
@@ -45,14 +44,3 @@ if hijack_settings.HIJACK_DISPLAY_ADMIN_BUTTON:
     UserModel = get_user_model()
     admin.site.unregister(UserModel)
     admin.site.register(UserModel, HijackUserAdmin)
-
-
-class SessionAdmin(admin.ModelAdmin):
-    def _session_data(self, obj):
-        return obj.get_decoded()
-
-    list_display = ['session_key', '_session_data', 'expire_date']
-
-
-if hijack_settings.SHOW_SESSIONS_IN_ADMIN:
-    admin.site.register(Session, SessionAdmin)
