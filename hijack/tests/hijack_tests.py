@@ -127,9 +127,8 @@ class HijackTests(TestCase):
         self.assertEqual(User.objects.get(id=self.user.id).last_login, last_non_hijack_login)
 
     def test_hijack_button(self):
-        user_admin = HijackUserAdmin(User, AdminSite())
-        user_hijack_button = user_admin.hijack_field(self.user)
-        self.assertTrue('Log in as user' in user_hijack_button)
+        response = self.client.get('/admin/auth/user/')
+        self.assertTrue('Log in as user' in str(response.content))
 
     def test_disable_hijack_warning(self):
         response = self._hijack(self.user.id)
