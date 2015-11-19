@@ -48,7 +48,7 @@ def release_hijack(request):
     return redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGOUT_REDIRECT_URL)
 
 
-def is_authorized(hijacker, hijacked):
+def is_authorized_default(hijacker, hijacked):
     """Checks if the user has the correct permission to Hijack another user.
 
     By default only superusers are allowed to hijack.
@@ -79,10 +79,16 @@ def is_authorized(hijacker, hijacked):
     return False
 
 
+def is_authorized(hijack, hijacked):
+    '''
+    Evaluates the authorization check specified in settings
+    '''
+    authorization_check = import_string(hijack_settings.HIJACK_AUTHORIZATION_CHECK)
+    return authorization_check(hijack, hijacked)
+
+
 def check_hijack_authorization(request, user):
-    check_authorization = import_string(hijack_settings.HIJACK_AUTHORIZATION_CHECK)
-    is_authorized = check_authorization(request.user, user)
-    if not is_authorized:
+    if not is_authorized(request.user, user):
         raise PermissionDenied
 
 

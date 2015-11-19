@@ -104,6 +104,6 @@ URL a hijacker is redirected to when starting a hijack. Default: `settings.LOGIN
 ## `HIJACK_LOGOUT_REDIRECT_URL`
 URL a hijacker is redirected to when ending a hijack. Default: `settings.LOGIN_REDIRECT_URL`.
 ## `HIJACK_AUTHORIZATION_CHECK`
-Dotted path of a function checking whether `hijacker` is allowed to hijack `hijacked`. Default: `'hijack.helpers.is_authorized'`.
+Dotted path of a function checking whether `hijacker` is allowed to hijack `hijacked`. Default: `'hijack.helpers.is_authorized_default'`.
 ## `HIJACK_DECORATOR`
 Dotted path of the decorator applied to the hijack views. Default: `'django.contrib.admin.views.decorators.staff_member_required'`.

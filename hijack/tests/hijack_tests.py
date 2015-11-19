@@ -3,11 +3,12 @@ from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase, Client
-from compat import unquote_plus
+from compat import import_string, unquote_plus
 
+from hijack import settings as hijack_settings
 from hijack.admin import HijackUserAdmin
 from hijack.helpers import is_authorized
-from hijack import settings as hijack_settings
+from hijack.templatetags.hijack_tags import can_hijack
 from hijack.tests.utils import SettingsOverride
 
 class HijackTests(TestCase):
@@ -125,12 +126,10 @@ class HijackTests(TestCase):
         self._release_hijack()
         self.assertEqual(User.objects.get(id=self.user.id).last_login, last_non_hijack_login)
 
-    def test_admin(self):
-        ua = HijackUserAdmin(User, AdminSite())
-        self.assertEqual(ua.list_display,
-                         ('username', 'email', 'first_name', 'last_name',
-                          'last_login', 'date_joined', 'is_staff',
-                          'hijack_field', ))
+    def test_hijack_button(self):
+        user_admin = HijackUserAdmin(User, AdminSite())
+        user_hijack_button = user_admin.hijack_field(self.user)
+        self.assertTrue('Log in as user' in user_hijack_button)
 
     def test_disable_hijack_warning(self):
         response = self._hijack(self.user.id)
@@ -169,7 +168,7 @@ class HijackTests(TestCase):
         self.assertTrue(hasattr(hijack_settings, 'HIJACK_LOGOUT_REDIRECT_URL'))
         self.assertEqual(hijack_settings.HIJACK_LOGOUT_REDIRECT_URL, '/hello/')
         self.assertTrue(hasattr(hijack_settings, 'HIJACK_AUTHORIZATION_CHECK'))
-        self.assertEqual(hijack_settings.HIJACK_AUTHORIZATION_CHECK, 'hijack.helpers.is_authorized')
+        self.assertEqual(hijack_settings.HIJACK_AUTHORIZATION_CHECK, 'hijack.helpers.is_authorized_default')
         self.assertTrue(hasattr(hijack_settings, 'HIJACK_DECORATOR'))
         self.assertEqual(hijack_settings.HIJACK_DECORATOR, 'django.contrib.admin.views.decorators.staff_member_required')
         self.assertTrue(hasattr(hijack_settings, 'HIJACK_USE_BOOTSTRAP'))
@@ -245,3 +244,37 @@ class HijackTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue('Notification filter' in str(response.content))
         self.assertTrue('hijacked-warning' in str(response.content))
+
+    def test_bootstrap_option(self):
+        with SettingsOverride(hijack_settings, HIJACK_USE_BOOTSTRAP=True):
+            response = self._hijack(self.user.id)
+            self.assertHijackSuccess(response)
+            response = self.client.get('/hello/')
+            self.assertTrue('hijacked-warning-boostrap' in str(response.content))
+            response = self.client.get('/hello/filter/')
+            self.assertTrue('hijacked-warning-boostrap' in str(response.content))
+
+    def test_can_hijack_filter(self):
+        self.assertTrue(can_hijack(self.superuser, self.staff_user))
+        self.assertFalse(can_hijack(self.user, self.superuser))
+
+    def test_custom_authorization_check(self):
+        for custom_check_path in [
+            'hijack.tests.test_app.authorization_checks.can_hijack_default',
+            'hijack.tests.test_app.authorization_checks.everybody_can_hijack',
+            'hijack.tests.test_app.authorization_checks.nobody_can_hijack',
+        ]:
+            with SettingsOverride(hijack_settings, HIJACK_AUTHORIZATION_CHECK=custom_check_path):
+                custom_check = import_string(custom_check_path)
+                for hijacker, hijacked in [
+                        (self.superuser, self.superuser),
+                        (self.superuser, self.staff_user),
+                        (self.superuser, self.user),
+                        (self.staff_user, self.superuser),
+                        (self.staff_user, self.staff_user),
+                        (self.staff_user, self.user),
+                        (self.user, self.superuser),
+                        (self.user, self.staff_user),
+                        (self.user, self.user),
+                ]:
+                    self.assertEqual(custom_check(hijacker, hijacked), is_authorized(hijacker, hijacked))

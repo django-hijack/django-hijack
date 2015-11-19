@@ -39,7 +39,7 @@ SETTINGS = (
     },
     {
         'name': 'HIJACK_AUTHORIZATION_CHECK',
-        'default': 'hijack.helpers.is_authorized',
+        'default': 'hijack.helpers.is_authorized_default',
         'legacy_name': 'CUSTOM_HIJACK_HANDLER',
     },
     {
