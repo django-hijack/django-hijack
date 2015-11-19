@@ -128,7 +128,7 @@ class HijackTests(TestCase):
 
     def test_hijack_button(self):
         response = self.client.get('/admin/auth/user/')
-        self.assertTrue('Log in as user' in str(response.content))
+        self.assertTrue('<a href="/hijack/%d/" class="button">' % self.user.id in str(response.content))
 
     def test_disable_hijack_warning(self):
         response = self._hijack(self.user.id)
