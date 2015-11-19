@@ -1,11 +1,7 @@
-import sys
-
-import django
-from django.conf import settings
+# -*- coding: utf-8 -*-
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.template import Template, Context
 from django.test import TestCase, Client
 from compat import unquote_plus
 
@@ -249,83 +245,3 @@ class HijackTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue('Notification filter' in str(response.content))
         self.assertTrue('hijacked-warning' in str(response.content))
-
-
-if django.VERSION >= (1, 7):
-    from django.core.checks import Error, Warning
-    from hijack import checks
-    from hijack.apps import HijackConfig
-
-
-    class ChecksTests(TestCase):
-
-        def test_check_url_allowed_attributes(self):
-            errors = checks.check_url_allowed_attributes(HijackConfig)
-            self.assertFalse(errors)
-
-            with SettingsOverride(hijack_settings, HIJACK_URL_ALLOWED_ATTRIBUTES=('username',)):
-                errors = checks.check_url_allowed_attributes(HijackConfig)
-                self.assertFalse(errors)
-
-            with SettingsOverride(hijack_settings, HIJACK_URL_ALLOWED_ATTRIBUTES=('username', 'email')):
-                errors = checks.check_url_allowed_attributes(HijackConfig)
-                self.assertFalse(errors)
-
-            with SettingsOverride(hijack_settings, HIJACK_URL_ALLOWED_ATTRIBUTES=('other',)):
-                errors = checks.check_url_allowed_attributes(HijackConfig)
-                expected_errors = [
-                    Error(
-                        'Setting HIJACK_URL_ALLOWED_ATTRIBUTES needs to be '
-                        'subset of (user_id, email, username)',
-                        hint=None,
-                        obj=hijack_settings.HIJACK_URL_ALLOWED_ATTRIBUTES,
-                        id='hijack.E001',
-                    )
-                ]
-                self.assertEqual(errors, expected_errors)
-
-        def test_check_display_admin_button_with_custom_user_model(self):
-            warnings = checks.check_display_admin_button_with_custom_user_model(HijackConfig)
-            self.assertFalse(warnings)
-
-            with SettingsOverride(hijack_settings, HIJACK_DISPLAY_ADMIN_BUTTON=False):
-                warnings = checks.check_display_admin_button_with_custom_user_model(HijackConfig)
-                self.assertFalse(warnings)
-
-            with SettingsOverride(hijack_settings, HIJACK_DISPLAY_ADMIN_BUTTON=True):
-                warnings = checks.check_display_admin_button_with_custom_user_model(HijackConfig)
-                self.assertFalse(warnings)
-
-        def test_check_legacy_settings(self):
-            with SettingsOverride(settings, SHOW_HIJACKUSER_IN_ADMIN=False):
-                warnings = checks.check_legacy_settings(HijackConfig)
-                expected_warnings = [
-                    Warning(
-                        'Deprecation warning: Setting "SHOW_HIJACKUSER_IN_ADMIN" has been renamed to "HIJACK_DISPLAY_ADMIN_BUTTON"',
-                        hint=None,
-                        obj=None,
-                        id='hijack.W002'
-                    )
-                ]
-                self.assertEqual(warnings, expected_warnings)
-
-        def test_check_staff_authorization_settings(self):
-            errors = checks.check_staff_authorization_settings(HijackConfig)
-            self.assertFalse(errors)
-            with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=True):
-                errors = checks.check_staff_authorization_settings(HijackConfig)
-                self.assertFalse(errors)
-            with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=True, HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF=True):
-                errors = checks.check_staff_authorization_settings(HijackConfig)
-                self.assertFalse(errors)
-            with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=False, HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF=True):
-                errors = checks.check_staff_authorization_settings(HijackConfig)
-                expected_errors = [
-                    Error(
-                        'Setting HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF may not be True if HIJACK_AUTHORIZE_STAFF is False.',
-                        hint=None,
-                        obj=None,
-                        id='hijack.E004',
-                    )
-                ]
-                self.assertEqual(errors, expected_errors)

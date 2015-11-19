@@ -62,16 +62,16 @@ def check_url_allowed_attributes(app_configs, **kwargs):
 
 def check_custom_authorization_check_importable(app_configs, **kwargs):
     errors = []
-    handler = hijack_settings.HIJACK_AUTHORIZATION_CHECK
+    authorization_check = hijack_settings.HIJACK_AUTHORIZATION_CHECK
     try:
-        if handler != staff_member_required:
-            import_string(handler)
+        if authorization_check != staff_member_required:
+            import_string(authorization_check)
     except ImportError:
         errors.append(
             Error(
                 'Setting HIJACK_AUTHORIZATION_CHECK cannot be imported',
                 hint=None,
-                obj=handler,
+                obj=authorization_check,
                 id='hijack.E002',
             )
         )
