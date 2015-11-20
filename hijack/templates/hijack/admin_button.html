@@ -1,9 +1,5 @@
 {% load i18n %}
 
-{% if not disabled %}
 <a href="{{ hijack_url }}" class="button">
-{% else %}
-<a href="#" class="button" disabled>
-{% endif %}
     {% blocktrans %}Hijack {{ username }}{% endblocktrans %}
 </a>

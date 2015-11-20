@@ -218,14 +218,6 @@ class HijackTests(TestCase):
             self.assertFalse(is_authorized(self.user, self.staff_user))
             self.assertFalse(is_authorized(self.user, self.user))
 
-    def test_is_authorized_to_hijack_inactive_user(self):
-        self.user.is_active = False
-        self.user.save()
-        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=True, HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF=True):
-            self.assertFalse(is_authorized(self.superuser, self.user))
-            self.assertFalse(is_authorized(self.staff_user, self.user))
-            self.assertFalse(is_authorized(self.user, self.user))
-
     def test_notification_tag(self):
         response = self._hijack(self.user)
         self.assertHijackSuccess(response)

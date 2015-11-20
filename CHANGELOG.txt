@@ -1,5 +1,19 @@
 === (ongoing) ===
 
+=== (2.0.0) ===
+- Unify settings; Django will show a warning if a deprecated setting name is used. See http://django-hijack.rtfd.org/en/latest/configuration/#settings-overview
+- Drop official support for Django 1.4, 1.6; add support for 1.9 using https://github.com/arteria/django-compat v1.0.8
+- Add i18n support, see https://github.com/arteria/django-hijack/tree/v2.0.0/hijack/locale
+- Make `HIJACK_DECORATOR` configurable
+- Do not update last_login time of hijacked users
+- Add optional Bootstrap-optimized notification bar. Can be activated with `HIJACK_USE_BOOTSTRAP`
+- Add signals `hijack_started` and `hijack_ended`
+- Add AppConfig and various checks
+- Check "next" GET parameter for safety
+- Move documentation to http://django-hijack.readthedocs.org/
+- Use https://github.com/arteria/django-sessioninfo as a dependency
+- Rewrite tests
+
 === (1.0.10) ===
 - Bugfixes
 - Allow hijacking users with negative IDs

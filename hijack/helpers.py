@@ -63,10 +63,8 @@ def is_authorized_default(hijacker, hijacked):
     This can be disabled by enabling the HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF
     setting in the Django settings.
 
-    Staff users can never hijack superusers. Also, hijacked users must have is_active==True.
+    Staff users can never hijack superusers.
     """
-    if not hijacked.is_active:
-        return False
 
     if hijacker.is_superuser:
         return True

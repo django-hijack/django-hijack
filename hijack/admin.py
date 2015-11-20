@@ -25,7 +25,6 @@ class HijackUserAdminMixin(object):
         button_context = Context({
             'hijack_url': hijack_url,
             'username': str(obj),
-            'disabled': not obj.is_active,
         })
         return button_template.render(button_context)
 
