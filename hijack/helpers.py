@@ -10,8 +10,7 @@ from compat import get_user_model, import_string
 from compat import resolve_url
 
 from hijack import settings as hijack_settings
-from hijack.signals import post_superuser_login
-from hijack.signals import post_superuser_logout
+from hijack.signals import post_superuser_login, post_superuser_logout, hijack_started, hijack_ended
 
 
 def get_used_backend(request):
@@ -26,13 +25,16 @@ def release_hijack(request):
     if not hijack_history:
         raise PermissionDenied
 
+    hijacker = None
+    hijacked = None
     if hijack_history:
+        hijacked = request.user
         user_pk = hijack_history.pop()
-        user = get_object_or_404(get_user_model(), pk=user_pk)
+        hijacker = get_object_or_404(get_user_model(), pk=user_pk)
         backend = get_used_backend(request)
-        user.backend = "%s.%s" % (backend.__module__,
+        hijacker.backend = "%s.%s" % (backend.__module__,
                                   backend.__class__.__name__)
-        login(request, user)
+        login(request, hijacker)
     if hijack_history:
         request.session['hijack_history'] = hijack_history
         request.session['is_hijacked_user'] = True
@@ -45,6 +47,7 @@ def release_hijack(request):
         except KeyError:
             pass
     request.session.modified = True
+    hijack_ended.send(sender=None, hijacker_id=hijacker.id, hijacked_id=hijacked.id)
     return redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGOUT_REDIRECT_URL)
 
 
@@ -99,6 +102,8 @@ def login_user(request, user):
         hijack_history = request.session['hijack_history'] + hijack_history
 
     check_hijack_authorization(request, user)
+    hijacker = request.user
+    hijacked = user
 
     backend = get_used_backend(request)
     user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
@@ -107,6 +112,7 @@ def login_user(request, user):
     user.last_login = last_login
     user.save()
     post_superuser_login.send(sender=None, user_id=user.pk)
+    hijack_started.send(sender=None, hijacker_id=hijacker.id, hijacked_id=hijacked.id)
     request.session['hijack_history'] = hijack_history
     request.session['is_hijacked_user'] = True
     request.session['display_hijack_warning'] = True

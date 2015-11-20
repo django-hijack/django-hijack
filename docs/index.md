@@ -93,15 +93,17 @@ As an alternative, navigate directly to `/hijack/release-hijack/`.
 
 After releasing, you are redirected to the `HIJACK_LOGOUT_REDIRECT_URL`.
 
+## Signals
+You can catch a signal when someone is hijacked or released. Here is an example:
 
-# Signals
+```python
+from hijack.signals import hijack_started, hijack_ended
 
-## Superuser logs in
-You can catch a signal when a superuser logs in as another user. Here is an example:
-
-    from django.dispatch import receiver
-    from signals import post_superuser_login
-
-    @receiver(post_superuser_login)
-    def set_superuser(sender, **kwargs):
-        print "Superuser hijacked userID %s" % kwargs['user_id']
+def print_hijack_started(sender, hijacker_id, hijacked_id, **kwargs):
+    print('%d has hijacked %d' % (hijacker_id, hijacked_id))
+hijack_started.connect(print_hijack_started)
+    
+def print_hijack_ended(sender, hijacker_id, hijacked_id, **kwargs):
+    print('%d has released %d' % (hijacker_id, hijacked_id))
+hijack_ended.connect(print_hijack_ended)
+```

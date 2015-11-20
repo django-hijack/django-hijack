@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase, Client
 from compat import import_string, unquote_plus
 
 from hijack import settings as hijack_settings
-from hijack.admin import HijackUserAdmin
 from hijack.helpers import is_authorized
+from hijack.signals import hijack_started, hijack_ended
 from hijack.templatetags.hijack_tags import can_hijack
 from hijack.tests.utils import SettingsOverride
 
@@ -57,8 +56,8 @@ class HijackTests(TestCase):
         self.assertFalse(getattr(self.client.session, 'is_hijacked_user', False))
         self.assertFalse('hijacked-warning' in str(response.content))
 
-    def _hijack(self, user_id):
-        return self.client.get('/hijack/%d/' % user_id, follow=True)
+    def _hijack(self, user):
+        return self.client.get('/hijack/%d/' % user.id, follow=True)
 
     def _release_hijack(self):
         response = self.client.get('/hijack/release-hijack/', follow=True)
@@ -102,13 +101,12 @@ class HijackTests(TestCase):
     def test_hijack_permission_denied(self):
         self.client.logout()
         self.client.login(username=self.staff_user_username, password=self.staff_user_password)
-        response = self._hijack(self.superuser.id)
+        response = self._hijack(self.superuser)
         self.assertHijackPermissionDenied(response)
-        response = self._hijack(self.staff_user.id)
+        response = self._hijack(self.staff_user)
         self.assertHijackPermissionDenied(response)
-        response = self._hijack(self.user.id)
+        response = self._hijack(self.user)
         self.assertHijackPermissionDenied(response)
-        self.client.login(username=self.superuser_username, password=self.superuser_password)
 
     def test_release_before_hijack(self):
         response = self.client.get('/hijack/release-hijack/', follow=True)
@@ -121,7 +119,7 @@ class HijackTests(TestCase):
         last_non_hijack_login = User.objects.get(id=self.user.id).last_login
         self.assertIsNotNone(last_non_hijack_login)
         self.client.login(username=self.superuser_username, password=self.superuser_password)
-        response = self._hijack(self.user.id)
+        response = self._hijack(self.user)
         self.assertHijackSuccess(response)
         self._release_hijack()
         self.assertEqual(User.objects.get(id=self.user.id).last_login, last_non_hijack_login)
@@ -131,7 +129,7 @@ class HijackTests(TestCase):
         self.assertTrue('<a href="/hijack/%d/" class="button">' % self.user.id in str(response.content))
 
     def test_disable_hijack_warning(self):
-        response = self._hijack(self.user.id)
+        response = self._hijack(self.user)
         self.assertTrue('hijacked-warning' in str(response.content))
         self.assertTrue(self.client.session['is_hijacked_user'])
         self.assertTrue(self.client.session['display_hijack_warning'])
@@ -229,7 +227,7 @@ class HijackTests(TestCase):
             self.assertFalse(is_authorized(self.user, self.user))
 
     def test_notification_tag(self):
-        response = self._hijack(self.user.id)
+        response = self._hijack(self.user)
         self.assertHijackSuccess(response)
         response = self.client.get('/hello/')
         self.assertEqual(response.status_code, 200)
@@ -237,7 +235,7 @@ class HijackTests(TestCase):
         self.assertTrue('hijacked-warning' in str(response.content))
 
     def test_notification_filter(self):
-        response = self._hijack(self.user.id)
+        response = self._hijack(self.user)
         self.assertHijackSuccess(response)
         response = self.client.get('/hello/filter/')
         self.assertEqual(response.status_code, 200)
@@ -246,7 +244,7 @@ class HijackTests(TestCase):
 
     def test_bootstrap_option(self):
         with SettingsOverride(hijack_settings, HIJACK_USE_BOOTSTRAP=True):
-            response = self._hijack(self.user.id)
+            response = self._hijack(self.user)
             self.assertHijackSuccess(response)
             response = self.client.get('/hello/')
             self.assertTrue('hijacked-warning-boostrap' in str(response.content))
@@ -277,3 +275,38 @@ class HijackTests(TestCase):
                         (self.user, self.user),
                 ]:
                     self.assertEqual(custom_check(hijacker, hijacked), is_authorized(hijacker, hijacked))
+
+    def test_default_decorator(self):
+        self.client.logout()
+        self.client.login(username=self.user_username, password=self.user_password)
+        response = self._hijack(self.staff_user)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('this_is_the_login_form', str(response.content))
+
+    # def test_custom_decorator(self):
+    #     custom_decorator_path = 'hijack.tests.test_app.decorators.no_decorator'
+    #     with SettingsOverride(hijack_settings, HIJACK_DECORATOR=custom_decorator_path):
+    #         self.assertEqual(hijack_settings.HIJACK_DECORATOR, custom_decorator_path)
+    #         self.client.logout()
+    #         self.client.login(username=self.user_username, password=self.user_password)
+    #         response = self._hijack(self.staff_user)
+    #         self.assertEqual(response.status_code, 403)
+
+    def test_signals(self):
+        self.recieved_signals = []
+
+        def hijack_started_reciever(sender, hijacker_id, hijacked_id, **kwargs):
+            self.recieved_signals.append('hijack_started_%d_%d' % (hijacker_id, hijacked_id))
+        hijack_started.connect(hijack_started_reciever)
+
+        def hijack_ended_reciever(sender, hijacker_id, hijacked_id, **kwargs):
+            self.recieved_signals.append('hijack_ended_%d_%d' % (hijacker_id, hijacked_id))
+        hijack_ended.connect(hijack_ended_reciever)
+
+        self.assertEqual(len(self.recieved_signals), 0)
+        self._hijack(self.user)
+        self.assertEqual(len(self.recieved_signals), 1)
+        self.assertIn('hijack_started_%d_%d' % (self.superuser.id, self.user.id), self.recieved_signals)
+        self._release_hijack()
+        self.assertEqual(len(self.recieved_signals), 2)
+        self.assertIn('hijack_ended_%d_%d' % (self.superuser.id, self.user.id), self.recieved_signals)
