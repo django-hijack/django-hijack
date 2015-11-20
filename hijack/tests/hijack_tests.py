@@ -281,7 +281,7 @@ class HijackTests(TestCase):
         self.client.login(username=self.user_username, password=self.user_password)
         response = self._hijack(self.staff_user)
         self.assertEqual(response.status_code, 200)
-        self.assertIn('this_is_the_login_form', str(response.content))
+        self.assertIn('Log in', str(response.content))
 
     # def test_custom_decorator(self):
     #     custom_decorator_path = 'hijack.tests.test_app.decorators.no_decorator'
