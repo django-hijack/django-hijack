@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.signals import user_logged_out
 from django.contrib.auth import login, load_backend, BACKEND_SESSION_KEY
