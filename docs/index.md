@@ -1,4 +1,4 @@
-*With Django Hijack, admins can log in and work on behalf of other users without having to know their credentials.*
+*With Django Hijack, admins can log in and work on behalf of other users without having to know their credentials. <https://github.com/arteria/django-hijack/>*
 
 # Installation
 
