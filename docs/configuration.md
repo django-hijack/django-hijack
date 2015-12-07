@@ -84,6 +84,8 @@ class MyCustomUserAdmin(UserAdmin, HijackUserAdminMixin):
     )
 ```
 
+In addition, you should explicitly set `HIJACK_DISPLAY_ADMIN_BUTTON==False` in your project settings.
+
 # Settings overview
 ## `HIJACK_DISPLAY_ADMIN_BUTTON`
 Hide or display the "Hijack" buttons in the admin backend. Default: `True`.
