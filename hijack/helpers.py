@@ -111,7 +111,7 @@ def login_user(request, user):
     user.last_login = last_login
     user.save()
     post_superuser_login.send(sender=None, user_id=user.pk)
-    hijack_started.send(sender=None, hijacker_id=hijacker.id, hijacked_id=hijacked.id)
+    hijack_started.send(sender=None, hijacker_id=hijacker.pk, hijacked_id=hijacked.pk)
     request.session['hijack_history'] = hijack_history
     request.session['is_hijacked_user'] = True
     request.session['display_hijack_warning'] = True
