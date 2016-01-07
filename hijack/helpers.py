@@ -48,7 +48,7 @@ def release_hijack(request):
         except KeyError:
             pass
     request.session.modified = True
-    hijack_ended.send(sender=None, hijacker_id=hijacker.id, hijacked_id=hijacked.id)
+    hijack_ended.send(sender=None, hijacker_id=hijacker.pk, hijacked_id=hijacked.pk)
     return redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGOUT_REDIRECT_URL)
 
 
