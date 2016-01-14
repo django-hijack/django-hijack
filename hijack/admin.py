@@ -5,8 +5,12 @@ from django.contrib.auth.admin import UserAdmin
 from django.core.urlresolvers import reverse
 from django.template.loader import get_template
 from django.utils.translation import ugettext as _
-
 from hijack import settings as hijack_settings
+
+import django
+if django.VERSION <= (1, 7):
+    from django.template import Context
+
 
 
 class HijackUserAdminMixin(object):
@@ -25,6 +29,9 @@ class HijackUserAdminMixin(object):
             'hijack_url': hijack_url,
             'username': str(obj),
         }
+        if django.VERSION <= (1, 7):
+            button_context = Context(button_context)
+
         return button_template.render(button_context)
 
     hijack_field.allow_tags = True
