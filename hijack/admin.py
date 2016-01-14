@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 from hijack import settings as hijack_settings
 
 import django
-if django.VERSION <= (1, 7):
+if django.VERSION < (1, 8):
     from django.template import Context
 
 
@@ -29,7 +29,8 @@ class HijackUserAdminMixin(object):
             'hijack_url': hijack_url,
             'username': str(obj),
         }
-        if django.VERSION <= (1, 7):
+        import django
+        if django.VERSION < (1, 8):
             button_context = Context(button_context)
 
         return button_template.render(button_context)
