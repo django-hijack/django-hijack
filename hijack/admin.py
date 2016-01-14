@@ -3,7 +3,6 @@ from compat import get_user_model
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.core.urlresolvers import reverse
-from django.template import Context
 from django.template.loader import get_template
 from django.utils.translation import ugettext as _
 
@@ -22,10 +21,10 @@ class HijackUserAdminMixin(object):
             hijack_url = reverse('login_with_username', args=(obj.username, ))
 
         button_template = get_template('hijack/admin_button.html')
-        button_context = Context({
+        button_context = {
             'hijack_url': hijack_url,
             'username': str(obj),
-        })
+        }
         return button_template.render(button_context)
 
     hijack_field.allow_tags = True
