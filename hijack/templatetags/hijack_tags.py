@@ -27,13 +27,13 @@ def _render_hijack_notification(request):
     else:
         template_name = 'hijack/notifications.html'
     ans = ''
-    if (hijack_settings.HIJACK_DISPLAY_WARNING and
-            request and
-            request.session.get('is_hijacked_user', False) and
-            request.session.get('display_hijack_warning', False)
-        ):
-        ans = render_to_string(template_name, {},
-                               context_instance=RequestContext(request))
+    if all([
+        hijack_settings.HIJACK_DISPLAY_WARNING,
+        request,
+        request.session.get('is_hijacked_user', False),
+        request.session.get('display_hijack_warning', False),
+    ]):
+        ans = render_to_string(template_name, {request: request})
     return mark_safe(ans)
 
 
