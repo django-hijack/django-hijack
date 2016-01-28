@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.core.urlresolvers import reverse
 from django.template.loader import get_template
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django import VERSION
 
 from hijack import settings as hijack_settings
