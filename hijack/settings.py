@@ -67,5 +67,3 @@ for setting in SETTINGS:
         default = setting['default']
     value = getattr(django_settings, setting['name'], default)
     globals()[setting['name']] = value
-
-HIJACK_BUTTON_TEMPLATE = 'hijack/admin_button.html'
