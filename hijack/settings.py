@@ -52,6 +52,12 @@ SETTINGS = (
         'default': False,
         'legacy_name': None,
     },
+    {
+        'name': 'HIJACK_BUTTON_TEMPLATE',
+        'default': 'hijack/admin_button.html',
+        'legacy_name': None,
+    },
+
 )
 
 for setting in SETTINGS:
@@ -61,3 +67,5 @@ for setting in SETTINGS:
         default = setting['default']
     value = getattr(django_settings, setting['name'], default)
     globals()[setting['name']] = value
+
+HIJACK_BUTTON_TEMPLATE = 'hijack/admin_button.html'

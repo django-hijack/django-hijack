@@ -24,7 +24,7 @@ class HijackUserAdminMixin(object):
         else:
             hijack_url = reverse('login_with_username', args=(obj.username, ))
 
-        button_template = get_template('hijack/admin_button.html')
+        button_template = get_template(hijack_settings.HIJACK_BUTTON_TEMPLATE)
         button_context = {
             'hijack_url': hijack_url,
             'username': str(obj),
