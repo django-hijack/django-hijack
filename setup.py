@@ -36,8 +36,8 @@ dev_requires = ['flake8', ]
 
 def read(fname):
     try:
-        return open(os.path.join(os.path.dirname(__file__), fname), 'r').read().encode("utf8")
-    except IOError:
+        return open(os.path.join(os.path.dirname(__file__), fname), 'r').read().decode("utf8")
+    except (IOError):
         return u''
 
 
