@@ -17,10 +17,10 @@ See http://django-hijack.readthedocs.org.
 
 > I am using django-hijack on a project with hundreds of users, wonderful tool for support. Thank you!
 >
-> — [benzinonapoloni](https://www.reddit.com/user/benzinonapoloni) on [reddit](https://redd.it/39aggd)
+> -- [benzinonapoloni](https://www.reddit.com/user/benzinonapoloni) on [reddit](https://redd.it/39aggd)
 
 ---
 
 > This is a super useful tool. I have a site where I occasionally impersonating users to help troubleshoot their issues. This is a huge time saver.
 >
-> — [orangishyellow](https://www.reddit.com/user/orangishyellow) on [reddit](https://redd.it/2i35fu)
+> -- [orangishyellow](https://www.reddit.com/user/orangishyellow) on [reddit](https://redd.it/2i35fu)
