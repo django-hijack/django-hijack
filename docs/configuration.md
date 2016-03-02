@@ -89,6 +89,8 @@ In addition, you should explicitly set `HIJACK_DISPLAY_ADMIN_BUTTON = False` in 
 # Settings overview
 ## `HIJACK_DISPLAY_ADMIN_BUTTON`
 Hide or display the "Hijack" buttons in the admin backend. Default: `True`.
+## `HIJACK_BUTTON_TEMPLATE`
+Path to template for the "Hijack" buttons in the admin backend. Default: `'hijack/admin_button.html'`
 ## `HIJACK_DISPLAY_WARNING`
 Hide or display the yellow notificiation bar show to hijackers. Default: `True`.
 ## `HIJACK_USE_BOOTSTRAP`
