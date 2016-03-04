@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.core.exceptions import PermissionDenied
-from django.contrib.auth.signals import user_logged_out
+from django.contrib.auth.models import update_last_login
+from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.contrib.auth import login, load_backend, BACKEND_SESSION_KEY
 from django.dispatch import receiver
 from django.http import HttpResponseRedirect
@@ -94,23 +95,29 @@ def check_hijack_authorization(request, user):
         raise PermissionDenied
 
 
-def login_user(request, user):
+def login_user(request, hijacked):
     ''' hijack mechanism '''
-    hijack_history = [request.user._meta.pk.value_to_string(request.user)]
+    hijacker = request.user
+    hijack_history = [request.user._meta.pk.value_to_string(hijacker)]
     if request.session.get('hijack_history'):
         hijack_history = request.session['hijack_history'] + hijack_history
 
-    check_hijack_authorization(request, user)
-    hijacker = request.user
-    hijacked = user
+    check_hijack_authorization(request, hijacked)
 
     backend = get_used_backend(request)
-    user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
-    last_login = user.last_login  # Save last_login to reset it after hijack login
-    login(request, user)
-    user.last_login = last_login
-    user.save()
-    post_superuser_login.send(sender=None, user_id=user.pk)
+    hijacked.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
+
+    # Prevent update of hijacked user last_login
+    signal_was_connected = user_logged_in.disconnect(update_last_login)
+
+    # Actually log user in
+    login(request, hijacked)
+
+    # Restore signal if needed
+    if signal_was_connected:
+        user_logged_in.connect(update_last_login)
+
+    post_superuser_login.send(sender=None, user_id=hijacked.pk)
     hijack_started.send(sender=None, hijacker_id=hijacker.pk, hijacked_id=hijacked.pk)
     request.session['hijack_history'] = hijack_history
     request.session['is_hijacked_user'] = True
@@ -125,6 +132,7 @@ def logout_user(sender, **kwargs):
     user = kwargs['user']
     if hasattr(user, 'id'):
         post_superuser_logout.send(sender=None, user_id=user.pk)
+
 
 def redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGIN_REDIRECT_URL):
     redirect_to = request.GET.get('next', '')
