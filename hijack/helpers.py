@@ -41,12 +41,9 @@ def release_hijack(request):
         request.session['is_hijacked_user'] = True
         request.session['display_hijack_warning'] = True
     else:
-        try:
-            del request.session['hijack_history']
-            del request.session['is_hijacked_user']
-            del request.session['display_hijack_warning']
-        except KeyError:
-            pass
+        request.session.pop('hijack_history', None)
+        request.session.pop('is_hijacked_user', None)
+        request.session.pop('display_hijack_warning', None)
     request.session.modified = True
     hijack_ended.send(sender=None, hijacker_id=hijacker.pk, hijacked_id=hijacked.pk)
     return redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGOUT_REDIRECT_URL)
