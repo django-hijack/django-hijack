@@ -285,20 +285,20 @@ class HijackTests(TestCase):
     #         self.assertEqual(response.status_code, 403)
 
     def test_signals(self):
-        self.recieved_signals = []
+        received_signals = []
 
-        def hijack_started_reciever(sender, hijacker_id, hijacked_id, **kwargs):
-            self.recieved_signals.append('hijack_started_%d_%d' % (hijacker_id, hijacked_id))
-        hijack_started.connect(hijack_started_reciever)
+        def hijack_started_receiver(sender, hijacker_id, hijacked_id, **kwargs):
+            received_signals.append('hijack_started_%d_%d' % (hijacker_id, hijacked_id))
+        hijack_started.connect(hijack_started_receiver)
 
-        def hijack_ended_reciever(sender, hijacker_id, hijacked_id, **kwargs):
-            self.recieved_signals.append('hijack_ended_%d_%d' % (hijacker_id, hijacked_id))
-        hijack_ended.connect(hijack_ended_reciever)
+        def hijack_ended_receiver(sender, hijacker_id, hijacked_id, **kwargs):
+            received_signals.append('hijack_ended_%d_%d' % (hijacker_id, hijacked_id))
+        hijack_ended.connect(hijack_ended_receiver)
 
-        self.assertEqual(len(self.recieved_signals), 0)
+        self.assertEqual(len(received_signals), 0)
         self._hijack(self.user)
-        self.assertEqual(len(self.recieved_signals), 1)
-        self.assertIn('hijack_started_%d_%d' % (self.superuser.id, self.user.id), self.recieved_signals)
+        self.assertEqual(len(received_signals), 1)
+        self.assertIn('hijack_started_%d_%d' % (self.superuser.id, self.user.id), received_signals)
         self._release_hijack()
-        self.assertEqual(len(self.recieved_signals), 2)
-        self.assertIn('hijack_ended_%d_%d' % (self.superuser.id, self.user.id), self.recieved_signals)
+        self.assertEqual(len(received_signals), 2)
+        self.assertIn('hijack_ended_%d_%d' % (self.superuser.id, self.user.id), received_signals)
