@@ -113,8 +113,8 @@ def login_user(request, hijacked):
     if signal_was_connected:
         user_logged_in.connect(update_last_login)
 
-    post_superuser_login.send(sender=None, user_id=hijacked.pk)
-    hijack_started.send(sender=None, hijacker_id=hijacker.pk, hijacked_id=hijacked.pk)
+    post_superuser_login.send(sender=None, user_id=hijacked.pk)  # Send legacy signal
+    hijack_started.send(sender=None, hijacker_id=hijacker.pk, hijacked_id=hijacked.pk)  # Send official, documented signal
     request.session['hijack_history'] = hijack_history
     request.session['is_hijacked_user'] = True
     request.session['display_hijack_warning'] = True
@@ -125,7 +125,8 @@ def login_user(request, hijacked):
 @receiver(user_logged_out)
 def logout_user(sender, **kwargs):
     """
-    Wraps logout signal
+    Legacy code
+    Wraps logout signal to send deprecated "post_superuser_logout" signal
     """
     user = kwargs['user']
     if hasattr(user, 'id'):
