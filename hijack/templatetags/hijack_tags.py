@@ -1,7 +1,6 @@
 from django import template
 from django.utils.safestring import mark_safe
 from django.template.loader import render_to_string
-from django.template import RequestContext
 from compat import import_string
 
 from hijack import settings as hijack_settings
@@ -9,9 +8,11 @@ from hijack import settings as hijack_settings
 register = template.Library()
 
 
-# Deprecated. Use the template tag below
 @register.filter
 def hijackNotification(request):
+    """
+    Deprecated. Use the template tag "hijack_notification" below
+    """
     return _render_hijack_notification(request)
 
 

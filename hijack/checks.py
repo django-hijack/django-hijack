@@ -24,6 +24,7 @@ def check_display_admin_button_with_custom_user_model(app_configs, **kwargs):
         )
     return warnings
 
+
 def check_legacy_settings(app_configs, **kwargs):
     warnings = []
     for setting in hijack_settings.SETTINGS:
@@ -39,6 +40,7 @@ def check_legacy_settings(app_configs, **kwargs):
                 )
             )
     return warnings
+
 
 def check_url_allowed_attributes(app_configs, **kwargs):
     errors = []
@@ -60,6 +62,7 @@ def check_url_allowed_attributes(app_configs, **kwargs):
         )
     return errors
 
+
 def check_custom_authorization_check_importable(app_configs, **kwargs):
     errors = []
     authorization_check = hijack_settings.HIJACK_AUTHORIZATION_CHECK
@@ -76,6 +79,7 @@ def check_custom_authorization_check_importable(app_configs, **kwargs):
             )
         )
     return errors
+
 
 def check_hijack_decorator_importable(app_configs, **kwargs):
     errors = []
@@ -94,6 +98,7 @@ def check_hijack_decorator_importable(app_configs, **kwargs):
         )
     return errors
 
+
 def check_staff_authorization_settings(app_configs, **kwargs):
     errors = []
     if hijack_settings.HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF and not hijack_settings.HIJACK_AUTHORIZE_STAFF:
@@ -106,6 +111,7 @@ def check_staff_authorization_settings(app_configs, **kwargs):
             )
         )
     return errors
+
 
 def register_checks():
     for check in [

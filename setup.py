@@ -37,7 +37,7 @@ dev_requires = ['flake8', ]
 def read(fname):
     try:
         return open(os.path.join(os.path.dirname(__file__), fname), 'r').read()
-    except (IOError):
+    except IOError:
         return u''
 
 

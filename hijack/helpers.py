@@ -34,8 +34,7 @@ def release_hijack(request):
         user_pk = hijack_history.pop()
         hijacker = get_object_or_404(get_user_model(), pk=user_pk)
         backend = get_used_backend(request)
-        hijacker.backend = "%s.%s" % (backend.__module__,
-                                  backend.__class__.__name__)
+        hijacker.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
         login(request, hijacker)
     if hijack_history:
         request.session['hijack_history'] = hijack_history
@@ -125,7 +124,9 @@ def login_user(request, hijacked):
 
 @receiver(user_logged_out)
 def logout_user(sender, **kwargs):
-    ''' wraps logout signal '''
+    """
+    Wraps logout signal
+    """
     user = kwargs['user']
     if hasattr(user, 'id'):
         post_superuser_logout.send(sender=None, user_id=user.pk)
