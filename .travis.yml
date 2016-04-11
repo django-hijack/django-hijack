@@ -21,8 +21,8 @@ install:
 
 script:
     - coverage run runtests.py hijack.tests.test_hijack:HijackTests
-    - python runtests.py hijack.tests.hijack.tests.test_hijack_url_settings:AllowGetMethodHijackTestCase
-    - python runtests.py hijack.tests.hijack.tests.test_hijack_url_settings:CustomDecoratorHijackTestCase
+    - python runtests.py hijack.tests.test_hijack_url_settings:AllowGetMethodHijackTestCase
+    - python runtests.py hijack.tests.test_hijack_url_settings:CustomDecoratorHijackTestCase
 
 after_success:
     coveralls
