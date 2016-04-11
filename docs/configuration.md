@@ -46,6 +46,11 @@ def my_authorization_check(hijacker, hijacked):
 effects on your application's authorization system. Potentially, it might allow any user to impersonate 
 any other user and to take advantage of all their permissions.**
 
+
+## Allowing GET method for hijack views
+The hijack-specific views (hijack someone, release etc.) only accept POST requests by default. This is to avoid CSRF attacks on hijack functionality (cf. https://github.com/arteria/django-hijack/issues/84).
+However, some users may want to forego this protection, e.g. if they want to integrate Django Hijack in the Django admin. In this case, they can set `HIJACK_ALLOW_GET_METHOD = True`.
+
 ## Custom view decorator
 Django Hijack's views are decorated by Django's `staff_member_required` decorator. If you have written your own 
 authorization function, or haven't installed `django.contrib.admin`, you may want to override this behaviour by 
@@ -109,5 +114,7 @@ URL a hijacker is redirected to when starting a hijack. Default: `settings.LOGIN
 URL a hijacker is redirected to when ending a hijack. Default: `settings.LOGIN_REDIRECT_URL`.
 ## `HIJACK_AUTHORIZATION_CHECK`
 Dotted path of a function checking whether `hijacker` is allowed to hijack `hijacked`. Default: `'hijack.helpers.is_authorized_default'`.
+## `HIJACK_ALLOW_GET_METHOD`
+Whether hijack views accept GET requests. Default: `False`.
 ## `HIJACK_DECORATOR`
 Dotted path of the decorator applied to the hijack views. Default: `'django.contrib.admin.views.decorators.staff_member_required'`.

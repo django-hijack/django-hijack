@@ -28,6 +28,11 @@ SETTINGS = (
         'legacy_name': 'ALLOW_STAFF_TO_HIJACK_STAFF_USER',
     },
     {
+        'name': 'HIJACK_ALLOW_GET_METHOD',
+        'default': False,
+        'legacy_name': None,
+    },
+    {
         'name': 'HIJACK_LOGIN_REDIRECT_URL',
         'default': getattr(django_settings, 'LOGIN_REDIRECT_URL', '/'),
         'legacy_name': None,
