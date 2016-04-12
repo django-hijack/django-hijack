@@ -1,3 +1,4 @@
+import django
 from django import template
 from django.utils.safestring import mark_safe
 from django.template.loader import render_to_string
@@ -34,7 +35,11 @@ def _render_hijack_notification(request):
         request.session.get('is_hijacked_user', False),
         request.session.get('display_hijack_warning', False),
     ]):
-        ans = render_to_string(template_name, {'request': request})
+        if django.VERSION < (1, 8):
+            from django.template import RequestContext
+            ans = render_to_string(template_name, context_instance=RequestContext(request))
+        else:
+            ans = render_to_string(template_name, request=request)
     return mark_safe(ans)
 
 

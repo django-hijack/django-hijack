@@ -3,6 +3,14 @@
 
 <div id="hijacked-warning" class="hijacked-warning hijacked-warning-default">
     <span style="padding-top: 4px; float: left;"><b>{% blocktrans with user=request.user%}You are currently working on behalf of {{ user }}.{% endblocktrans %}</b></span>
-    <span style="float: right; margin-right: 15px;"><a href="{% url 'release_hijack' %}" class="django-hijack-button-default">{% blocktrans with user=request.user %}release {{ user }}{% endblocktrans %}</a>
-    <a href="{% url 'disable_hijack_warning' %}?next={{ request.path }}" class="django-hijack-button-default">{% trans "hide" %}</a></span>
+    <div class="hijacked-warning-controls hijacked-warning-controls-pull-right">
+        <form action="{% url 'release_hijack' %}" method="POST">
+            {% csrf_token %}
+            <button class="django-hijack-button-default">{% blocktrans with user=request.user %}release {{ user }}{% endblocktrans %}</button>
+        </form>
+        <form action="{% url 'disable_hijack_warning' %}?next={{ request.path }}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="django-hijack-button-default">{% trans "hide" %}</button>
+        </form>
+    </div>
 </div>
