@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-10 10:10-0600\n"
+"POT-Creation-Date: 2016-04-12 09:51-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,25 +18,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: hijack/admin.py:36
-msgid "Hijack user"
-msgstr "Anmelden als"
-
-#: hijack/templates/hijack/admin_button.html:4
-#, python-format
-msgid "Hijack %(username)s"
-msgstr "Als %(username)s anmelden"
-
 #: hijack/templates/hijack/notifications.html:5
+#: hijack/templates/hijack/notifications_bootstrap.html:5
 #, python-format
 msgid "You are currently working on behalf of %(user)s."
 msgstr "Sie arbeiten mit dem Account von %(user)s."
 
-#: hijack/templates/hijack/notifications.html:6
+#: hijack/templates/hijack/notifications.html:9
+#: hijack/templates/hijack/notifications_bootstrap.html:9
 #, python-format
 msgid "release %(user)s"
 msgstr "Nicht mehr als %(user)s arbeiten"
 
-#: hijack/templates/hijack/notifications.html:7
+#: hijack/templates/hijack/notifications.html:13
 msgid "hide"
 msgstr "Ausblenden"
