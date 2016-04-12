@@ -23,7 +23,7 @@ script:
     - coverage erase
     - coverage run -a runtests.py hijack.tests.test_hijack
     - coverage run -a runtests.py hijack.tests.test_checks
-    - coverage run -a runtests.py hijack.tests.test_hijack_url_settings:AllowGetMethodHijackTestCase
+    - coverage run -a runtests.py hijack.tests.test_hijack_url_settings:AllowGetRequestsHijackTestCase
     - coverage run -a runtests.py hijack.tests.test_hijack_url_settings:CustomDecoratorHijackTestCase
 
 after_success:
