@@ -21,7 +21,8 @@ install:
 
 script:
     - coverage erase
-    - coverage run -a runtests.py hijack.tests.test_hijack:HijackTests
+    - coverage run -a runtests.py hijack.tests.test_hijack
+    - coverage run -a runtests.py hijack.tests.test_checks
     - coverage run -a runtests.py hijack.tests.test_hijack_url_settings:AllowGetMethodHijackTestCase
     - coverage run -a runtests.py hijack.tests.test_hijack_url_settings:CustomDecoratorHijackTestCase
 
