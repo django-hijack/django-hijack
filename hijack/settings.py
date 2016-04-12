@@ -23,7 +23,7 @@ SETTINGS = (
         'legacy_name': 'ALLOW_STAFF_TO_HIJACK_STAFF_USER',
     },
     {
-        'name': 'HIJACK_ALLOW_GET_METHOD',
+        'name': 'HIJACK_ALLOW_GET_REQUESTS',
         'default': False,
         'legacy_name': None,
     },

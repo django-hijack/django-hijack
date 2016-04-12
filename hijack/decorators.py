@@ -18,6 +18,6 @@ def hijack_require_http_methods(fn):
     Wrapper for "require_http_methods" decorator. POST required by default, GET can optionally be allowed
     """
     required_methods = ['POST']
-    if hijack_settings.HIJACK_ALLOW_GET_METHOD:
+    if hijack_settings.HIJACK_ALLOW_GET_REQUESTS:
         required_methods.append('GET')
     return require_http_methods(required_methods)(fn)

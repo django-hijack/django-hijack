@@ -6,15 +6,15 @@ from hijack.tests.test_hijack import BaseHijackTests
 from hijack.tests.utils import SettingsOverride
 
 
-class AllowGetMethodHijackTestCase(BaseHijackTests):
+class AllowGetRequestsHijackTestCase(BaseHijackTests):
 
     def setUp(self):
-        super(AllowGetMethodHijackTestCase, self).setUp()
+        super(AllowGetRequestsHijackTestCase, self).setUp()
 
     def tearDown(self):
-        super(AllowGetMethodHijackTestCase, self).tearDown()
+        super(AllowGetRequestsHijackTestCase, self).tearDown()
 
-    def test_allow_get_method(self):
+    def test_allow_get_requests(self):
         protected_urls = [
             '/hijack/{}/'.format(self.user.id),
             '/hijack/email/{}/'.format(self.user_email),
@@ -23,11 +23,11 @@ class AllowGetMethodHijackTestCase(BaseHijackTests):
             '/hijack/release-hijack/',
         ]
 
-        with SettingsOverride(hijack_settings, HIJACK_ALLOW_GET_METHOD=True):
-            self.assertTrue(hijack_settings.HIJACK_ALLOW_GET_METHOD)
+        with SettingsOverride(hijack_settings, HIJACK_ALLOW_GET_REQUESTS=True):
+            self.assertTrue(hijack_settings.HIJACK_ALLOW_GET_REQUESTS)
             for protected_url in protected_urls:
                 self.assertNotEqual(self.client.get(protected_url, follow=True).status_code, 405,
-                                    msg='GET method should be allowed')
+                                    msg='GET requests should be allowed')
 
 
 class CustomDecoratorHijackTestCase(BaseHijackTests):

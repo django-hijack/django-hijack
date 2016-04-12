@@ -173,6 +173,8 @@ class HijackTests(BaseHijackTests):
         self.assertEqual(hijack_settings.HIJACK_DECORATOR, 'django.contrib.admin.views.decorators.staff_member_required')
         self.assertTrue(hasattr(hijack_settings, 'HIJACK_USE_BOOTSTRAP'))
         self.assertFalse(hijack_settings.HIJACK_USE_BOOTSTRAP)
+        self.assertTrue(hasattr(hijack_settings, 'HIJACK_ALLOW_GET_REQUESTS'))
+        self.assertFalse(hijack_settings.HIJACK_ALLOW_GET_REQUESTS)
 
     def test_settings_override(self):
         self.assertFalse(hijack_settings.HIJACK_AUTHORIZE_STAFF)
@@ -221,8 +223,8 @@ class HijackTests(BaseHijackTests):
             self.assertFalse(is_authorized(self.user, self.staff_user))
             self.assertFalse(is_authorized(self.user, self.user))
 
-    def test_disallow_get_method(self):
-        self.assertFalse(hijack_settings.HIJACK_ALLOW_GET_METHOD)
+    def test_disallow_get_requests(self):
+        self.assertFalse(hijack_settings.HIJACK_ALLOW_GET_REQUESTS)
         protected_urls = [
             '/hijack/{}/'.format(self.user.id),
             '/hijack/email/{}/'.format(self.user_email),
@@ -232,7 +234,7 @@ class HijackTests(BaseHijackTests):
         ]
         for protected_url in protected_urls:
             self.assertEqual(self.client.get(protected_url, follow=True).status_code, 405,
-                             msg='GET method should not be allowed')
+                             msg='GET requests should not be allowed')
 
     def test_notification_tag(self):
         response = self._hijack(self.user)
