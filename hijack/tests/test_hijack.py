@@ -257,9 +257,9 @@ class HijackTests(BaseHijackTests):
             response = self._hijack(self.user)
             self.assertHijackSuccess(response)
             response = self.client.get('/hello/')
-            self.assertTrue('hijacked-warning-boostrap' in str(response.content))
+            self.assertTrue('hijacked-warning-bootstrap' in str(response.content))
             response = self.client.get('/hello/filter/')
-            self.assertTrue('hijacked-warning-boostrap' in str(response.content))
+            self.assertTrue('hijacked-warning-bootstrap' in str(response.content))
 
     def test_can_hijack_filter(self):
         self.assertTrue(can_hijack(self.superuser, self.staff_user))
