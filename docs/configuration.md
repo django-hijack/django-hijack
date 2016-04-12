@@ -92,12 +92,8 @@ class MyCustomUserAdmin(UserAdmin, HijackUserAdminMixin):
 In addition, you should explicitly set `HIJACK_DISPLAY_ADMIN_BUTTON = False` in your project settings.
 
 # Settings overview
-## `HIJACK_DISPLAY_ADMIN_BUTTON`
-Hide or display the "Hijack" buttons in the admin backend. Default: `True`.
-## `HIJACK_BUTTON_TEMPLATE`
-Path to template for the "Hijack" buttons in the admin backend. Default: `'hijack/admin_button.html'`
 ## `HIJACK_DISPLAY_WARNING`
-Hide or display the yellow notificiation bar show to hijackers. Default: `True`.
+Hide or display the yellow notification bar show to hijackers. Default: `True`.
 ## `HIJACK_USE_BOOTSTRAP`
 Whether a Bootstrap-optimized notification bar is used. Default: `False`.
 ## `HIJACK_URL_ALLOWED_ATTRIBUTES`

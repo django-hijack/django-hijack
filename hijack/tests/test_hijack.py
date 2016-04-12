@@ -133,10 +133,6 @@ class HijackTests(BaseHijackTests):
         self._release_hijack()
         self.assertEqual(User.objects.get(id=self.user.id).last_login, last_non_hijack_login)
 
-    def test_hijack_button(self):
-        response = self.client.get('/admin/auth/user/')
-        self.assertTrue('<a href="/hijack/%d/" class="button">' % self.user.id in str(response.content))
-
     def test_disable_hijack_warning(self):
         response = self._hijack(self.user)
         self.assertTrue('hijacked-warning' in str(response.content))
@@ -159,8 +155,6 @@ class HijackTests(BaseHijackTests):
         self.assertFalse(self.user.is_staff)
 
     def test_settings(self):
-        self.assertTrue(hasattr(hijack_settings, 'HIJACK_DISPLAY_ADMIN_BUTTON'))
-        self.assertTrue(hijack_settings.HIJACK_DISPLAY_ADMIN_BUTTON)
         self.assertTrue(hasattr(hijack_settings, 'HIJACK_DISPLAY_WARNING'))
         self.assertTrue(hijack_settings.HIJACK_DISPLAY_WARNING)
         self.assertTrue(hasattr(hijack_settings, 'HIJACK_URL_ALLOWED_ATTRIBUTES'))
@@ -181,10 +175,10 @@ class HijackTests(BaseHijackTests):
         self.assertFalse(hijack_settings.HIJACK_USE_BOOTSTRAP)
 
     def test_settings_override(self):
-        self.assertTrue(hijack_settings.HIJACK_DISPLAY_ADMIN_BUTTON)
-        with SettingsOverride(hijack_settings, HIJACK_DISPLAY_ADMIN_BUTTON=False):
-            self.assertFalse(hijack_settings.HIJACK_DISPLAY_ADMIN_BUTTON)
-        self.assertTrue(hijack_settings.HIJACK_DISPLAY_ADMIN_BUTTON)
+        self.assertFalse(hijack_settings.HIJACK_AUTHORIZE_STAFF)
+        with SettingsOverride(hijack_settings, HIJACK_AUTHORIZE_STAFF=True):
+            self.assertTrue(hijack_settings.HIJACK_AUTHORIZE_STAFF)
+        self.assertFalse(hijack_settings.HIJACK_AUTHORIZE_STAFF)
 
     def test_is_authorized(self):
         self.assertFalse(hijack_settings.HIJACK_AUTHORIZE_STAFF)

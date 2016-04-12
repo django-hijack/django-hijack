@@ -3,11 +3,6 @@ from django.conf import settings as django_settings
 
 SETTINGS = (
     {
-        'name': 'HIJACK_DISPLAY_ADMIN_BUTTON',
-        'default': True,
-        'legacy_name': 'SHOW_HIJACKUSER_IN_ADMIN',
-    },
-    {
         'name': 'HIJACK_DISPLAY_WARNING',
         'default': True,
         'legacy_name': 'HIJACK_NOTIFY_ADMIN',
@@ -57,12 +52,6 @@ SETTINGS = (
         'default': False,
         'legacy_name': None,
     },
-    {
-        'name': 'HIJACK_BUTTON_TEMPLATE',
-        'default': 'hijack/admin_button.html',
-        'legacy_name': None,
-    },
-
 )
 
 for setting in SETTINGS:

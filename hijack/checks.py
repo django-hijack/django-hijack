@@ -1,28 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.core.checks import Error, Warning, register
-from django.conf.global_settings import AUTH_USER_MODEL as default_auth_user_model
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 
 from compat import import_string
 from hijack import settings as hijack_settings
-
-
-def check_display_admin_button_with_custom_user_model(app_configs, **kwargs):
-    warnings = []
-    if hijack_settings.HIJACK_DISPLAY_ADMIN_BUTTON \
-            and settings.AUTH_USER_MODEL != default_auth_user_model:
-        warnings.append(
-            Warning(
-                'Setting HIJACK_DISPLAY_ADMIN_BUTTON, which is True by default, '
-                'does not work with a custom user model. '
-                'Mix HijackUserAdminMixin into your custom UserAdmin or set HIJACK_DISPLAY_ADMIN_BUTTON to False.',
-                hint=None,
-                obj=settings.AUTH_USER_MODEL,
-                id='hijack.W001',
-            )
-        )
-    return warnings
 
 
 def check_legacy_settings(app_configs, **kwargs):
@@ -115,7 +97,6 @@ def check_staff_authorization_settings(app_configs, **kwargs):
 
 def register_checks():
     for check in [
-        check_display_admin_button_with_custom_user_model,
         check_legacy_settings,
         check_url_allowed_attributes,
         check_custom_authorization_check_importable,

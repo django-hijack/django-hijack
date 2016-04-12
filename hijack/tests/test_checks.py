@@ -16,38 +16,12 @@ else:
 
     class ChecksTests(TestCase):
 
-        def test_check_display_admin_button_with_custom_user_model(self):
-            warnings = checks.check_display_admin_button_with_custom_user_model(HijackConfig)
-            self.assertFalse(warnings)
-
-            with SettingsOverride(hijack_settings, HIJACK_DISPLAY_ADMIN_BUTTON=False):
-                warnings = checks.check_display_admin_button_with_custom_user_model(HijackConfig)
-                self.assertFalse(warnings)
-
-            with SettingsOverride(hijack_settings, HIJACK_DISPLAY_ADMIN_BUTTON=True):
-                warnings = checks.check_display_admin_button_with_custom_user_model(HijackConfig)
-                self.assertFalse(warnings)
-
-            with self.settings(AUTH_USER_MODEL='my_auth_user_model'):
-                warnings = checks.check_display_admin_button_with_custom_user_model(HijackConfig)
-                expected_warnings = [
-                    Warning(
-                        'Setting HIJACK_DISPLAY_ADMIN_BUTTON, which is True by default, '
-                        'does not work with a custom user model. '
-                        'Mix HijackUserAdminMixin into your custom UserAdmin or set HIJACK_DISPLAY_ADMIN_BUTTON to False.',
-                        hint=None,
-                        obj=settings.AUTH_USER_MODEL,
-                        id='hijack.W001',
-                    )
-                ]
-                self.assertEqual(warnings, expected_warnings)
-
         def test_check_legacy_settings(self):
-            with SettingsOverride(settings, SHOW_HIJACKUSER_IN_ADMIN=False):
+            with SettingsOverride(settings, ALLOW_STAFF_TO_HIJACKUSER=True):
                 warnings = checks.check_legacy_settings(HijackConfig)
                 expected_warnings = [
                     Warning(
-                        'Deprecation warning: Setting "SHOW_HIJACKUSER_IN_ADMIN" has been renamed to "HIJACK_DISPLAY_ADMIN_BUTTON"',
+                        'Deprecation warning: Setting "ALLOW_STAFF_TO_HIJACKUSER" has been renamed to "HIJACK_AUTHORIZE_STAFF"',
                         hint=None,
                         obj=None,
                         id='hijack.W002'
