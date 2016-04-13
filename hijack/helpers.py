@@ -45,7 +45,7 @@ def release_hijack(request):
         request.session.pop('is_hijacked_user', None)
         request.session.pop('display_hijack_warning', None)
     request.session.modified = True
-    hijack_ended.send(sender=None, hijacker_id=hijacker.pk, hijacked_id=hijacked.pk)
+    hijack_ended.send(sender=None, hijacker_id=hijacker.pk, hijacked_id=hijacked.pk, request=request)
     return redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGOUT_REDIRECT_URL)
 
 
@@ -114,7 +114,7 @@ def login_user(request, hijacked):
         user_logged_in.connect(update_last_login)
 
     post_superuser_login.send(sender=None, user_id=hijacked.pk)  # Send legacy signal
-    hijack_started.send(sender=None, hijacker_id=hijacker.pk, hijacked_id=hijacked.pk)  # Send official, documented signal
+    hijack_started.send(sender=None, hijacker_id=hijacker.pk, hijacked_id=hijacked.pk, request=request)  # Send official, documented signal
     request.session['hijack_history'] = hijack_history
     request.session['is_hijacked_user'] = True
     request.session['display_hijack_warning'] = True

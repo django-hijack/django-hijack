@@ -112,11 +112,11 @@ You can catch a signal when someone is hijacked or released. Here is an example:
 ```python
 from hijack.signals import hijack_started, hijack_ended
 
-def print_hijack_started(sender, hijacker_id, hijacked_id, **kwargs):
+def print_hijack_started(sender, hijacker_id, hijacked_id, request, **kwargs):
     print('%d has hijacked %d' % (hijacker_id, hijacked_id))
 hijack_started.connect(print_hijack_started)
     
-def print_hijack_ended(sender, hijacker_id, hijacked_id, **kwargs):
+def print_hijack_ended(sender, hijacker_id, hijacked_id, request, *kwargs):
     print('%d has released %d' % (hijacker_id, hijacked_id))
 hijack_ended.connect(print_hijack_ended)
 ```

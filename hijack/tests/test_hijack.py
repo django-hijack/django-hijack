@@ -296,11 +296,11 @@ class HijackTests(BaseHijackTests):
     def test_signals(self):
         received_signals = []
 
-        def hijack_started_receiver(sender, hijacker_id, hijacked_id, **kwargs):
+        def hijack_started_receiver(sender, hijacker_id, hijacked_id, request, **kwargs):
             received_signals.append('hijack_started_%d_%d' % (hijacker_id, hijacked_id))
         hijack_started.connect(hijack_started_receiver)
 
-        def hijack_ended_receiver(sender, hijacker_id, hijacked_id, **kwargs):
+        def hijack_ended_receiver(sender, hijacker_id, hijacked_id, request, **kwargs):
             received_signals.append('hijack_ended_%d_%d' % (hijacker_id, hijacked_id))
         hijack_ended.connect(hijack_ended_receiver)
 
