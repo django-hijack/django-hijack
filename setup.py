@@ -61,7 +61,7 @@ setup(name="django-hijack",
                    'Framework :: Django',
                    'Framework :: Django :: 1.7',
                    'Framework :: Django :: 1.8',
-                   # 'Framework :: Django :: compat',
+                   'Framework :: Django :: 1.9',
                    'Programming Language :: Python',
                    'Programming Language :: Python :: 2',
                    'Programming Language :: Python :: 3', ], )
