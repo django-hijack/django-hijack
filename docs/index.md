@@ -39,10 +39,10 @@ HIJACK_LOGOUT_REDIRECT_URL = '/admin/auth/user/'  # Where admins are redirected 
 ```
 
 ### Setting up the notification bar
-We strongly recommend to display a notification bar to everyone who is hijacking another user.
+We strongly recommend displaying a notification bar to everyone who is hijacking another user.
 This reduces the risk of an admin hijacking someone inadvertently or forgetting to release the user afterwards.
 
-To set up the notification bar, add the following lines to your base.html / to the template in which want the notification bar to be displayed.
+To set up the notification bar, add the following lines to your `base.html` or to another template in which you want the notification bar to be displayed.
 
 ```html
 <!-- At the top -->
@@ -62,36 +62,49 @@ To set up the notification bar, add the following lines to your base.html / to t
 ...
 ```
 
-If your project uses Bootstrap, you may want to set `HIJACK_USE_BOOTSTRAP = True` in your project settings.
-Django Hijack will use a Bootstrap notification bar that does not overlap with the default navbar.
+If your project uses Bootstrap you may want to set `HIJACK_USE_BOOTSTRAP = True` in your project settings.
+Django Hijack will display a Bootstrap notification bar that does not overlap with the default navbar.
 
 # Usage
 
-Superusers can hijack a user by clicking the "Hijack" button in the Users admin or more directly by sending a GET request to a `/hijack/...` URL.
+Superusers can hijack a user by by sending a POST request to a `/hijack/...` URL.
 
-If the hijacking is successful, you are redirected to the `HIJACK_LOGIN_REDIRECT_URL`, 
-and a yellow notification bar is displayed at the top of the landing page.
+The following URLs are available by default:
 
-## Hijack button
+* `/hijack/<user id>` 
+* `/hijack/username/<username>`
+* `/hijack/email/<user email>`
 
-By default, Django Hijack displays a button in the Django admin's user list, which usually is located at `/admin/auth/user/`. 
-For instance, if you would like to hijack a user with the username "Max", click on the button named "Hijack Max".
+If the hijacking is successful, the user is redirected to the `HIJACK_LOGIN_REDIRECT_URL`, 
+and the yellow notification bar is displayed at the top of the landing page.
 
-## Hijacking by URL
-Alternatively, you can hijack a user directly from the address bar by specifying their ID, username, or e-mail address, respectively, in the following URLs:
+Here is a reference implementation of a button that allows a superuser to hijack the user referenced by the context variable `user`:
 
-* `example.com/hijack/<user-id>` 
-* `example.com/hijack/username/<username>`
-* `example.com/hijack/email/<email-address>`
+```html
+<form action="/hijack/{{ user.id }}/" method="post">
+    {% csrf_token %}
+    <button type="submit">Hijack {{ user.username }}</button>
+</form>
+```
 
 ## Ending the hijack
 In order to end the hijack and switch back to your admin account, push the "Release" button in the yellow notification bar:
 
 ![Screenshot of the release button in the notification bar](release-button.png)
 
-As an alternative, navigate directly to `/hijack/release-hijack/`.
+As an alternative, send a POST request to `/hijack/release-hijack/`.
 
 After releasing, you are redirected to the `HIJACK_LOGOUT_REDIRECT_URL`.
+
+## Django admin integration
+
+If you want to display the hijack button in the Django admin's user list which is usually located at `/admin/auth/user/`, 
+have a look at the <https://github.com/arteria/django-hijack-admin> app 
+that was originally a part of the core and has since been moved to a separate app.
+
+Example screenshot:
+
+![Screenshot of the django admin user list with a hijack column](admin-screenshot.png)
 
 ## Signals
 You can catch a signal when someone is hijacked or released. Here is an example:
