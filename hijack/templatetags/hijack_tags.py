@@ -19,7 +19,7 @@ def hijackNotification(request):
 
 @register.simple_tag(takes_context=True)
 def hijack_notification(context):
-    request = context['request']
+    request = context.get('request')
     return _render_hijack_notification(request)
 
 
