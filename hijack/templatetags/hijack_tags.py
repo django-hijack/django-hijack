@@ -29,9 +29,8 @@ def _render_hijack_notification(request):
     else:
         template_name = 'hijack/notifications.html'
     ans = ''
-    if all([
+    if request is not None and all([
         hijack_settings.HIJACK_DISPLAY_WARNING,
-        request,
         request.session.get('is_hijacked_user', False),
         request.session.get('display_hijack_warning', False),
     ]):
