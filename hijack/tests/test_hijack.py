@@ -244,6 +244,14 @@ class HijackTests(BaseHijackTests):
         self.assertTrue('Notification tag' in str(response.content))
         self.assertTrue('hijacked-warning' in str(response.content))
 
+    def test_is_hijacked_filter(self):
+        response = self._hijack(self.user)
+        self.assertHijackSuccess(response)
+        response = self.client.get('/hello/')
+        print(response.content)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'You are hijacking this user')
+
     def test_notification_filter(self):
         response = self._hijack(self.user)
         self.assertHijackSuccess(response)
