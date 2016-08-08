@@ -3,3 +3,6 @@ Notification tag:
 {% hijack_notification %}
 <h1>Hello</h1>
 <p>{{ user }}</p>
+{% if request|is_hijacked %}
+<p>You are hijacking this user</p>
+{% endif %}

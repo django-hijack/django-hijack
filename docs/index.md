@@ -65,6 +65,16 @@ To set up the notification bar, add the following lines to your `base.html` or t
 If your project uses Bootstrap you may want to set `HIJACK_USE_BOOTSTRAP = True` in your project settings.
 Django Hijack will display a Bootstrap notification bar that does not overlap with the default navbar.
 
+### Generic template filter
+We also provide a generic template filter to check if you are currently hijacking a user. This is useful for displaying/hiding elements besides the notification bar.
+
+```html
+{% load hijack_tags %}
+{% if request|is_hijacked %}
+...
+{% endif %}
+```
+
 # Usage
 
 Superusers can hijack a user by by sending a POST request to a `/hijack/...` URL.

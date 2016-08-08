@@ -46,3 +46,8 @@ def _render_hijack_notification(request):
 def can_hijack(hijacker, hijacked):
     check_authorization = import_string(hijack_settings.HIJACK_AUTHORIZATION_CHECK)
     return check_authorization(hijacker, hijacked)
+
+
+@register.filter
+def is_hijacked(request):
+    return request.session.get('is_hijacked_user', False)
