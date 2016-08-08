@@ -1,2 +1,2 @@
-django>=1.4,<1.10
-django-compat>=1.0.8
+django>=1.4,<1.11
+django-compat>=1.0.13
