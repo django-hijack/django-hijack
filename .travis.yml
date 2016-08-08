@@ -5,11 +5,12 @@ python:
     - "3.4"
     - "3.5"
 env:
-    - DJANGO=django==1.4.*
-    - DJANGO=django==1.6.*
-    - DJANGO=django==1.7.*
-    - DJANGO=django==1.8.*
-    - DJANGO=django==1.9.*
+    - DJANGO=django==1.4.* DJANGO_NOSE=django-nose==1.4.3
+    - DJANGO=django==1.6.* DJANGO_NOSE=django-nose==1.4.3
+    - DJANGO=django==1.7.* DJANGO_NOSE=django-nose==1.4.3
+    - DJANGO=django==1.8.* DJANGO_NOSE=django-nose==1.4.4
+    - DJANGO=django==1.9.* DJANGO_NOSE=django-nose==1.4.4
+    - DJANGO=django==1.10.* DJANGO_NOSE=django-nose==1.4.4
 
 sudo: false
 
@@ -17,6 +18,7 @@ install:
     - pip install -r requirements.txt
     - pip install -r requirements-test.txt
     - pip install $DJANGO
+    - pip install $DJANGO_NOSE
     - pip install coveralls
 
 script:
@@ -42,4 +44,5 @@ matrix:
     allow_failures:
         - env: DJANGO=django==1.4.*
         - env: DJANGO=django==1.6.*
+        - env: DJANGO=django==1.7.*
     fast_finish: true
