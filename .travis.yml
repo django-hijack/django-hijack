@@ -34,15 +34,15 @@ after_success:
 matrix:
     exclude:
         - python: "3.4"
-          env: DJANGO=django==1.4.*
+          env: DJANGO=django==1.4.* DJANGO_NOSE=django-nose==1.4.3
         - python: "3.5"
-          env: DJANGO=django==1.4.*
+          env: DJANGO=django==1.4.* DJANGO_NOSE=django-nose==1.4.3
         - python: "3.5"
-          env: DJANGO=django==1.6.*
+          env: DJANGO=django==1.6.* DJANGO_NOSE=django-nose==1.4.3
         - python: "3.5"
-          env: DJANGO=django==1.7.*
+          env: DJANGO=django==1.7.* DJANGO_NOSE=django-nose==1.4.3
     allow_failures:
-        - env: DJANGO=django==1.4.*
-        - env: DJANGO=django==1.6.*
-        - env: DJANGO=django==1.7.*
+        - env: DJANGO=django==1.4.* DJANGO_NOSE=django-nose==1.4.3
+        - env: DJANGO=django==1.6.* DJANGO_NOSE=django-nose==1.4.3
+        - env: DJANGO=django==1.7.* DJANGO_NOSE=django-nose==1.4.3
     fast_finish: true
