@@ -4,45 +4,32 @@ python:
     - "2.7"
     - "3.4"
     - "3.5"
-env:
-    - DJANGO=django==1.4.* DJANGO_NOSE=django-nose==1.4.3
-    - DJANGO=django==1.6.* DJANGO_NOSE=django-nose==1.4.3
-    - DJANGO=django==1.7.* DJANGO_NOSE=django-nose==1.4.3
-    - DJANGO=django==1.8.* DJANGO_NOSE=django-nose==1.4.4
-    - DJANGO=django==1.9.* DJANGO_NOSE=django-nose==1.4.4
-    - DJANGO=django==1.10.* DJANGO_NOSE=django-nose==1.4.4
 
-sudo: false
+# this list can be easily generated py running `tox -l`
+env:
+    - TOX_ENX=py27-django14
+    - TOX_ENX=py27-django16
+    - TOX_ENX=py27-django17
+    - TOX_ENX=py27-django18
+    - TOX_ENX=py27-django19
+    - TOX_ENX=py27-django110
+    - TOX_ENX=py34-django16
+    - TOX_ENX=py34-django17
+    - TOX_ENX=py34-django18
+    - TOX_ENX=py34-django19
+    - TOX_ENX=py34-django110
+    - TOX_ENX=py35-django18
+    - TOX_ENX=py35-django19
+    - TOX_ENX=py35-django110
 
 install:
-    - pip install -r requirements.txt
-    - pip install -r requirements-test.txt
-    - pip install $DJANGO
-    - pip install $DJANGO_NOSE
+    - pip install tox
     - pip install coveralls
 
 script:
-    - coverage erase
-    - coverage run -a runtests.py hijack.tests.test_hijack
-    - coverage run -a runtests.py hijack.tests.test_checks
-    - coverage run -a runtests.py hijack.tests.test_hijack_url_settings:AllowGetRequestsHijackTestCase
-    - coverage run -a runtests.py hijack.tests.test_hijack_url_settings:CustomDecoratorHijackTestCase
+    - tox -e $TOX_ENV
+
+sudo: false
 
 after_success:
     coveralls
-
-matrix:
-    exclude:
-        - python: "3.4"
-          env: DJANGO=django==1.4.* DJANGO_NOSE=django-nose==1.4.3
-        - python: "3.5"
-          env: DJANGO=django==1.4.* DJANGO_NOSE=django-nose==1.4.3
-        - python: "3.5"
-          env: DJANGO=django==1.6.* DJANGO_NOSE=django-nose==1.4.3
-        - python: "3.5"
-          env: DJANGO=django==1.7.* DJANGO_NOSE=django-nose==1.4.3
-    allow_failures:
-        - env: DJANGO=django==1.4.* DJANGO_NOSE=django-nose==1.4.3
-        - env: DJANGO=django==1.6.* DJANGO_NOSE=django-nose==1.4.3
-        - env: DJANGO=django==1.7.* DJANGO_NOSE=django-nose==1.4.3
-    fast_finish: true

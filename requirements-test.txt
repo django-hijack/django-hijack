@@ -1,3 +1,0 @@
-django-nose
-coverage
-django-coverage
