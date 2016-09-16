@@ -28,3 +28,14 @@ sudo: false
 
 after_success:
     coveralls
+
+# Currently, Python 3.5 Interpreter is only available when it is specified
+# in the travis python section. So we have to work around this with this include
+# GitHub issue: https://github.com/travis-ci/travis-ci/issues/4794
+matrix:
+    include:
+        - python: 3.5
+        env:
+            - TOX_ENV=py35-django18
+            - TOX_ENV=py35-django19
+            - TOX_ENV=py35-django110
