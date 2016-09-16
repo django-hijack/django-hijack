@@ -7,20 +7,20 @@ python:
 
 # this list can be easily generated py running `tox -l`
 env:
-    - TOX_ENX=py27-django14
-    - TOX_ENX=py27-django16
-    - TOX_ENX=py27-django17
-    - TOX_ENX=py27-django18
-    - TOX_ENX=py27-django19
-    - TOX_ENX=py27-django110
-    - TOX_ENX=py34-django16
-    - TOX_ENX=py34-django17
-    - TOX_ENX=py34-django18
-    - TOX_ENX=py34-django19
-    - TOX_ENX=py34-django110
-    - TOX_ENX=py35-django18
-    - TOX_ENX=py35-django19
-    - TOX_ENX=py35-django110
+    - TOX_ENV=py27-django14
+    - TOX_ENV=py27-django16
+    - TOX_ENV=py27-django17
+    - TOX_ENV=py27-django18
+    - TOX_ENV=py27-django19
+    - TOX_ENV=py27-django110
+    - TOX_ENV=py34-django16
+    - TOX_ENV=py34-django17
+    - TOX_ENV=py34-django18
+    - TOX_ENV=py34-django19
+    - TOX_ENV=py34-django110
+    - TOX_ENV=py35-django18
+    - TOX_ENV=py35-django19
+    - TOX_ENV=py35-django110
 
 install:
     - pip install tox
