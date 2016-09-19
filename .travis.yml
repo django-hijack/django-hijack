@@ -34,7 +34,7 @@ matrix:
       - TOX_ENV=py35-django110
 
 install:
-    - pip install tox
+    - pip install tox-travis
     - pip install coveralls
 
 script:
