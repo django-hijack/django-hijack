@@ -13,21 +13,6 @@ env:
     - TOX_ENV=py34-django18
     - TOX_ENV=py34-django19
     - TOX_ENV=py34-django110
-    - TOX_ENV=py35-django18
-    - TOX_ENV=py35-django19
-    - TOX_ENV=py35-django110
-
-install:
-    - pip install tox
-    - pip install coveralls
-
-script:
-    - tox -e $TOX_ENV
-
-sudo: false
-
-after_success:
-    coveralls
 
 # Currently, Python 3.5 Interpreter is only available when it is specified
 # in the travis python section. So we have to work around this with this include
@@ -43,3 +28,15 @@ matrix:
   - python: "3.5"
     env:
       - TOX_ENV=py35-django110
+
+install:
+    - pip install tox
+    - pip install coveralls
+
+script:
+    - tox -e $TOX_ENV
+
+sudo: false
+
+after_success:
+    coveralls
