@@ -33,13 +33,13 @@ after_success:
 # in the travis python section. So we have to work around this with this include
 # GitHub issue: https://github.com/travis-ci/travis-ci/issues/4794
 matrix:
-    include:
-        - python: "3.5"
-        env:
-            - TOX_ENV=py35-django18
-        - python: "3.5"
-        env:
-            - TOX_ENV=py35-django19
-    - python: "3.5"
-        env:
-            - TOX_ENV=py35-django110
+  include:
+  - python: "3.5"
+    env:
+      - TOX_ENV=py35-django18
+  - python: "3.5"
+    env:
+      - TOX_ENV=py35-django19
+  - python: "3.5"
+    env:
+      - TOX_ENV=py35-django110
