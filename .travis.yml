@@ -1,9 +1,5 @@
 language: python
 
-python:
-    - "2.7"
-    - "3.4"
-
 # this list can be easily generated py running `tox -l`
 env:
     - TOX_ENV=py27-django14
