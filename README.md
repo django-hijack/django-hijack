@@ -22,3 +22,9 @@ See http://django-hijack.readthedocs.org/en/stable/.
 > This is a super useful tool. I have a site where I occasionally impersonating users to help troubleshoot their issues. This is a huge time saver.
 >
 > -- [orangishyellow](https://www.reddit.com/user/orangishyellow) on [reddit](https://redd.it/2i35fu)
+
+---
+
+> ... one of our standard apps to install now.
+>
+> -- [thundersnow](https://www.reddit.com/user/thundersnow) on [reddit](https://redd.it/4wqo0d/)
