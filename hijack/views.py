@@ -19,21 +19,27 @@ def login_with_id(request, user_id):
     except ValueError:
         return HttpResponseBadRequest('user_id must be an integer value.')
     user = get_object_or_404(get_user_model(), pk=user_id)
-    return login_user(request, user)
+    if not user.is_superuser:
+        return login_user(request, user)
+    return HttpResponseBadRequest('Cannot hijack superuser.')
 
 
 @hijack_decorator
 @hijack_require_http_methods
 def login_with_email(request, email):
     user = get_object_or_404(get_user_model(), email=email)
-    return login_user(request, user)
+    if not user.is_superuser:
+        return login_user(request, user)
+    return HttpResponseBadRequest('Cannot hijack superuser.')
 
 
 @hijack_decorator
 @hijack_require_http_methods
 def login_with_username(request, username):
     user = get_object_or_404(get_user_model(), username=username)
-    return login_user(request, user)
+    if not user.is_superuser:
+        return login_user(request, user)
+    return HttpResponseBadRequest('Cannot hijack superuser.')
 
 
 @login_required
