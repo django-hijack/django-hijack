@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest,HttpResponse
 from django.shortcuts import get_object_or_404
 
 from hijack.decorators import hijack_require_http_methods, hijack_decorator
@@ -22,7 +22,7 @@ def login_with_id(request, user_id):
     user = get_object_or_404(get_user_model(), pk=user_id)
     if not user.is_superuser or hijack_settings.HIJACK_AUTHORIZE_SUPERUSER_TO_HIJACK_SUPERUSER:
         return login_user(request, user)
-    return HttpResponseBadRequest('Cannot hijack superuser.')
+    return HttpResponse('Cannot hijack superuser.')
 
 
 @hijack_decorator
@@ -31,7 +31,7 @@ def login_with_email(request, email):
     user = get_object_or_404(get_user_model(), email=email)
     if not user.is_superuser or hijack_settings.HIJACK_AUTHORIZE_SUPERUSER_TO_HIJACK_SUPERUSER:
         return login_user(request, user)
-    return HttpResponseBadRequest('Cannot hijack superuser.')
+    return HttpResponse('Cannot hijack superuser.')
 
 
 @hijack_decorator
@@ -40,7 +40,7 @@ def login_with_username(request, username):
     user = get_object_or_404(get_user_model(), username=username)
     if not user.is_superuser or hijack_settings.HIJACK_AUTHORIZE_SUPERUSER_TO_HIJACK_SUPERUSER:
         return login_user(request, user)
-    return HttpResponseBadRequest('Cannot hijack superuser.')
+    return HttpResponse('Cannot hijack superuser.')
 
 
 @login_required
