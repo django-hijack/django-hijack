@@ -24,7 +24,7 @@ SETTINGS = (
     },
     {
         'name': 'HIJACK_AUTHORIZE_SUPERUSER_TO_HIJACK_SUPERUSER',
-        'default': True,
+        'default': False,
         'legacy_name': None,
     },
     {
