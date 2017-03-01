@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/arteria/django-hijack.svg?branch=master)](https://travis-ci.org/arteria/django-hijack)
 [![Stories in Ready](https://badge.waffle.io/arteria/django-hijack.png?label=ready&title=Ready)](https://waffle.io/arteria/django-hijack)
 [![Coverage Status](https://coveralls.io/repos/arteria/django-hijack/badge.svg?branch=master&service=github)](https://coveralls.io/github/arteria/django-hijack?branch=master)
+[![PyPI](https://img.shields.io/pypi/v/django-hijack.svg)](https://pypi.python.org/pypi/django-hijack)
 
 ![Screenshot of the notification seen while hijacking another user.](docs/hijacker-screenshot.png)
 
