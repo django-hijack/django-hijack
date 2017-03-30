@@ -9,3 +9,4 @@ global-exclude *.orig *.pyc *.log *.swp
 prune hijack/tests/coverage
 prune hijack/.ropeproject
 recursive-include hijack/templates *
+recursive-include hijack/locale *
