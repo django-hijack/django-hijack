@@ -23,6 +23,11 @@ SETTINGS = (
         'legacy_name': 'ALLOW_STAFF_TO_HIJACK_STAFF_USER',
     },
     {
+        'name': 'HIJACK_AUTHORIZE_SUPERUSER_TO_HIJACK_SUPERUSER',
+        'default': False,
+        'legacy_name': None,
+    },
+    {
         'name': 'HIJACK_ALLOW_GET_REQUESTS',
         'default': False,
         'legacy_name': None,

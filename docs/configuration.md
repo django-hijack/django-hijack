@@ -89,6 +89,8 @@ Whether staff members are allowed to hijack. Default: `False`.
 ## `HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF`
 Whether staff members are allowed to hijack other staff members. Default: `False`.
 May not be True if `HIJACK_AUTHORIZE_STAFF` is disabled.
+## `HIJACK_AUTHORIZE_SUPERUSER_TO_HIJACK_SUPERUSER`
+Whether superusers are allowed to hijack other superusers. Default: `False`.
 ## `HIJACK_LOGIN_REDIRECT_URL`
 URL a hijacker is redirected to when starting a hijack. Default: `settings.LOGIN_REDIRECT_URL`.
 ## `HIJACK_LOGOUT_REDIRECT_URL`
