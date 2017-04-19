@@ -5,21 +5,13 @@ env:
     - TOX_ENV=py27-django18
     - TOX_ENV=py27-django19
     - TOX_ENV=py27-django110
+    - TOX_ENV=py27-django111
 
 # Currently, Python 3.5 Interpreter is only available when it is specified
 # in the travis python section. So we have to work around this with this include
 # GitHub issue: https://github.com/travis-ci/travis-ci/issues/4794
 matrix:
   include:
-  - python: "3.4"
-    env:
-      - TOX_ENV=py34-django18
-  - python: "3.4"
-    env:
-      - TOX_ENV=py34-django19
-  - python: "3.4"
-    env:
-      - TOX_ENV=py34-django110
   - python: "3.5"
     env:
       - TOX_ENV=py35-django18
@@ -29,6 +21,21 @@ matrix:
   - python: "3.5"
     env:
       - TOX_ENV=py35-django110
+  - python: "3.5"
+    env:
+      - TOX_ENV=py35-django111
+  - python: "3.6"
+    env:
+      - TOX_ENV=py36-django18
+  - python: "3.6"
+    env:
+      - TOX_ENV=py36-django19
+  - python: "3.6"
+    env:
+      - TOX_ENV=py36-django110
+  - python: "3.6"
+    env:
+      - TOX_ENV=py36-django111
 
 install:
     - pip install tox-travis
