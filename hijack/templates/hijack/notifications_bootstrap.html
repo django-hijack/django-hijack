@@ -1,8 +1,7 @@
-{% load url from compat %}
 {% load i18n %}
 
 <div id="hijacked-warning" class="alert hijacked-warning hijacked-warning-bootstrap" role="alert">
-    {% blocktrans with user=request.user%}You are currently working on behalf of {{ user }}.{% endblocktrans %}
+    {% blocktrans with user=request.user %}You are currently working on behalf of {{ user }}.{% endblocktrans %}
     <div class="hijacked-warning-controls">
         <form action="{% url 'release_hijack' %}" method="POST">
             {% csrf_token %}
