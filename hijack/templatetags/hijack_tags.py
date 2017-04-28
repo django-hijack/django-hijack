@@ -20,10 +20,10 @@ def hijackNotification(request):
 @register.simple_tag(takes_context=True)
 def hijack_notification(context):
     request = context.get('request')
-    return _render_hijack_notification(request)
+    return _render_hijack_notification(request, context)
 
 
-def _render_hijack_notification(request):
+def _render_hijack_notification(request, context=None):
     if hijack_settings.HIJACK_USE_BOOTSTRAP:
         template_name = 'hijack/notifications_bootstrap.html'
     else:
@@ -36,9 +36,9 @@ def _render_hijack_notification(request):
     ]):
         if django.VERSION < (1, 8):
             from django.template import RequestContext
-            ans = render_to_string(template_name, context_instance=RequestContext(request))
+            ans = render_to_string(template_name, context, RequestContext(request))
         else:
-            ans = render_to_string(template_name, request=request)
+            ans = render_to_string(template_name, context, request=request)
     return mark_safe(ans)
 
 
