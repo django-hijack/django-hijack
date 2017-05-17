@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase, Client
@@ -248,7 +249,6 @@ class HijackTests(BaseHijackTests):
         response = self._hijack(self.user)
         self.assertHijackSuccess(response)
         response = self.client.get('/hello/')
-        print(response.content)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'You are hijacking this user')
 
@@ -319,3 +319,11 @@ class HijackTests(BaseHijackTests):
         self._release_hijack()
         self.assertEqual(len(received_signals), 2)
         self.assertIn('hijack_ended_%d_%d' % (self.superuser.id, self.user.id), received_signals)
+
+    def test_custom_session_cookie_name(self):
+        self.assertEqual(settings.SESSION_COOKIE_NAME, 'sessionid')
+        with SettingsOverride(settings, SESSION_COOKIE_NAME='somethingelse'):
+            self.client.login(username=self.superuser_username, password=self.superuser_password)
+            response = self._hijack(self.user)
+            self.assertHijackSuccess(response)
+            self._release_hijack()
