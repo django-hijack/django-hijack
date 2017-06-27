@@ -1,4 +1,58 @@
 === (ongoing) ===
+- Remove deprecated signals from version 1 (#115)
+
+== (2.1.4) ==
+- Added support for Django 1.11
+- Reworked tox and travis setup
+
+== (2.1.3) ==
+- Add French and Czech translations
+- Include compiled messages in package
+
+== (2.1.2) ==
+- Django 1.10 compatibility
+- Drop support for Django 1.7 (might still work, but tests are allowed to fail)
+- Add template filter request|is_hijacked
+- Improve error handling in notification template tag
+
+== (2.1.1) ==
+- 
+
+== (2.1.0) ==
+- Make hijacking via POST a default requirement
+- Introduce a setting HIJACK_ALLOW_GET_REQUESTS
+- Move Django admin integration to a separate package as it depends on GET (https://github.com/arteria/django-hijack-admin)
+- If you currently use the admin integration, follow the instructions there when upgrading
+- The setting HIJACK_DISPLAY_ADMIN_BUTTON is not used anymore.
+- Pass request to signals
+- Tests for custom decorators
+
+== (2.0.8) ==
+- Fix end-of-hijack session cleanup code
+- Don't save hijacked user at login; disconnect update_last_login instead
+- Avoid encoding error in setup.py
+
+== (2.0.7) ==
+- Optional setting for admin hijack button template, cf. http://django-hijack.readthedocs.org/en/latest/configuration/#hijack_button_template
+- Minor enhancements
+
+== (2.0.6) ==
+-
+
+== (2.0.5) ==
+-
+
+== (2.0.4) ==
+-
+
+== (2.0.3) ==
+- Use pk to access the User primary key
+
+== (2.0.2) ==
+- Use pk to access the User primary key
+
+== (2.0.1) ==
+- Remove django-sessioninfo as a dependency
 
 === (2.0.0) ===
 - Unify settings; Django will show a warning if a deprecated setting name is used. See http://django-hijack.rtfd.org/en/latest/configuration/#settings-overview
