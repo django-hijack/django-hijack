@@ -18,14 +18,18 @@ See http://django-hijack.readthedocs.org/en/stable/.
 >
 > -- [benzinonapoloni](https://www.reddit.com/user/benzinonapoloni) on [reddit](https://redd.it/39aggd)
 
----
 
 > This is a super useful tool. I have a site where I occasionally impersonating users to help troubleshoot their issues. This is a huge time saver.
 >
 > -- [orangishyellow](https://www.reddit.com/user/orangishyellow) on [reddit](https://redd.it/2i35fu)
 
----
+
 
 > ... one of our standard apps to install now.
 >
 > -- [thundersnow](https://www.reddit.com/user/thundersnow) on [reddit](https://redd.it/4wqo0d/)
+
+
+
+| django-hijack is free software. If you find it useful and would like to give back, please consider to make a donation using [Bitcoin](https://blockchain.info/payment_request?address=1AJkbQdcNkrHzxi91mB1kkPxh4t4BJ4hu4) or [PayPal](https://www.paypal.me/arteriagmbh). Thank you! |
+| ----- |
