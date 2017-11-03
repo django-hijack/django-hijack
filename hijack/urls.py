@@ -33,7 +33,7 @@ if 'user_id' in hijacking_user_attributes:
     ))
 if any([e for e in hijacking_user_attributes if e != 'email' or e != 'user_id']):
     urlpatterns.append(url(
-        r'^(?P<field>[\w]+)/(?P<value>[\w]+)/$',
+        r'^(?P<field>[\w-]+)/(?P<value>[\w-]+)/$',
         views.login_with_another_field,
         name='login_with_another_field'
     ))

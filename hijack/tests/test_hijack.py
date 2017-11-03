@@ -30,9 +30,9 @@ class BaseHijackTests(TestCase):
         self.user_username = 'user'
         self.user_email = 'user@example.com'
         self.user_password = 'user_pw'
-        self.user = User.objects.create_user(self.user_username, self.user_email, self.user_password)
+        self.user = User.objects.create_user(self.user_username, self.user_email, self.user_password, first_name='django-hijack')
 
-        User.objects.create_user('user2', 'user2@example.com', 'user_pw')
+        User.objects.create_user('user2', 'user2@example.com', 'user_pw', first_name='django-hijack')
 
         self.client.login(username=self.superuser_username, password=self.superuser_password)
 
@@ -104,7 +104,7 @@ class HijackTests(BaseHijackTests):
         self.assertEqual(response.status_code, 404)
         response = self.client.post('/hijack/user_name/bob/', follow=True)
         self.assertEqual(response.status_code, 404)
-        response = self.client.post('/hijack/password/user_pw/', follow=True)
+        response = self.client.post('/hijack/first_name/django-hijack/', follow=True)
         self.assertEqual(response.status_code, 404)
 
     def test_hijack_url_email(self):
