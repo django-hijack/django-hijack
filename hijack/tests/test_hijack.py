@@ -32,6 +32,8 @@ class BaseHijackTests(TestCase):
         self.user_password = 'user_pw'
         self.user = User.objects.create_user(self.user_username, self.user_email, self.user_password)
 
+        User.objects.create_user('user2', 'user2@example.com', 'user_pw')
+
         self.client.login(username=self.superuser_username, password=self.superuser_password)
 
     def tearDown(self):
@@ -94,11 +96,15 @@ class HijackTests(BaseHijackTests):
         response = self.client.post('/hijack/-1/', follow=True)
         self.assertEqual(response.status_code, 404)
 
-    def test_hijack_url_username(self):
-        response = self.client.post('/hijack/username/%s/' % self.user_username, follow=True)
+    def test_hijack_url_another_field(self):
+        response = self.client.post('/hijack/%s/%s/' % ('username', self.user_username), follow=True)
         self.assertHijackSuccess(response)
         self._release_hijack()
         response = self.client.post('/hijack/username/dfjakhdl/', follow=True)
+        self.assertEqual(response.status_code, 404)
+        response = self.client.post('/hijack/user_name/bob/', follow=True)
+        self.assertEqual(response.status_code, 404)
+        response = self.client.post('/hijack/password/user_pw/', follow=True)
         self.assertEqual(response.status_code, 404)
 
     def test_hijack_url_email(self):
