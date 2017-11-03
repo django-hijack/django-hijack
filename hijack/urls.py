@@ -25,15 +25,15 @@ if 'email' in hijacking_user_attributes:
         views.login_with_email,
         name='login_with_email'
     ))
-if 'username' in hijacking_user_attributes:
-    urlpatterns.append(url(
-        r'^username/(?P<username>.*)/$',
-        views.login_with_username,
-        name='login_with_username'
-    ))
 if 'user_id' in hijacking_user_attributes:
     urlpatterns.append(url(
         r'^(?P<user_id>[\w-]+)/$',
         views.login_with_id,
         name='login_with_id'
+    ))
+else:
+    urlpatterns.append(url(
+        r'^(?P<field>[\w]+)/(?P<value>[\w]+)/$',
+        views.login_with_another_field,
+        name=login_with_another_field
     ))

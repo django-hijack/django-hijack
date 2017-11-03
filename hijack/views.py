@@ -2,6 +2,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
+from django.http import Http404
 
 from hijack.decorators import hijack_require_http_methods, hijack_decorator
 from hijack.helpers import login_user, redirect_to_next
@@ -31,8 +32,17 @@ def login_with_email(request, email):
 
 @hijack_decorator
 @hijack_require_http_methods
-def login_with_username(request, username):
-    user = get_object_or_404(get_user_model(), username=username)
+def login_with_another_field(request, field, value):
+    try:
+        user = get_user_model().objects.get(**{field: value})
+    except FieldError:
+        return Http404('There is no such field in your user model.')
+    except DoesNotExist:
+        return Http404('There is no such object that matches the value.')
+    except MultipleObjectsReturned:
+        return Http404('There is multiple objects that math the value.')
+    except Exception:
+        return Http404('')
     return login_user(request, user)
 
 
