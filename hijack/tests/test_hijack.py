@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
 from django.test import TestCase, Client
 from compat import import_string, unquote_plus
 
@@ -9,6 +8,11 @@ from hijack.helpers import is_authorized
 from hijack.signals import hijack_started, hijack_ended
 from hijack.templatetags.hijack_tags import can_hijack
 from hijack.tests.utils import SettingsOverride
+
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse
 
 
 class BaseHijackTests(TestCase):
