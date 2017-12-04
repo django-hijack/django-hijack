@@ -4,11 +4,11 @@
 <div id="hijacked-warning" class="alert hijacked-warning hijacked-warning-bootstrap" role="alert">
     {% blocktrans with user=request.user%}You are currently working on behalf of {{ user }}.{% endblocktrans %}
     <div class="hijacked-warning-controls">
-        <form action="{% url 'release_hijack' %}" method="POST">
+        <form action="{% url 'hijack:release_hijack' %}" method="POST">
             {% csrf_token %}
             <button type="submit" class="btn btn-default btn-sm django-hijack-button-bootstrap">{% blocktrans with user=request.user %}release {{ user }}{% endblocktrans %}</button>
         </form>
-        <form action="{% url 'disable_hijack_warning' %}?next={{ request.path }}" method="POST">
+        <form action="{% url 'hijack:disable_hijack_warning' %}?next={{ request.path }}" method="POST">
             {% csrf_token %}
             <button type="submit" class="close" data-dismiss="alert">×</button>
         </form>
