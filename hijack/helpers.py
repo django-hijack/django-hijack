@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import update_last_login
-from django.contrib.auth.signals import user_logged_in, user_logged_out
+from django.contrib.auth.signals import user_logged_in
 from django.contrib.auth import login, load_backend, BACKEND_SESSION_KEY
-from django.dispatch import receiver
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.http import is_safe_url
@@ -12,7 +11,7 @@ from compat import get_user_model, import_string
 from compat import resolve_url
 
 from hijack import settings as hijack_settings
-from hijack.signals import post_superuser_login, post_superuser_logout, hijack_started, hijack_ended
+from hijack.signals import hijack_started, hijack_ended
 
 
 def get_used_backend(request):
@@ -113,24 +112,12 @@ def login_user(request, hijacked):
     if signal_was_connected:
         user_logged_in.connect(update_last_login)
 
-    post_superuser_login.send(sender=None, user_id=hijacked.pk)  # Send legacy signal
     hijack_started.send(sender=None, hijacker_id=hijacker.pk, hijacked_id=hijacked.pk, request=request)  # Send official, documented signal
     request.session['hijack_history'] = hijack_history
     request.session['is_hijacked_user'] = True
     request.session['display_hijack_warning'] = True
     request.session.modified = True
     return redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGIN_REDIRECT_URL)
-
-
-@receiver(user_logged_out)
-def logout_user(sender, **kwargs):
-    """
-    Legacy code
-    Wraps logout signal to send deprecated "post_superuser_logout" signal
-    """
-    user = kwargs['user']
-    if hasattr(user, 'id'):
-        post_superuser_logout.send(sender=None, user_id=user.pk)
 
 
 def redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGIN_REDIRECT_URL):
