@@ -128,15 +128,22 @@ class HijackTests(BaseHijackTests):
 
     def test_last_login_time_not_changed(self):
         self.client.logout()
+        # user login to set user.last_login
         self.client.login(username=self.user_username, password=self.user_password)
         self.client.logout()
-        last_non_hijack_login = User.objects.get(id=self.user.id).last_login
-        self.assertIsNotNone(last_non_hijack_login)
+        user_last_login = User.objects.get(id=self.user.id).last_login
+        self.assertIsNotNone(user_last_login)
+        # super-user login to hijack
         self.client.login(username=self.superuser_username, password=self.superuser_password)
+        su_last_login = User.objects.get(id=self.superuser.id).last_login
+        self.assertIsNotNone(su_last_login)
+        # this shall not update user last_login
         response = self._hijack(self.user)
         self.assertHijackSuccess(response)
+        # this shall not update super-user last_login
         self._release_hijack()
-        self.assertEqual(User.objects.get(id=self.user.id).last_login, last_non_hijack_login)
+        self.assertEqual(User.objects.get(id=self.user.id).last_login, user_last_login)
+        self.assertEqual(User.objects.get(id=self.superuser.id).last_login, su_last_login)
 
     def test_disable_hijack_warning(self):
         response = self._hijack(self.user)

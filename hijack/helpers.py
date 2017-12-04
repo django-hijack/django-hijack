@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import contextlib
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth.signals import user_logged_in
@@ -12,6 +13,25 @@ from compat import resolve_url
 
 from hijack import settings as hijack_settings
 from hijack.signals import hijack_started, hijack_ended
+
+
+@contextlib.contextmanager
+def no_update_last_login():
+    """
+    Disconnect any signals to update_last_login() for the scope of the context
+    manager, then restore.
+    """
+    kw = {'receiver': update_last_login}
+    kw_id = {'receiver': update_last_login, 'dispatch_uid': 'update_last_login'}
+
+    was_connected = user_logged_in.disconnect(**kw)
+    was_connected_id = not was_connected and user_logged_in.disconnect(**kw_id)
+    yield
+    # Restore signal if needed
+    if was_connected:
+        user_logged_in.connect(**kw)
+    elif was_connected_id:
+        user_logged_in.connect(**kw_id)
 
 
 def get_used_backend(request):
@@ -34,7 +54,8 @@ def release_hijack(request):
         hijacker = get_object_or_404(get_user_model(), pk=user_pk)
         backend = get_used_backend(request)
         hijacker.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
-        login(request, hijacker)
+        with no_update_last_login():
+            login(request, hijacker)
     if hijack_history:
         request.session['hijack_history'] = hijack_history
         request.session['is_hijacked_user'] = True
@@ -102,15 +123,9 @@ def login_user(request, hijacked):
     backend = get_used_backend(request)
     hijacked.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
 
-    # Prevent update of hijacked user last_login
-    signal_was_connected = user_logged_in.disconnect(update_last_login)
-
-    # Actually log user in
-    login(request, hijacked)
-
-    # Restore signal if needed
-    if signal_was_connected:
-        user_logged_in.connect(update_last_login)
+    with no_update_last_login():
+        # Actually log user in
+        login(request, hijacked)
 
     hijack_started.send(sender=None, hijacker_id=hijacker.pk, hijacked_id=hijacked.pk, request=request)  # Send official, documented signal
     request.session['hijack_history'] = hijack_history
