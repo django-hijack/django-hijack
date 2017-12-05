@@ -21,7 +21,7 @@ if hijack_settings.HIJACK_DISPLAY_WARNING:
 hijacking_user_attributes = hijack_settings.HIJACK_URL_ALLOWED_ATTRIBUTES
 if 'email' in hijacking_user_attributes:
     urlpatterns.append(url(
-        r'^email/(?P<email>[^@]+@[^@]+\.[^@]+)/$',
+        r'^email/(?P<email>[^@\s]+@[^@\s]+\.[^@\s]+)/$',
         views.login_with_email,
         name='login_with_email'
     ))
