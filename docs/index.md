@@ -21,7 +21,7 @@ Finally, add the Django Hijack URLs to ``urls.py``:
 ```python
 urlpatterns = [
     ...
-    url(r'^hijack/', include('hijack.urls')),
+    url(r'^hijack/', include('hijack.urls', namespace='hijack')),
 ]
 ```
 
