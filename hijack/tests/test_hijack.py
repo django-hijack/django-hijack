@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
 from django.test import TestCase, Client
 from compat import import_string, unquote_plus
 
@@ -10,6 +9,11 @@ from hijack.helpers import is_authorized
 from hijack.signals import hijack_started, hijack_ended
 from hijack.templatetags.hijack_tags import can_hijack
 from hijack.tests.utils import SettingsOverride
+
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse
 
 
 class BaseHijackTests(TestCase):
@@ -76,14 +80,14 @@ class HijackTests(BaseHijackTests):
         self.assertFalse('hijacked-warning' in str(response.content))
 
     def test_hijack_urls(self):
-        self.assertEqual('/hijack/disable-hijack-warning/', reverse('disable_hijack_warning'))
-        self.assertEqual('/hijack/release-hijack/', reverse('release_hijack'))
-        self.assertEqual('/hijack/1/', reverse('login_with_id', args=[1]))
-        self.assertEqual('/hijack/2/', reverse('login_with_id', kwargs={'user_id': 2}))
-        self.assertEqual('/hijack/username/bob/', reverse('login_with_username', args=['bob']))
-        self.assertEqual('/hijack/username/bob_too/', reverse('login_with_username', kwargs={'username': 'bob_too'}))
-        self.assertEqual('/hijack/email/bob@bobsburgers.com/', unquote_plus(reverse('login_with_email', args=['bob@bobsburgers.com'])))
-        self.assertEqual('/hijack/email/bob_too@bobsburgers.com/', unquote_plus(reverse('login_with_email', kwargs={'email': 'bob_too@bobsburgers.com'})))
+        self.assertEqual('/hijack/disable-hijack-warning/', reverse('hijack:disable_hijack_warning'))
+        self.assertEqual('/hijack/release-hijack/', reverse('hijack:release_hijack'))
+        self.assertEqual('/hijack/1/', reverse('hijack:login_with_id', args=[1]))
+        self.assertEqual('/hijack/2/', reverse('hijack:login_with_id', kwargs={'user_id': 2}))
+        self.assertEqual('/hijack/username/bob/', reverse('hijack:login_with_username', args=['bob']))
+        self.assertEqual('/hijack/username/bob_too/', reverse('hijack:login_with_username', kwargs={'username': 'bob_too'}))
+        self.assertEqual('/hijack/email/bob@bobsburgers.com/', unquote_plus(reverse('hijack:login_with_email', args=['bob@bobsburgers.com'])))
+        self.assertEqual('/hijack/email/bob_too@bobsburgers.com/', unquote_plus(reverse('hijack:login_with_email', kwargs={'email': 'bob_too@bobsburgers.com'})))
 
     def test_hijack_url_user_id(self):
         response = self.client.post('/hijack/%d/' % self.user.id, follow=True)
@@ -124,15 +128,22 @@ class HijackTests(BaseHijackTests):
 
     def test_last_login_time_not_changed(self):
         self.client.logout()
+        # user login to set user.last_login
         self.client.login(username=self.user_username, password=self.user_password)
         self.client.logout()
-        last_non_hijack_login = User.objects.get(id=self.user.id).last_login
-        self.assertIsNotNone(last_non_hijack_login)
+        user_last_login = User.objects.get(id=self.user.id).last_login
+        self.assertIsNotNone(user_last_login)
+        # super-user login to hijack
         self.client.login(username=self.superuser_username, password=self.superuser_password)
+        su_last_login = User.objects.get(id=self.superuser.id).last_login
+        self.assertIsNotNone(su_last_login)
+        # this shall not update user last_login
         response = self._hijack(self.user)
         self.assertHijackSuccess(response)
+        # this shall not update super-user last_login
         self._release_hijack()
-        self.assertEqual(User.objects.get(id=self.user.id).last_login, last_non_hijack_login)
+        self.assertEqual(User.objects.get(id=self.user.id).last_login, user_last_login)
+        self.assertEqual(User.objects.get(id=self.superuser.id).last_login, su_last_login)
 
     def test_disable_hijack_warning(self):
         response = self._hijack(self.user)
