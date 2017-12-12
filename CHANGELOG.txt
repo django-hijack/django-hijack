@@ -1,5 +1,11 @@
 === (ongoing) ===
+-
+
+== (2.1.5) ==
+- Django 2.0 Support (#149)
 - Remove deprecated signals from version 1 (#115)
+- mini-css-fix: avoid content to be hidden by the fixed notification warning (#125)
+- Spaces mustn't be contained in email (#148)
 
 == (2.1.4) ==
 - Added support for Django 1.11
