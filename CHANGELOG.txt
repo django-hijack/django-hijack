@@ -1,5 +1,5 @@
 === (ongoing) ===
-- Add Slovak localization
+- Add Slovak and Russian localization
 
 == (2.1.5) ==
 - Django 2.0 Support (#149)
