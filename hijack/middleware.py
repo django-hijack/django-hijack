@@ -1,5 +1,3 @@
-import django
-
 class HijackRemoteUserMiddleware(object):
     """
     Middleware for hijack RemoteUser. One must place this middleware between
