@@ -1,4 +1,7 @@
 === (ongoing) ===
+-
+
+== (2.1.6) ==
 - Add Slovak and Russian localization
 
 == (2.1.5) ==
