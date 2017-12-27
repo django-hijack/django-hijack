@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 class HijackRemoteUserMiddleware(object):
     """
     Middleware for hijack RemoteUser. One must place this middleware between

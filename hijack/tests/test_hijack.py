@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.test import TestCase, Client
-from compat import import_string, unquote_plus
+from django.test import TestCase, Client, RequestFactory
+from django.contrib.auth.models import AnonymousUser
 
+from compat import import_string, unquote_plus
 from hijack import settings as hijack_settings
 from hijack.helpers import is_authorized
+from hijack.middleware import HijackRemoteUserMiddleware
 from hijack.signals import hijack_started, hijack_ended
 from hijack.templatetags.hijack_tags import can_hijack
 from hijack.tests.utils import SettingsOverride
@@ -338,3 +340,23 @@ class HijackTests(BaseHijackTests):
             response = self._hijack(self.user)
             self.assertHijackSuccess(response)
             self._release_hijack()
+
+    def test_middleware_without_remote_user(self):
+        middleware = HijackRemoteUserMiddleware()
+        factory = RequestFactory()
+        request = factory.get('/')
+        request.session = {}
+        request.META = {}
+        request.user = AnonymousUser()
+        middleware.process_request(request)
+        self.assertEqual(request.META.get('REMOTE_USER'), None)
+
+    def test_middleware_with_remote_user(self):
+        middleware = HijackRemoteUserMiddleware()
+        factory = RequestFactory()
+        request = factory.get('/')
+        request.session = {'is_hijacked_user': True}
+        request.META = {'REMOTE_USER': 'test_user'}
+        request.user = self.superuser
+        middleware.process_request(request)
+        self.assertEqual(request.META.get('REMOTE_USER'), self.superuser_username)
