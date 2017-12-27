@@ -14,10 +14,14 @@ class HijackRemoteUserMiddleware(object):
         if not is_hijacked or not remote_username:
             return
         # Ok, we hijacked and remote. Just assign hijacked user to remote
-        if request.user.is_authenticated():
+        if callable(request.user.is_authenticated):
+            is_authenticated = request.user.is_authenticated()
+        else:
+            is_authenticated = request.user.is_authenticated
+        if is_authenticated:
             username = request.user.get_username()
             if username != remote_username:
                 request.META[self.header] = username
-                
+
     def authenticate(self, *args, **kwargs):
         return None

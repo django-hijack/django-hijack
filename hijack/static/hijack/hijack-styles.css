@@ -12,6 +12,8 @@
   font-weight: 600;
   text-align: center;
   position:fixed;
+  min-height: 50px;
+  height: auto;
   top: 0;
   left: 0;
   right: 0;
@@ -20,6 +22,11 @@
   border-bottom: 2px solid #ae9e49;
   font-size: 12px;
   font-family: sans-serif;
+}
+#hijacked-warning-wrapper::after {
+    height: 50px;
+    content: "";
+    display: block;
 }
 
 .hijacked-warning-bootstrap {

@@ -1,6 +1,7 @@
 {% load url from compat %}
 {% load i18n %}
 
+<div id="hijacked-warning-wrapper">
 <div id="hijacked-warning" class="hijacked-warning hijacked-warning-default">
     <span style="padding-top: 4px; float: left;"><b>{% blocktrans with user=request.user%}You are currently working on behalf of {{ user }}.{% endblocktrans %}</b></span>
     <div class="hijacked-warning-controls hijacked-warning-controls-pull-right">
@@ -13,4 +14,5 @@
             <button type="submit" class="django-hijack-button-default">{% trans "hide" %}</button>
         </form>
     </div>
+</div>
 </div>
