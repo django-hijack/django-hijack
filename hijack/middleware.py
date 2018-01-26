@@ -1,4 +1,12 @@
-class HijackRemoteUserMiddleware(object):
+# -*- coding: utf-8 -*-
+try:
+    from django.utils.deprecation import MiddlewareMixin
+except ImportError:
+    class MiddlewareMixin(object):
+        pass
+
+
+class HijackRemoteUserMiddleware(MiddlewareMixin):
     """
     Middleware for hijack RemoteUser. One must place this middleware between
     'django.contrib.auth.middleware.AuthenticationMiddleware' and
