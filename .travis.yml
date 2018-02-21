@@ -1,54 +1,46 @@
 language: python
 
-# this list can be easily generated py running `tox -l`
-env:
-    - TOX_ENV=py27-django18
-    - TOX_ENV=py27-django19
-    - TOX_ENV=py27-django110
-    - TOX_ENV=py27-django111
-
-# Currently, Python 3.5 Interpreter is only available when it is specified
-# in the travis python section. So we have to work around this with this include
-# GitHub issue: https://github.com/travis-ci/travis-ci/issues/4794
+# Enumerate all Python/Django pairs until Travis has a real syntax for that
+# Use tox -l to list available tox environments
 matrix:
   include:
-  - python: "3.5"
-    env:
-      - TOX_ENV=py35-django18
-  - python: "3.5"
-    env:
-      - TOX_ENV=py35-django19
-  - python: "3.5"
-    env:
-      - TOX_ENV=py35-django110
-  - python: "3.5"
-    env:
-      - TOX_ENV=py35-django111
-  - python: "3.5"
-    env:
-      - TOX_ENV=py35-django20
-  - python: "3.6"
-    env:
-      - TOX_ENV=py36-django18
-  - python: "3.6"
-    env:
-      - TOX_ENV=py36-django19
-  - python: "3.6"
-    env:
-      - TOX_ENV=py36-django110
-  - python: "3.6"
-    env:
-      - TOX_ENV=py36-django111
-  - python: "3.6"
-    env:
-      - TOX_ENV=py36-django20
+  - python: 2.7
+    env: TOXENV=py27-django18
+  - python: 2.7
+    env: TOXENV=py27-django19
+  - python: 2.7
+    env: TOXENV=py27-django110
+  - python: 2.7
+    env: TOXENV=py27-django111
+
+  - python: 3.5
+    env: TOXENV=py35-django18
+  - python: 3.5
+    env: TOXENV=py35-django19
+  - python: 3.5
+    env: TOXENV=py35-django110
+  - python: 3.5
+    env: TOXENV=py35-django111
+  - python: 3.5
+    env: TOXENV=py35-django20
+
+  - python: 3.6
+    env: TOXENV=py36-django18
+  - python: 3.6
+    env: TOXENV=py36-django19
+  - python: 3.6
+    env: TOXENV=py36-django110
+  - python: 3.6
+    env: TOXENV=py36-django111
+  - python: 3.6
+    env: TOXENV=py36-django20
 
 install:
     - pip install tox-travis
     - pip install coveralls
 
 script:
-    - tox -e $TOX_ENV
+    - tox
 
 sudo: false
 
