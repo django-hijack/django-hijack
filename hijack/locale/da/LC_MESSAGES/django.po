@@ -1,0 +1,35 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-02-05 11:11-0600\n"
+"PO-Revision-Date: 2018-02-05 17:17+0000\n"
+"Language: da\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.8.7.1\n"
+
+#: hijack/templates/hijack/notifications.html:6
+#: hijack/templates/hijack/notifications_bootstrap.html:5
+#, python-format
+msgid "You are currently working on behalf of %(user)s."
+msgstr "Du er i øjeblikket logget ind på vegne af %(user)s."
+
+#: hijack/templates/hijack/notifications.html:10
+#: hijack/templates/hijack/notifications_bootstrap.html:9
+#, python-format
+msgid "release %(user)s"
+msgstr "Frigør %(user)s"
+
+#: hijack/templates/hijack/notifications.html:14
+msgid "hide"
+msgstr "Skjul"
