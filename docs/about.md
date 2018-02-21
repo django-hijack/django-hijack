@@ -13,4 +13,4 @@ Similar projects can be found and compared in the [user-switching](https://www.d
 
 
 # Contributing
-If you want to contribute to this project, simply send us a pull request. Thanks. :)
+Anyone and everyone is welcome to contribute. Please take a moment to review the [guidelines for contributing](https://github.com/arteria/django-hijack/blob/master/CONTRIBUTING.md).
