@@ -337,6 +337,28 @@ class HijackTests(BaseHijackTests):
         self.assertEqual(len(received_signals), 2)
         self.assertIn('hijack_ended_%d_%d' % (self.superuser.id, self.user.id), received_signals)
 
+    def test_session_uuid_persists(self):
+        self.client.login(
+            username=self.superuser_username,
+            password=self.superuser_password,
+        )
+
+        self._hijack(self.user)
+        self.assertNotIn('hijack_uuid', self.client.session.keys())
+        self._release_hijack()
+        self.assertNotIn('hijack_uuid', self.client.session.keys())
+
+        with SettingsOverride(settings, HIJACK_PERSIST_UUID_IN_SESSION=True):
+            self.client.login(
+                username=self.superuser_username,
+                password=self.superuser_password,
+            )
+
+            self._hijack(self.user)
+            self.assertIn('hijack_uuid', self.client.session.keys())
+            self._release_hijack()
+            self.assertIn('hijack_uuid', self.client.session.keys())
+
     def test_custom_session_cookie_name(self):
         self.assertEqual(settings.SESSION_COOKIE_NAME, 'sessionid')
         with SettingsOverride(settings, SESSION_COOKIE_NAME='somethingelse'):

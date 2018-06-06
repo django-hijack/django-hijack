@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import contextlib
+import uuid
+
 from django.core.exceptions import PermissionDenied
+from django.conf import settings
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth.signals import user_logged_in
 from django.contrib.auth import login, load_backend, BACKEND_SESSION_KEY
@@ -46,6 +49,10 @@ def release_hijack(request):
     if not hijack_history:
         raise PermissionDenied
 
+    hijack_uuid = None
+    if settings.HIJACK_PERSIST_UUID_IN_SESSION:
+        hijack_uuid = request.session.get('hijack_uuid', None)
+
     hijacker = None
     hijacked = None
     if hijack_history:
@@ -64,6 +71,10 @@ def release_hijack(request):
         request.session.pop('hijack_history', None)
         request.session.pop('is_hijacked_user', None)
         request.session.pop('display_hijack_warning', None)
+
+    if hijack_uuid:
+        request.session['hijack_uuid'] = hijack_uuid
+
     request.session.modified = True
     hijack_ended.send(
             sender=None, request=request,
@@ -130,6 +141,9 @@ def login_user(request, hijacked):
     with no_update_last_login():
         # Actually log user in
         login(request, hijacked)
+
+    if settings.HIJACK_PERSIST_UUID_IN_SESSION:
+        request.session['hijack_uuid'] = str(uuid.uuid4())
 
     hijack_started.send(
             sender=None, request=request,

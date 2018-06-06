@@ -52,6 +52,11 @@ SETTINGS = (
         'default': False,
         'legacy_name': None,
     },
+    {
+        'name': 'HIJACK_PERSIST_UUID_IN_SESSION',
+        'default': False,
+        'legacy_name': None,
+    }
 )
 
 for setting in SETTINGS:
