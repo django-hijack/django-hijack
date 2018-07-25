@@ -46,6 +46,18 @@ def my_authorization_check(hijacker, hijacked):
 effects on your application's authorization system. Potentially, it might allow any user to impersonate 
 any other user and to take advantage of all their permissions.**
 
+## Non-staff members
+To allow non-staff members to hijack other users you need to set `HIJACK_DECORATOR` in addition to `HIJACK_AUTHORIZATION_CHECK`, otherwise the default `staff_member_required` will prevent non-staff members from using the hijack functionality. For example you can use an identity decorator:
+
+```python
+# settings.py
+HIJACK_DECORATOR = 'mysite.utils.hijack_decorator'
+```
+```python
+# mysite.utils.py
+def mysite(f):
+    return f
+```
 
 ## Allowing GET method for hijack views
 The hijack-specific views (hijack someone, release etc.) only accept POST requests by default. This is to avoid CSRF attacks on hijack functionality (cf. https://github.com/arteria/django-hijack/issues/84).
