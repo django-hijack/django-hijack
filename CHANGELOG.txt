@@ -1,6 +1,6 @@
 === (ongoing) ===
 - Django 2.1 Support (#173)
-- `redirect_to_next` helper now passes the ALLOWED_HOSTS setting to django's internal `is_safe_url` for Django 1.11 and higher.
+- Django 1.11 and higher: `redirect_to_next` helper now passes the request host to django's `is_safe_url` util's allowed_hosts parameter.
 
 == (2.1.6) ==
 - Add Slovak and Russian localization
