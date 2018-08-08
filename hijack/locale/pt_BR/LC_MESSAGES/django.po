@@ -28,7 +28,7 @@ msgstr "Você está trabalhando atualmente em nome de %(user)s."
 #: hijack/templates/hijack/notifications_bootstrap.html:9
 #, python-format
 msgid "release %(user)s"
-msgstr "Liberar %(user)s"
+msgstr "liberar %(user)s"
 
 #: hijack/templates/hijack/notifications.html:14
 msgid "hide"
