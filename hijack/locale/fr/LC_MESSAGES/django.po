@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-18 10:18-0600\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2018-08-17 19:37+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: \n"
@@ -30,8 +30,8 @@ msgstr "Vous endossez actuellement l'identité de %(user)s."
 #: hijack/templates/hijack/notifications_bootstrap.html:9
 #, python-format
 msgid "release %(user)s"
-msgstr "libérer %(user)s"
+msgstr "quitter l'identité de %(user)s"
 
 #: hijack/templates/hijack/notifications.html:14
 msgid "hide"
-msgstr "cacher"
+msgstr "masquer"
