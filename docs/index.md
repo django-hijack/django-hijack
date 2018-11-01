@@ -34,8 +34,8 @@ Both settings default to `LOGIN_REDIRECT_URL`.
 
 ```python
 # settings.py
-HIJACK_LOGIN_REDIRECT_URL = '/profile/'  # Where admins are redirected to after hijacking a user
-HIJACK_LOGOUT_REDIRECT_URL = '/admin/auth/user/'  # Where admins are redirected to after releasing a user
+HIJACK_LOGIN_REDIRECT_URL = reverse_lazy('profile') # Where admins are redirected to after hijacking a user
+HIJACK_LOGOUT_REDIRECT_URL = reverse_lazy('admin:auth_user_changelist') # Where admins are redirected to after releasing a user
 ```
 
 ### Setting up the notification bar
@@ -81,9 +81,9 @@ Superusers can hijack a user by by sending a POST request to a `/hijack/...` URL
 
 The following URLs are available by default:
 
-* `/hijack/<user id>` 
-* `/hijack/username/<username>`
-* `/hijack/email/<user email>`
+* `/hijack/<user id>` (`{% url "hijack:login_with_id" user_id=user.pk %}`)
+* `/hijack/username/<username>` (`{% url "hijack:login_with_username" username=user.username %}`)
+* `/hijack/email/<user email>` (`{% url "hijack:login_with_email" email=user.email %}`)
 
 If the hijacking is successful, the user is redirected to the `HIJACK_LOGIN_REDIRECT_URL`, 
 and the yellow notification bar is displayed at the top of the landing page.
@@ -91,7 +91,7 @@ and the yellow notification bar is displayed at the top of the landing page.
 Here is a reference implementation of a button that allows a superuser to hijack the user referenced by the context variable `user`:
 
 ```html
-<form action="/hijack/{{ user.id }}/" method="post">
+<form action="{% url 'hijack:login_with_id' user_id=user.pk %}" method="post">
     {% csrf_token %}
     <button type="submit">Hijack {{ user.username }}</button>
 </form>
@@ -102,7 +102,7 @@ In order to end the hijack and switch back to your admin account, push the "Rele
 
 ![Screenshot of the release button in the notification bar](release-button.png)
 
-As an alternative, send a POST request to `/hijack/release-hijack/`.
+As an alternative, send a POST request to `/hijack/release-hijack/` (`{% url "hijack:release_hijack" %}`).
 
 After releasing, you are redirected to the `HIJACK_LOGOUT_REDIRECT_URL`.
 
