@@ -8,7 +8,7 @@ from compat import import_string, unquote_plus
 from hijack import settings as hijack_settings
 from hijack.helpers import is_authorized
 from hijack.middleware import HijackRemoteUserMiddleware
-from hijack.signals import hijack_started, hijack_ended
+from hijack.signals import hijack_started, hijack_ended, pre_hijack_started, pre_hijack_ended
 from hijack.templatetags.hijack_tags import can_hijack
 from hijack.tests.utils import SettingsOverride
 
@@ -336,6 +336,60 @@ class HijackTests(BaseHijackTests):
         self._release_hijack()
         self.assertEqual(len(received_signals), 2)
         self.assertIn('hijack_ended_%d_%d' % (self.superuser.id, self.user.id), received_signals)
+
+    def test_pre_signals(self):
+        received_signals = []
+
+        def pre_hijack_started_receiver(hijacker_id, hijacked_id, hijacker, hijacked, **kwargs):
+            self.assertEqual(hijacker_id, hijacker.id)
+            self.assertEqual(hijacked_id, hijacked.id)
+            received_signals.append('pre_hijack_started_%d_%d' % (hijacker_id, hijacked_id))
+        pre_hijack_started.connect(pre_hijack_started_receiver)
+
+        def pre_hijack_ended_receiver(hijacker_id, hijacked_id, hijacker, hijacked, **kwargs):
+            self.assertEqual(hijacker_id, hijacker.id)
+            self.assertEqual(hijacked_id, hijacked.id)
+            received_signals.append('pre_hijack_ended_%d_%d' % (hijacker_id, hijacked_id))
+        pre_hijack_ended.connect(pre_hijack_ended_receiver)
+
+        self.assertEqual(len(received_signals), 0)
+        self._hijack(self.user)
+        self.assertEqual(len(received_signals), 1)
+        self.assertIn('pre_hijack_started_%d_%d' % (self.superuser.id, self.user.id), received_signals)
+        self._release_hijack()
+        self.assertEqual(len(received_signals), 2)
+        self.assertIn('pre_hijack_ended_%d_%d' % (self.superuser.id, self.user.id), received_signals)
+
+    def test_hijack_ended_return_value_signals(self):
+        received_signals = []
+
+        def pre_hijack_started_receiver(**kwargs):
+            return 'return from pre_hijack_started_receiver'
+        pre_hijack_started.connect(pre_hijack_started_receiver)
+
+        def hijack_started_receiver(pre_hijack_started_results, **kwargs):
+            for function_obj, results in pre_hijack_started_results:
+                received_signals.append(function_obj == pre_hijack_started_receiver
+                                        and results == 'return from pre_hijack_started_receiver')
+        hijack_started.connect(hijack_started_receiver)
+
+        def pre_hijack_ended_receiver(**kwargs):
+            return 'return from pre_hijack_ended_receiver'
+        pre_hijack_ended.connect(pre_hijack_ended_receiver)
+
+        def hijack_ended_receiver(pre_hijack_ended_results, **kwargs):
+            for function_obj, results in pre_hijack_ended_results:
+                received_signals.append(function_obj == pre_hijack_ended_receiver
+                                        and results == 'return from pre_hijack_ended_receiver')
+        hijack_ended.connect(hijack_ended_receiver)
+
+        self.assertEqual(len(received_signals), 0)
+        self._hijack(self.user)
+        self.assertEqual(len(received_signals), 1)
+        self.assertEqual(received_signals[0], True)
+        self._release_hijack()
+        self.assertEqual(len(received_signals), 2)
+        self.assertEqual(received_signals[1], True)
 
     def test_custom_session_cookie_name(self):
         self.assertEqual(settings.SESSION_COOKIE_NAME, 'sessionid')
