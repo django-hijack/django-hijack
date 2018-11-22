@@ -5,4 +5,5 @@ pages:
 - Configuration: configuration.md
 - Troubleshooting: troubleshooting.md
 - About: about.md
+- Signals: signals.md
 theme: readthedocs
