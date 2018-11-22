@@ -47,30 +47,27 @@ def release_hijack(request):
     if not hijack_history:
         raise PermissionDenied
 
-    hijacker = None
-    hijacked = None
-    if hijack_history:
-        hijacked = request.user
-        user_pk = hijack_history.pop()
-        hijacker = get_object_or_404(get_user_model(), pk=user_pk)
-        backend = get_used_backend(request)
-        hijacker.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
-        with no_update_last_login():
-            login(request, hijacker)
-    if hijack_history:
-        request.session['hijack_history'] = hijack_history
-        request.session['is_hijacked_user'] = True
-        request.session['display_hijack_warning'] = True
-    else:
-        request.session.pop('hijack_history', None)
-        request.session.pop('is_hijacked_user', None)
-        request.session.pop('display_hijack_warning', None)
+    hijacked = request.user
+    user_pk = hijack_history.pop()
+    hijacker = get_object_or_404(get_user_model(), pk=user_pk)
+    backend = get_used_backend(request)
+    hijacker.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
+
+    with no_update_last_login():
+        login(request, hijacker)
+
+    request.session['hijack_history'] = hijack_history
+    request.session['is_hijacked_user'] = True
+    request.session['display_hijack_warning'] = True
     request.session.modified = True
+
     hijack_ended.send(
-            sender=None, request=request,
-            hijacker=hijacker, hijacked=hijacked,
-            # send IDs for backward compatibility
-            hijacker_id=hijacker.pk, hijacked_id=hijacked.pk)
+        sender=None, request=request,
+        hijacker=hijacker, hijacked=hijacked,
+        # send IDs for backward compatibility
+        hijacker_id=hijacker.pk, hijacked_id=hijacked.pk,
+    )
+
     return redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGOUT_REDIRECT_URL)
 
 
