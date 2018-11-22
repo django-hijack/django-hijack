@@ -13,7 +13,7 @@ from compat import get_user_model, import_string
 from compat import resolve_url
 
 from hijack import settings as hijack_settings
-from hijack.signals import hijack_started, hijack_ended
+from hijack.signals import hijack_started, hijack_ended, pre_hijack_started, pre_hijack_ended
 
 
 @contextlib.contextmanager
@@ -53,6 +53,13 @@ def release_hijack(request):
     backend = get_used_backend(request)
     hijacker.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
 
+    pre_signal_returned_value = pre_hijack_ended.send(
+        sender=None, request=request,
+        hijacker=hijacker, hijacked=hijacked,
+        # send IDs for backward compatibility
+        hijacker_id=hijacker.pk, hijacked_id=hijacked.pk
+    )
+
     with no_update_last_login():
         login(request, hijacker)
 
@@ -66,6 +73,7 @@ def release_hijack(request):
         hijacker=hijacker, hijacked=hijacked,
         # send IDs for backward compatibility
         hijacker_id=hijacker.pk, hijacked_id=hijacked.pk,
+        pre_release_results=pre_signal_returned_value,
     )
 
     return redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGOUT_REDIRECT_URL)
@@ -125,15 +133,24 @@ def login_user(request, hijacked):
     backend = get_used_backend(request)
     hijacked.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
 
+    pre_signal_returned_value = pre_hijack_started.send(
+        sender=None, request=request,
+        hijacker=hijacker, hijacked=hijacked,
+        # send IDs for backward compatibility
+        hijacker_id=hijacker.pk, hijacked_id=hijacked.pk
+    )
+
     with no_update_last_login():
         # Actually log user in
         login(request, hijacked)
 
     hijack_started.send(
-            sender=None, request=request,
-            hijacker=hijacker, hijacked=hijacked,
-            # send IDs for backward compatibility
-            hijacker_id=hijacker.pk, hijacked_id=hijacked.pk)
+        sender=None, request=request,
+        hijacker=hijacker, hijacked=hijacked,
+        # send IDs for backward compatibility
+        hijacker_id=hijacker.pk, hijacked_id=hijacked.pk,
+        pre_hijack_results=pre_signal_returned_value
+    )
     request.session['hijack_history'] = hijack_history
     request.session['is_hijacked_user'] = True
     request.session['display_hijack_warning'] = True
