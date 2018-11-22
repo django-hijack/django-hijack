@@ -53,7 +53,7 @@ def release_hijack(request):
     backend = get_used_backend(request)
     hijacker.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
 
-    pre_signal_returned_value = pre_hijack_ended.send(
+    pre_hijack_ended_results = pre_hijack_ended.send(
         sender=None, request=request,
         hijacker=hijacker, hijacked=hijacked,
         # send IDs for backward compatibility
@@ -73,7 +73,7 @@ def release_hijack(request):
         hijacker=hijacker, hijacked=hijacked,
         # send IDs for backward compatibility
         hijacker_id=hijacker.pk, hijacked_id=hijacked.pk,
-        pre_hijack_ended_results=pre_signal_returned_value,
+        pre_hijack_ended_results=pre_hijack_ended_results,
     )
 
     return redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGOUT_REDIRECT_URL)
@@ -133,7 +133,7 @@ def login_user(request, hijacked):
     backend = get_used_backend(request)
     hijacked.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
 
-    pre_signal_returned_value = pre_hijack_started.send(
+    pre_hijack_started_results = pre_hijack_started.send(
         sender=None, request=request,
         hijacker=hijacker, hijacked=hijacked,
         # send IDs for backward compatibility
@@ -149,7 +149,7 @@ def login_user(request, hijacked):
         hijacker=hijacker, hijacked=hijacked,
         # send IDs for backward compatibility
         hijacker_id=hijacker.pk, hijacked_id=hijacked.pk,
-        pre_hijack_started_results=pre_signal_returned_value
+        pre_hijack_started_results=pre_hijack_started_results
     )
     request.session['hijack_history'] = hijack_history
     request.session['is_hijacked_user'] = True
