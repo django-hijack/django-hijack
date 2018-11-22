@@ -63,9 +63,15 @@ def release_hijack(request):
     with no_update_last_login():
         login(request, hijacker)
 
-    request.session.pop('hijack_history', None)
-    request.session.pop('is_hijacked_user', None)
-    request.session.pop('display_hijack_warning', None)
+    if hijack_history:
+        request.session['hijack_history'] = hijack_history
+        request.session['is_hijacked_user'] = True
+        request.session['display_hijack_warning'] = True
+    else:
+        request.session.pop('hijack_history', None)
+        request.session.pop('is_hijacked_user', None)
+        request.session.pop('display_hijack_warning', None)
+
     request.session.modified = True
 
     hijack_ended.send(
