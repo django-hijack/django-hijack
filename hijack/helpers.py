@@ -116,7 +116,9 @@ def check_hijack_authorization(request, user):
         raise PermissionDenied
 
 
-def login_user(request, hijacked, auth_check_function=check_hijack_authorization):
+def login_user(request, hijacked,
+               auth_check_function=check_hijack_authorization,
+               redirect_to_url=hijack_settings.HIJACK_LOGIN_REDIRECT_URL):
     ''' hijack mechanism '''
     hijacker = request.user
     hijack_history = [request.user._meta.pk.value_to_string(hijacker)]
@@ -143,7 +145,7 @@ def login_user(request, hijacked, auth_check_function=check_hijack_authorization
     request.session['is_hijacked_user'] = True
     request.session['display_hijack_warning'] = True
     request.session.modified = True
-    return redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGIN_REDIRECT_URL)
+    return redirect_to_next(request, default_url=redirect_to_url)
 
 
 def redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGIN_REDIRECT_URL):

@@ -411,3 +411,22 @@ class HijackTests(BaseHijackTests):
         self.assertFalse(request.session.pop('is_hijacked_user', False))
         self.assertFalse(request.session.pop('display_hijack_warning', False))
         self.assertFalse(request.session.pop('hijack_history', False))
+
+    def test_login_user_redirect_url(self):
+        self.client.logout()
+        self.client.login(username=self.superuser_username, password=self.superuser_password)
+        response = self.client.get('/')
+        request = response.context['request']
+
+        redirect_to_response = login_user(request, self.user)
+        self.assertEqual(redirect_to_response.url, hijack_settings.HIJACK_LOGIN_REDIRECT_URL)
+
+        release_hijack(request)
+
+        redirect_to_response = login_user(request, self.user, redirect_to_url='test_app:hello_filter')
+        self.assertEqual(redirect_to_response.url, reverse('test_app:hello_filter'))
+
+        release_hijack(request)
+
+        redirect_to_response = login_user(request, self.user, redirect_to_url=reverse('test_app:hello_filter'))
+        self.assertEqual(redirect_to_response.url, reverse('test_app:hello_filter'))
