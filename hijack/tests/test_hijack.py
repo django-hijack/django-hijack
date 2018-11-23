@@ -386,10 +386,10 @@ class HijackTests(BaseHijackTests):
         self.assertEqual(len(received_signals), 0)
         self._hijack(self.user)
         self.assertEqual(len(received_signals), 1)
-        self.assertEqual(received_signals[0], True)
+        self.assertTrue(received_signals[0])
         self._release_hijack()
         self.assertEqual(len(received_signals), 2)
-        self.assertEqual(received_signals[1], True)
+        self.assertTrue(received_signals[1])
 
     def test_custom_session_cookie_name(self):
         self.assertEqual(settings.SESSION_COOKIE_NAME, 'sessionid')
