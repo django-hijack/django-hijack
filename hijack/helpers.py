@@ -129,6 +129,12 @@ def login_user(request, hijacked,
     if callable(auth_check_function):
         auth_check_function(request, hijacked)
 
+    elif isinstance(auth_check_function, (list, tuple, set)):
+        # Allow someone to pass a list, tuple, or set of various authentication functions to check against.
+        for possible_function in auth_check_function:
+            if callable(possible_function):
+                possible_function(request, hijacked)
+
     backend = get_used_backend(request)
     hijacked.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
 
