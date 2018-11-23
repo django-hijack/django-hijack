@@ -118,6 +118,7 @@ def check_hijack_authorization(request, user):
 
 def login_user(request, hijacked,
                auth_check_function=check_hijack_authorization,
+               auth_check_function_all=True,
                redirect_to_url=hijack_settings.HIJACK_LOGIN_REDIRECT_URL):
     ''' hijack mechanism '''
     hijacker = request.user
@@ -132,8 +133,20 @@ def login_user(request, hijacked,
     elif isinstance(auth_check_function, (list, tuple, set)):
         # Allow someone to pass a list, tuple, or set of various authentication functions to check against.
         for possible_function in auth_check_function:
-            if callable(possible_function):
+            if not callable(possible_function):
+                continue
+            try:
                 possible_function(request, hijacked)
+
+                # If we don't need to check all returned results, we're just
+                # looking for 1 to not raise PermissionDenied
+                if not auth_check_function_all:
+                    break
+            except PermissionDenied:
+                if auth_check_function_all:
+                    raise
+        else:
+            raise PermissionDenied
 
     backend = get_used_backend(request)
     hijacked.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)

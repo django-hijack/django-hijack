@@ -392,6 +392,35 @@ class HijackTests(BaseHijackTests):
             auth_check_function=auth_checker_all_fail_valueerror
         )
 
+    def test_login_user_auth_checker_deny_on_third_auth_check(self):
+        self.client.logout()
+        self.client.login(username=self.superuser_username, password=self.superuser_password)
+        response = self.client.get('/')
+        request = response.context['request']
+
+        def auth_allow(request, user):
+            pass
+
+        def auth_checker_all_fail_permissiondenied(request, user):
+            raise PermissionDenied
+
+        # This check requires all auth_check_function's to return True
+        self.assertRaises(
+            PermissionDenied, login_user,
+            request=request,
+            hijacked=self.user,
+            auth_check_function=[auth_allow, auth_checker_all_fail_permissiondenied],
+            auth_check_function_all=True,
+        )
+
+        # Any of the functions can return True
+        login_user(request, self.user,
+                   auth_check_function=[auth_checker_all_fail_permissiondenied, auth_allow],
+                   auth_check_function_all=False)
+        self.assertTrue(request.session['is_hijacked_user'])
+        self.assertTrue(request.session['display_hijack_warning'])
+        self.assertEqual(len(request.session['hijack_history']), 1)
+
     def test_login_user_auth_checker_none(self):
         # Login as regular user, disable auth_check_function and try to hijack superuser.
         self.client.logout()
