@@ -3,10 +3,11 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import AnonymousUser
+from django.core.exceptions import PermissionDenied
 
 from compat import import_string, unquote_plus
 from hijack import settings as hijack_settings
-from hijack.helpers import is_authorized
+from hijack.helpers import is_authorized, login_user, release_hijack
 from hijack.middleware import HijackRemoteUserMiddleware
 from hijack.signals import hijack_started, hijack_ended
 from hijack.templatetags.hijack_tags import can_hijack
@@ -364,3 +365,49 @@ class HijackTests(BaseHijackTests):
         request.user = self.superuser
         middleware.process_request(request)
         self.assertEqual(request.META.get('REMOTE_USER'), self.superuser_username)
+
+    def test_login_user_auth_checker_deny_all(self):
+        self.client.logout()
+        self.client.login(username=self.superuser_username, password=self.superuser_password)
+        response = self.client.get('/')
+        request = response.context['request']
+
+        def auth_checker_all_fail_permissiondenied(request, user):
+            raise PermissionDenied
+
+        def auth_checker_all_fail_valueerror(request, user):
+            raise ValueError
+
+        self.assertRaises(
+            PermissionDenied, login_user,
+            request=request,
+            hijacked=self.user,
+            auth_check_function=auth_checker_all_fail_permissiondenied
+        )
+
+        self.assertRaises(
+            ValueError, login_user,
+            request=request,
+            hijacked=self.user,
+            auth_check_function=auth_checker_all_fail_valueerror
+        )
+
+    def test_login_user_auth_checker_none(self):
+        # Login as regular user, disable auth_check_function and try to hijack superuser.
+        self.client.logout()
+        self.client.login(username=self.user_username, password=self.user_password)
+
+        response = self.client.get('/')
+        request = response.context['request']
+
+        login_user(request, self.superuser, auth_check_function=None)
+
+        self.assertTrue(request.session['is_hijacked_user'])
+        self.assertTrue(request.session['display_hijack_warning'])
+        self.assertEqual(len(request.session['hijack_history']), 1)
+
+        release_hijack(request)
+
+        self.assertFalse(request.session.pop('is_hijacked_user', False))
+        self.assertFalse(request.session.pop('display_hijack_warning', False))
+        self.assertFalse(request.session.pop('hijack_history', False))

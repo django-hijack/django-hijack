@@ -116,14 +116,16 @@ def check_hijack_authorization(request, user):
         raise PermissionDenied
 
 
-def login_user(request, hijacked):
+def login_user(request, hijacked, auth_check_function=check_hijack_authorization):
     ''' hijack mechanism '''
     hijacker = request.user
     hijack_history = [request.user._meta.pk.value_to_string(hijacker)]
     if request.session.get('hijack_history'):
         hijack_history = request.session['hijack_history'] + hijack_history
 
-    check_hijack_authorization(request, hijacked)
+    # Allow a developer to override the authorization check, or remove it altogether.
+    if callable(auth_check_function):
+        auth_check_function(request, hijacked)
 
     backend = get_used_backend(request)
     hijacked.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
