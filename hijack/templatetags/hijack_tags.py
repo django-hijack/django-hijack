@@ -51,7 +51,9 @@ def can_hijack(hijacker, hijacked):
 
 @register.filter
 def is_hijacked(request):
-    return request.session.get('is_hijacked_user', False)
+    return (request is not None and
+            request.session is not None and
+            request.session.get('is_hijacked_user', False))
 
 try:
     from django_jinja import library
