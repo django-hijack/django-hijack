@@ -30,7 +30,7 @@ def _render_hijack_notification(request, template_name=None):
         else:
             template_name = 'hijack/notifications.html'
     ans = ''
-    if request is not None and request.session is not None and all([
+    if request is not None and getattr(request, "session", None) is not None and all([
         hijack_settings.HIJACK_DISPLAY_WARNING,
         request.session.get('is_hijacked_user', False),
         request.session.get('display_hijack_warning', False),
@@ -52,7 +52,7 @@ def can_hijack(hijacker, hijacked):
 @register.filter
 def is_hijacked(request):
     return (request is not None and
-            request.session is not None and
+            getattr(request, "session", None) is not None and
             request.session.get('is_hijacked_user', False))
 
 try:
