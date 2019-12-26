@@ -1,11 +1,10 @@
 # Django Hijack
 
 [![Build Status](https://travis-ci.org/arteria/django-hijack.svg?branch=master)](https://travis-ci.org/arteria/django-hijack)
-[![Stories in Ready](https://badge.waffle.io/arteria/django-hijack.png?label=ready&title=Ready)](https://waffle.io/arteria/django-hijack)
 [![Coverage Status](https://coveralls.io/repos/arteria/django-hijack/badge.svg?branch=master&service=github)](https://coveralls.io/github/arteria/django-hijack?branch=master)
 [![PyPI](https://img.shields.io/pypi/v/django-hijack.svg)](https://pypi.python.org/pypi/django-hijack)
 
-![Screenshot of the notification seen while hijacking another user.](docs/hijacker-screenshot.png)
+![Screenshot of the notification seen while hijacking another user.](https://github.com/arteria/django-hijack/raw/master/docs/hijacker-screenshot.png)
 
 With Django Hijack, admins can log in and work on behalf of other users without having to know their credentials.
 
@@ -32,6 +31,8 @@ See http://django-hijack.readthedocs.org/en/stable/.
 > Love django-hijack
 >
 > -- [bmihelac](https://twitter.com/bmihelac) on [Twitter](https://twitter.com/bmihelac/status/836225081508519936)
+
+## Funding
 
 | django-hijack is free software. If you find it useful and would like to give back, please consider to make a donation using [Bitcoin](https://blockchain.info/payment_request?address=1AJkbQdcNkrHzxi91mB1kkPxh4t4BJ4hu4) or [PayPal](https://www.paypal.me/arteriagmbh). Thank you! |
 | ----- |

@@ -6,13 +6,12 @@ Get the latest stable release from PyPi:
 
     pip install django-hijack
 
-In your ``settings.py``, add ``hijack`` and the dependency `compat` to your installed apps:
+In your ``settings.py``, add ``hijack`` and the dependency to your installed apps:
 
 ```python
 INSTALLED_APPS = (
     ...,
     'hijack',
-    'compat',
 )
 ```
 

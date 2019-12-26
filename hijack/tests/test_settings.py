@@ -89,7 +89,6 @@ EXTERNAL_APPS = [
     'django.contrib.sitemaps',
     'django.contrib.sites',
     'django_nose',
-    'compat',
 ]
 
 INTERNAL_APPS = ['hijack', 'hijack.tests.test_app', ]

@@ -1,4 +1,4 @@
-from compat import url
+from django.conf.urls import url
 
 from hijack import settings as hijack_settings
 from hijack import views

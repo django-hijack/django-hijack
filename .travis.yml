@@ -1,48 +1,26 @@
 language: python
-
-# Enumerate all Python/Django pairs until Travis has a real syntax for that
-# Use tox -l to list available tox environments
-matrix:
-  include:
-  - python: 2.7
-    env: TOXENV=py27-django18
-  - python: 2.7
-    env: TOXENV=py27-django19
-  - python: 2.7
-    env: TOXENV=py27-django110
-  - python: 2.7
-    env: TOXENV=py27-django111
-
-  - python: 3.5
-    env: TOXENV=py35-django18
-  - python: 3.5
-    env: TOXENV=py35-django19
-  - python: 3.5
-    env: TOXENV=py35-django110
-  - python: 3.5
-    env: TOXENV=py35-django111
-  - python: 3.5
-    env: TOXENV=py35-django20
-
-  - python: 3.6
-    env: TOXENV=py36-django18
-  - python: 3.6
-    env: TOXENV=py36-django19
-  - python: 3.6
-    env: TOXENV=py36-django110
-  - python: 3.6
-    env: TOXENV=py36-django111
-  - python: 3.6
-    env: TOXENV=py36-django20
-
-install:
-    - pip install tox-travis
-    - pip install coveralls
-
-script:
-    - tox
-
+python:
+- '3.5'
+- '3.6'
+- '3.7'
+- '3.8'
+install: pip install coveralls tox-travis
+script: tox
 sudo: false
-
-after_success:
-    coveralls
+after_success: coveralls
+deploy:
+  provider: pypi
+  # TODO: Remove server section
+  server: https://test.pypi.org/legacy/
+  # TODO: Generate token for original pypi package
+  user: __token__
+  # TODO: Fix password
+  password:
+    secure: Q91+VRoflP/BwHjXBxCjmEz55cldwaL6X9ARpnzAThKELNlAmakKY1m77+AnF5Yf9AdVnBQN0XVMJFig0Voa7h/hMFD40JbKv+PTz8gRdQzVUYwNnRFdixpA3MBTcQRhsDfVwcL6BAxX9iAlY8tM+oZY6okEh9aFXUQ7d18ZHvcqTrnX/Keh5K8bpNmjli8EKN8qPPz3OK6+/68qfY4oD+JRZW5Q66fRJYumxCiwWcZ/kIvOQSBzGk6HYs6/CqC+biTkeis5z2BXyJWvDc97v/slZwKxEl1h1mtfzqO/LF6RERvGIYjqwJKww1qOnk4rmTzdsn/nDUA/9qZmbBh8dFRrae6DwutyykVsuLahP5g2bfhlOSQQMoOq7jnetp6BW2SapORzD+rRKwI0NsO2ZhOtM85zpUtc7CpuSphI50hMfbJRLpqGKgyjMQeqzWMNMuUnAn3wa0GTu3FNsALnMw+HxIkP5U38cORgaXeG7vFu9EtcOBHPCH0Y7DQVrcyU6djqHDQSFULeu2yWQzX0EHhF0xjAf3rUEZvC6bZWUDEIs1+pGYSujkQJQg+tLI5ncOVih7qDMunPGMIABkj0FTH502ekU/ym6hRzaRp4I9Na6QCVXBTkXdudPEpcakZnxg8B2lxMSVhTsLcV4fV4lbwGhV67hucyWybjShXO1t4=
+  on:
+    tags: true
+    # TODO: Fix Github repo identifier
+    repo: Mogost/django-hijack
+    python: 3.6
+  distributions: sdist bdist_wheel
+  skip_existing: true

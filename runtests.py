@@ -13,18 +13,14 @@ from django.conf import settings
 
 from hijack.tests import test_settings
 
-if not settings.configured:
-    settings.configure(**test_settings.__dict__)
-
-from django_nose import NoseTestSuiteRunner
+from django_nose import NoseTestSuiteRunner  # noqa: E402
 
 
 def runtests(*test_args):
     import django
-    if django.VERSION >= (1, 7):
-        django.setup()
-    failures = NoseTestSuiteRunner(verbosity=2,
-                                      interactive=True).run_tests(test_args)
+    django.setup()
+    failures = NoseTestSuiteRunner(
+        verbosity=2, interactive=True).run_tests(test_args)
     sys.exit(failures)
 
 

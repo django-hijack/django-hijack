@@ -1,12 +1,11 @@
-import django
 from django import template
-from django.utils.safestring import mark_safe
 from django.template.loader import render_to_string
-from compat import import_string
+from django.utils.module_loading import import_string
+from django.utils.safestring import mark_safe
+
 from hijack import settings as hijack_settings
 
 register = template.Library()
-
 
 
 @register.filter
@@ -35,17 +34,14 @@ def _render_hijack_notification(request, template_name=None):
         request.session.get('is_hijacked_user', False),
         request.session.get('display_hijack_warning', False),
     ]):
-        if django.VERSION < (1, 8):
-            from django.template import RequestContext
-            ans = render_to_string(template_name, context_instance=RequestContext(request))
-        else:
-            ans = render_to_string(template_name, request=request)
+        ans = render_to_string(template_name, request=request)
     return mark_safe(ans)
 
 
 @register.filter
 def can_hijack(hijacker, hijacked):
-    check_authorization = import_string(hijack_settings.HIJACK_AUTHORIZATION_CHECK)
+    check_authorization = import_string(
+        hijack_settings.HIJACK_AUTHORIZATION_CHECK)
     return check_authorization(hijacker, hijacked)
 
 
@@ -53,10 +49,13 @@ def can_hijack(hijacker, hijacked):
 def is_hijacked(request):
     return request.session.get('is_hijacked_user', False)
 
+
 try:
     from django_jinja import library
+
     @library.filter
     def jinja_hijack_notification(request, template_name=None):
         return _render_hijack_notification(request, template_name)
+
 except ImportError:
     pass

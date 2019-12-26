@@ -1,6 +1,8 @@
+# Borrowed from
+# https://github.com/stefanfoulis/django-filer/blob/develop/filer/tests/helpers.py
 
-# Borrowed from https://github.com/stefanfoulis/django-filer/blob/develop/filer/tests/helpers.py
-class SettingsOverride(object):
+
+class SettingsOverride:
     """
     Overrides Django settings within a context and resets them to their inital
     values on exit.

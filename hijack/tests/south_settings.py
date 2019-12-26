@@ -9,11 +9,11 @@ Unfortunately there seems to be an issue with either South or syncdb so that
 defining two routers ("default" and "south") does not work.
 
 """
-from .test_settings import *  # NOQA
+from .test_settings import *  # noqa: 403
 
 DATABASES = {
     'default': {'ENGINE': 'django.db.backends.sqlite3',
                 'NAME': 'db.sqlite', }
 }
 
-INSTALLED_APPS.append('south', )
+INSTALLED_APPS.append('south')  # noqa: 405

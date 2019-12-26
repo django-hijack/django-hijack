@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-try:
-    from django.utils.deprecation import MiddlewareMixin
-except ImportError:
-    class MiddlewareMixin(object):
-        pass
+from django.utils.deprecation import MiddlewareMixin
 
 
 class HijackRemoteUserMiddleware(MiddlewareMixin):

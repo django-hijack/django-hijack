@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.conf import settings as django_settings
 
 SETTINGS = (
@@ -44,7 +43,8 @@ SETTINGS = (
     },
     {
         'name': 'HIJACK_DECORATOR',
-        'default': 'django.contrib.admin.views.decorators.staff_member_required',
+        'default': (
+            'django.contrib.admin.views.decorators.staff_member_required'),
         'legacy_name': None,
     },
     {
@@ -56,7 +56,8 @@ SETTINGS = (
 
 for setting in SETTINGS:
     if setting['legacy_name']:
-        default = getattr(django_settings, setting['legacy_name'], setting['default'])
+        default = getattr(
+            django_settings, setting['legacy_name'], setting['default'])
     else:
         default = setting['default']
     value = getattr(django_settings, setting['name'], default)

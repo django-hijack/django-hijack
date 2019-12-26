@@ -1,0 +1,13 @@
+[tool.black]
+target-version = ["py35", "py36", "py37", "py38"]
+exclude =  "migrations/"
+
+[tool.isort]
+known_first_party = "hijack"
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+line_length = 88
+use_parentheses = true
+default_section = "THIRDPARTY"
+skip = "migrations"

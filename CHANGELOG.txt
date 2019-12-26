@@ -1,6 +1,14 @@
-=== (ongoing) ===
+=== (3.0.0)  ===
+- Drop support for python<3.5
+- Drop support for Django<2.2
+- Big code refactoring
+- CI improvements, automatically pypi deploy
+- Added wheel for pypi build
+
+=== (2.1.7 - 2.x.x)  ===
 - Django 2.1 Support (#173)
 - Django 1.11 and higher: `redirect_to_next` helper now passes the request host to django's `is_safe_url` util's allowed_hosts parameter.
+- Other fixes and improvements, with missed changelog entries
 
 == (2.1.6) ==
 - Add Slovak and Russian localization
