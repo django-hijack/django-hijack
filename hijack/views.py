@@ -13,11 +13,6 @@ from compat import get_user_model
 @hijack_decorator
 @hijack_require_http_methods
 def login_with_id(request, user_id):
-    # input(user_id) is unicode
-    try:
-        user_id = int(user_id)
-    except ValueError:
-        return HttpResponseBadRequest('user_id must be an integer value.')
     user = get_object_or_404(get_user_model(), pk=user_id)
     return login_user(request, user)
 
