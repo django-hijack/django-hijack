@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 This script is a trick to setup a fake Django environment, since this reusable
-app will be developed and tested outside any specifiv Django project.
+app will be developed and tested outside any specific Django project.
 
 Via ``settings.configure`` you will be able to set all necessary settings
 for your app and run the tests as if you were calling ``./manage.py test``.
