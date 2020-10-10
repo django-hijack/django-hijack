@@ -5,35 +5,37 @@ language: python
 matrix:
   include:
   - python: 2.7
-    env: TOXENV=py27-django18
-  - python: 2.7
-    env: TOXENV=py27-django19
-  - python: 2.7
-    env: TOXENV=py27-django110
-  - python: 2.7
     env: TOXENV=py27-django111
 
-  - python: 3.5
-    env: TOXENV=py35-django18
-  - python: 3.5
-    env: TOXENV=py35-django19
-  - python: 3.5
-    env: TOXENV=py35-django110
   - python: 3.5
     env: TOXENV=py35-django111
   - python: 3.5
     env: TOXENV=py35-django20
+  - python: 3.5
+    env: TOXENV=py35-django21
+  - python: 3.5
+    env: TOXENV=py35-django22
 
-  - python: 3.6
-    env: TOXENV=py36-django18
-  - python: 3.6
-    env: TOXENV=py36-django19
-  - python: 3.6
-    env: TOXENV=py36-django110
   - python: 3.6
     env: TOXENV=py36-django111
   - python: 3.6
     env: TOXENV=py36-django20
+  - python: 3.6
+    env: TOXENV=py36-django21
+  - python: 3.6
+    env: TOXENV=py36-django22
+
+  - python: 3.7
+    env: TOXENV=py37-django111
+  - python: 3.7
+    env: TOXENV=py37-django20
+  - python: 3.7
+    env: TOXENV=py37-django21
+  - python: 3.7
+    env: TOXENV=py37-django22
+
+  - python: 3.8
+    env: TOXENV=py38-django22
 
 install:
     - pip install tox-travis
