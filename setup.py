@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+#!/usr/bin/env python
 """
 Python setup file for the hijack app.
 
@@ -59,12 +59,12 @@ setup(name="django-hijack",
                    'Framework :: Django',
                    'License :: OSI Approved :: MIT License',
                    'Framework :: Django',
-                   'Framework :: Django :: 1.8',
-                   'Framework :: Django :: 1.9',
-                   'Framework :: Django :: 1.10',
-                   'Framework :: Django :: 1.11',
-                   'Framework :: Django :: 2.0',
-                   'Framework :: Django :: 2.1',
+                   'Framework :: Django :: 2.2',
+                   'Framework :: Django :: 3.0',
+                   'Framework :: Django :: 3.1',
                    'Programming Language :: Python',
-                   'Programming Language :: Python :: 2',
-                   'Programming Language :: Python :: 3', ], )
+                   'Programming Language :: Python :: 3',
+                   'Programming Language :: Python :: 3.6',
+                   'Programming Language :: Python :: 3.7',
+                   'Programming Language :: Python :: 3.8',
+                   'Programming Language :: Python :: 3.9'], )

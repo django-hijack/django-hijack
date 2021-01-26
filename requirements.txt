@@ -1,1 +1,2 @@
 django-compat>=1.0.14
+django>=2.2
