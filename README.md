@@ -1,11 +1,10 @@
 # Django Hijack
 
-[![Build Status](https://travis-ci.org/arteria/django-hijack.svg?branch=master)](https://travis-ci.org/arteria/django-hijack)
-[![Stories in Ready](https://badge.waffle.io/arteria/django-hijack.png?label=ready&title=Ready)](https://waffle.io/arteria/django-hijack)
-[![Coverage Status](https://coveralls.io/repos/arteria/django-hijack/badge.svg?branch=master&service=github)](https://coveralls.io/github/arteria/django-hijack?branch=master)
-[![PyPI](https://img.shields.io/pypi/v/django-hijack.svg)](https://pypi.python.org/pypi/django-hijack)
+[![CI](https://github.com/django-hijack/django-hijack/workflows/CI/badge.svg?branch=master)](https://github.com/django-hijack/django-hijack/actions)
+[![codecov](https://codecov.io/gh/django-hijack/django-hijack/branch/master/graph/badge.svg?token=zX0nCDRJDj)](https://codecov.io/gh/django-hijack/django-hijack)
+[![PyPI](https://img.shields.io/pypi/v/django-hijack)](https://pypi.org/project/django-hijack/)
 
-![Screenshot of the notification seen while hijacking another user.](docs/hijacker-screenshot.png)
+![Screenshot of the notification seen while hijacking another user.](https://github.com/django-hijack/django-hijack/raw/master/docs/hijacker-screenshot.png)
 
 With Django Hijack, admins can log in and work on behalf of other users without having to know their credentials.
 
