@@ -1,8 +1,8 @@
 # Django Hijack
 
-![CI](https://github.com/django-hijack/django-hijack/workflows/CI/badge.svg?branch=master)
+[![CI](https://github.com/django-hijack/django-hijack/workflows/CI/badge.svg?branch=master)](https://github.com/django-hijack/django-hijack/actions)
 [![codecov](https://codecov.io/gh/django-hijack/django-hijack/branch/master/graph/badge.svg?token=zX0nCDRJDj)](https://codecov.io/gh/django-hijack/django-hijack)
-![PyPI](https://img.shields.io/pypi/v/django-hijack)
+[![PyPI](https://img.shields.io/pypi/v/django-hijack)](https://pypi.org/project/django-hijack/)
 
 ![Screenshot of the notification seen while hijacking another user.](https://github.com/arteria/django-hijack/raw/master/docs/hijacker-screenshot.png)
 
