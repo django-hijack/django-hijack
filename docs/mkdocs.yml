@@ -1,5 +1,5 @@
 site_name: Django Hijack
-repo_url: https://github.com/arteria/django-hijack/
+repo_url: https://github.com/django-heroku/django-hijack/
 pages:
 - Overview: index.md
 - Configuration: configuration.md
