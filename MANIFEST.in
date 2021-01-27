@@ -1,12 +1,2 @@
-include AUTHORS
-include LICENSE
-include DESCRIPTION
-include CHANGELOG.txt
-include README.md
-include requirements.txt
-graft hijack
-global-exclude *.orig *.pyc *.log *.swp
-prune hijack/tests/coverage
-prune hijack/.ropeproject
-recursive-include hijack/templates *
-recursive-include hijack/locale *
+prune .github
+exclude .gitignore
