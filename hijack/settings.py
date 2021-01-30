@@ -1,3 +1,5 @@
+import warnings
+
 from django.conf import settings as django_settings
 
 SETTINGS = (
@@ -5,6 +7,11 @@ SETTINGS = (
         "name": "HIJACK_DISPLAY_WARNING",
         "default": True,
         "legacy_name": "HIJACK_NOTIFY_ADMIN",
+    },
+    {
+        "name": "HIJACK_USER_URL_PATTERN",
+        "default": None,
+        "legacy_name": None,
     },
     {
         "name": "HIJACK_URL_ALLOWED_ATTRIBUTES",
@@ -52,6 +59,12 @@ SETTINGS = (
         "legacy_name": None,
     },
 )
+
+if hasattr(django_settings, "HIJACK_URL_ALLOWED_ATTRIBUTES"):
+    warnings.warn(
+        'The "HIJACK_URL_ALLOWED_ATTRIBUTES" setting has be deprecated in favor of "HIJACK_USER_URL_PATTERN".',
+        DeprecationWarning,
+    )
 
 for setting in SETTINGS:
     if setting["legacy_name"]:

@@ -23,6 +23,7 @@ def check_legacy_settings(app_configs, **kwargs):
     return warnings
 
 
+# @TODO: HIJACK_URL_ALLOWED_ATTRIBUTES is deprecated, remove with next major release.
 def check_url_allowed_attributes(app_configs, **kwargs):
     errors = []
     required_attributes = ["user_id", "email", "username"]
