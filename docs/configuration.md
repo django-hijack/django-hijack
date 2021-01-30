@@ -81,9 +81,14 @@ MIDDLEWARE_CLASSES = (
 Hide or display the yellow notification bar show to hijackers. Default: `True`.
 ## `HIJACK_USE_BOOTSTRAP`
 Whether a Bootstrap-optimized notification bar is used. Default: `False`.
-## `HIJACK_URL_ALLOWED_ATTRIBUTES`
-User attributes by which a user can be hijacked over a URL. Default: `('user_id', 'email', 'username')`.
-May be changed to a subset of the default value.
+## `HIJACK_USER_URL_PATTERN`
+User model with a custom primary that is not a subclass of either
+`InterField`, `UUIDField` or `SlugField`, you will need to provide a regex URL pattern
+(compatible with `re_path`) that is valid for your primary key. Default: `None`
+This setting may also be used to hijack users based on other fields than the primary key, e.G.:
+```python
+HIJACK_USER_URL_PATTERN = r'^acquire/(?P<username>\w+)/$'  # hijack a user based on the username
+```
 ## `HIJACK_AUTHORIZE_STAFF`
 Whether staff members are allowed to hijack. Default: `False`.
 ## `HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF`

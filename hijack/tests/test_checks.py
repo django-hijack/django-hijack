@@ -21,53 +21,24 @@ class ChecksTests(TestCase):
             ]
             self.assertEqual(warnings, expected_warnings)
 
-    def test_check_url_allowed_attributes(self):
-        errors = checks.check_url_allowed_attributes(HijackConfig)
-        self.assertFalse(errors)
-
-        with SettingsOverride(
-            hijack_settings, HIJACK_URL_ALLOWED_ATTRIBUTES=("username",)
-        ):
-            errors = checks.check_url_allowed_attributes(HijackConfig)
-            self.assertFalse(errors)
-
-        with SettingsOverride(
-            hijack_settings, HIJACK_URL_ALLOWED_ATTRIBUTES=("username", "email")
-        ):
-            errors = checks.check_url_allowed_attributes(HijackConfig)
-            self.assertFalse(errors)
-
-        with SettingsOverride(
-            hijack_settings, HIJACK_URL_ALLOWED_ATTRIBUTES=("other",)
-        ):
-            errors = checks.check_url_allowed_attributes(HijackConfig)
-            expected_errors = [
-                Error(
-                    "Setting HIJACK_URL_ALLOWED_ATTRIBUTES needs to be "
-                    "subset of (user_id, email, username)",
-                    hint=None,
-                    obj=hijack_settings.HIJACK_URL_ALLOWED_ATTRIBUTES,
-                    id="hijack.E001",
-                )
-            ]
-            self.assertEqual(errors, expected_errors)
-
-    def test_check_custom_authorization_check_importable(self):
-        errors = checks.check_custom_authorization_check_importable(HijackConfig)
-        self.assertFalse(errors)
-        with SettingsOverride(
-            hijack_settings, HIJACK_AUTHORIZATION_CHECK="not.importable"
-        ):
-            expected_errors = [
-                Error(
-                    "Setting HIJACK_AUTHORIZATION_CHECK cannot be imported",
-                    hint=None,
-                    obj="not.importable",
-                    id="hijack.E002",
-                )
-            ]
+        def test_check_custom_authorization_check_importable(self):
             errors = checks.check_custom_authorization_check_importable(HijackConfig)
-            self.assertEqual(errors, expected_errors)
+            self.assertFalse(errors)
+            with SettingsOverride(
+                hijack_settings, HIJACK_AUTHORIZATION_CHECK="not.importable"
+            ):
+                expected_errors = [
+                    Error(
+                        "Setting HIJACK_AUTHORIZATION_CHECK cannot be imported",
+                        hint=None,
+                        obj="not.importable",
+                        id="hijack.E002",
+                    )
+                ]
+                errors = checks.check_custom_authorization_check_importable(
+                    HijackConfig
+                )
+                self.assertEqual(errors, expected_errors)
 
     def test_hijack_decorator_importable(self):
         errors = checks.check_hijack_decorator_importable(HijackConfig)
