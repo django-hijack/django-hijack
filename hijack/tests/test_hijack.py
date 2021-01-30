@@ -346,7 +346,7 @@ class HijackTests(BaseHijackTests):
             self._release_hijack()
 
     def test_middleware_without_remote_user(self):
-        middleware = HijackRemoteUserMiddleware()
+        middleware = HijackRemoteUserMiddleware(lambda r: None)
         factory = RequestFactory()
         request = factory.get('/')
         request.session = {}
@@ -356,7 +356,7 @@ class HijackTests(BaseHijackTests):
         self.assertEqual(request.META.get('REMOTE_USER'), None)
 
     def test_middleware_with_remote_user(self):
-        middleware = HijackRemoteUserMiddleware()
+        middleware = HijackRemoteUserMiddleware(lambda r: None)
         factory = RequestFactory()
         request = factory.get('/')
         request.session = {'is_hijacked_user': True}
