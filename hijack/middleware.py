@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-try:
-    from django.utils.deprecation import MiddlewareMixin
-except ImportError:
-    class MiddlewareMixin(object):
-        pass
+from django.utils.deprecation import MiddlewareMixin
 
 
 class HijackRemoteUserMiddleware(MiddlewareMixin):
@@ -30,6 +26,3 @@ class HijackRemoteUserMiddleware(MiddlewareMixin):
             username = request.user.get_username()
             if username != remote_username:
                 request.META[self.header] = username
-
-    def authenticate(self, *args, **kwargs):
-        return None
