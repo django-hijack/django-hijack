@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+from urllib.parse import unquote_plus
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import AnonymousUser
+from django.utils.module_loading import import_string
 
-from compat import import_string, unquote_plus
 from hijack import settings as hijack_settings
 from hijack.helpers import is_authorized
 from hijack.middleware import HijackRemoteUserMiddleware

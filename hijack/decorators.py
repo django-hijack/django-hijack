@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-from compat import import_string
+from django.utils.module_loading import import_string
 from django.views.decorators.http import require_http_methods
 
 from hijack import settings as hijack_settings

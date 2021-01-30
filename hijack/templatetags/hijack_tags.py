@@ -1,8 +1,8 @@
 import django
 from django import template
+from django.utils.module_loading import import_string
 from django.utils.safestring import mark_safe
 from django.template.loader import render_to_string
-from compat import import_string
 from hijack import settings as hijack_settings
 
 register = template.Library()
