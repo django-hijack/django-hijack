@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.core.checks import Error, Warning, register
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required

@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 import contextlib
+
 import django
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import update_last_login
@@ -149,10 +149,8 @@ def login_user(request, hijacked):
 
 def redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGIN_REDIRECT_URL):
     redirect_to = request.GET.get('next', '')
-    # is_safe_url's allowed_hosts keyword was added in Django 1.11, and became required in 2.1:
-    is_safe_url_kwargs = {}
-    if django.VERSION >= (1, 11):
-        is_safe_url_kwargs['allowed_hosts'] = {request.get_host()}
-    if not url_has_allowed_host_and_scheme(redirect_to, **is_safe_url_kwargs):
+    if not url_has_allowed_host_and_scheme(
+        redirect_to, allowed_hosts=request.get_host()
+    ):
         redirect_to = default_url
     return HttpResponseRedirect(resolve_url(redirect_to))

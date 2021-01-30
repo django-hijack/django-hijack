@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Test cases for settings-dependent urls/decorators. Need to be run separately from HijackTests
 
 from unittest import skipIf
