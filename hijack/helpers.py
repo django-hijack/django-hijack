@@ -7,7 +7,11 @@ from django.contrib.auth.signals import user_logged_in
 from django.contrib.auth import login, load_backend, BACKEND_SESSION_KEY
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.utils.http import is_safe_url
+
+if django.VERSION >= (3, 0):
+    from django.utils.http import url_has_allowed_host_and_scheme
+else:
+    from django.utils.http import is_safe_url as url_has_allowed_host_and_scheme
 
 from compat import get_user_model, import_string
 from compat import resolve_url
@@ -150,6 +154,6 @@ def redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGIN_REDIRECT_
     is_safe_url_kwargs = {}
     if django.VERSION >= (1, 11):
         is_safe_url_kwargs['allowed_hosts'] = {request.get_host()}
-    if not is_safe_url(redirect_to, **is_safe_url_kwargs):
+    if not url_has_allowed_host_and_scheme(redirect_to, **is_safe_url_kwargs):
         redirect_to = default_url
     return HttpResponseRedirect(resolve_url(redirect_to))
