@@ -1,9 +1,9 @@
 """URLs to run the tests."""
-from compat import include, url
 from django.contrib import admin
+from django.urls import include, path
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^hijack/', include('hijack.urls', namespace='hijack')),
-    url(r'^hello/', include('hijack.tests.test_app.urls', 'test_app')),
+    path('admin/', admin.site.urls),
+    path('hijack/', include('hijack.urls', namespace='hijack')),
+    path('hello/', include('hijack.tests.test_app.urls', 'test_app')),
 ]
