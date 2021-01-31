@@ -35,7 +35,7 @@ def _render_hijack_notification(request, template_name=None):
         request.session.get('display_hijack_warning', False),
     ]):
         ans = render_to_string(template_name, request=request)
-    return mark_safe(ans)
+    return mark_safe(ans)  # nosec
 
 
 @register.filter
