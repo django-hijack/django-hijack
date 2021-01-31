@@ -15,7 +15,7 @@ class HijackRemoteUserMiddleware(MiddlewareMixin):
     header = "REMOTE_USER"
 
     def process_request(self, request):
-        is_hijacked = request.session.get('is_hijacked_user', False)
+        is_hijacked = request.session.get("is_hijacked_user", False)
         remote_username = request.META.get(self.header, None)
         if not is_hijacked or not remote_username:
             return

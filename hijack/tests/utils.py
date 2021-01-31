@@ -1,4 +1,3 @@
-
 # Borrowed from https://github.com/stefanfoulis/django-filer/blob/develop/filer/tests/helpers.py
 class SettingsOverride(object):
     """
