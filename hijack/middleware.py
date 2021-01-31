@@ -3,12 +3,15 @@ from django.utils.deprecation import MiddlewareMixin
 
 class HijackRemoteUserMiddleware(MiddlewareMixin):
     """
-    Middleware for hijack RemoteUser. One must place this middleware between
+    Middleware for hijack RemoteUser.
+
+    One must place this middleware between
     'django.contrib.auth.middleware.AuthenticationMiddleware' and
     'django.contrib.auth.middleware.RemoteUserMiddleware' in MIDDLEWARE_CLASSES
 
     Just makes remote user same as hijacked
     """
+
     header = "REMOTE_USER"
 
     def process_request(self, request):
