@@ -19,7 +19,7 @@ def login_with_id(request, user_id):
     try:
         user_id = int(user_id)
     except ValueError:
-        return HttpResponseBadRequest('user_id must be an integer value.')
+        return HttpResponseBadRequest("user_id must be an integer value.")
     user = get_object_or_404(get_user_model(), pk=user_id)
     return login_user(request, user)
 
@@ -47,5 +47,5 @@ def release_hijack(request):
 @login_required
 @hijack_require_http_methods
 def disable_hijack_warning(request):
-    request.session['display_hijack_warning'] = False
-    return redirect_to_next(request, default_url='/')
+    request.session["display_hijack_warning"] = False
+    return redirect_to_next(request, default_url="/")

@@ -1,4 +1,3 @@
-
 from hijack.helpers import is_authorized_default
 
 
