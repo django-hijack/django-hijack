@@ -1,5 +1,6 @@
 from urllib.parse import unquote_plus
 
+import pytest
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser, User
 from django.test import Client, RequestFactory, TestCase
@@ -264,7 +265,8 @@ class HijackTests(BaseHijackTests):
     def test_notification_filter(self):
         response = self._hijack(self.user)
         self.assertHijackSuccess(response)
-        response = self.client.get('/hello/filter/')
+        with pytest.deprecated_call():
+            response = self.client.get('/hello/filter/')
         self.assertEqual(response.status_code, 200)
         self.assertTrue('Notification filter' in str(response.content))
         self.assertTrue('hijacked-warning' in str(response.content))
@@ -275,7 +277,8 @@ class HijackTests(BaseHijackTests):
             self.assertHijackSuccess(response)
             response = self.client.get('/hello/')
             self.assertTrue('hijacked-warning-bootstrap' in str(response.content))
-            response = self.client.get('/hello/filter/')
+            with pytest.deprecated_call():
+                response = self.client.get('/hello/filter/')
             self.assertTrue('hijacked-warning-bootstrap' in str(response.content))
 
     def test_can_hijack_filter(self):

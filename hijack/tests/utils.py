@@ -2,8 +2,8 @@
 # Borrowed from https://github.com/stefanfoulis/django-filer/blob/develop/filer/tests/helpers.py
 class SettingsOverride(object):
     """
-    Overrides Django settings within a context and resets them to their inital
-    values on exit.
+    Override Django settings and restore original values on exit.
+
     Example:
         with SettingsOverride(DEBUG=True):
             # do something

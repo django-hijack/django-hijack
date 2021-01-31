@@ -24,6 +24,14 @@ jobs:
       - run: python -m pip install `cat requirements.txt | grep isort`
       - run: isort --check-only --diff .
 
+  pydocstyle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v1
+      - uses: actions/checkout@v2
+      - run: python -m pip install `cat requirements.txt | grep pydocstyle`
+      - run: pydocstyle .
+
   dist:
     runs-on: ubuntu-latest
     steps:
@@ -39,6 +47,7 @@ jobs:
       - bandit
       - dist
       - isort
+      - pydocstyle
     strategy:
       matrix:
         python-version:
