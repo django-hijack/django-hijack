@@ -1,7 +1,6 @@
 from django.urls import path, re_path
 
-from hijack import settings as hijack_settings
-from hijack import views
+from hijack import settings as hijack_settings, views
 
 app_name = 'hijack'
 urlpatterns = [

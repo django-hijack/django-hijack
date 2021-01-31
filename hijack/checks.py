@@ -1,6 +1,6 @@
-from django.core.checks import Error, Warning, register
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
+from django.core.checks import Error, Warning, register
 from django.utils.module_loading import import_string
 
 from hijack import settings as hijack_settings
