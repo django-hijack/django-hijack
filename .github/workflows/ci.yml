@@ -16,6 +16,14 @@ jobs:
       - run: python -m pip install `cat requirements.txt | grep bandit`
       - run: bandit -r hijack -x hijack/tests
 
+  isort:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v1
+      - uses: actions/checkout@v2
+      - run: python -m pip install `cat requirements.txt | grep isort`
+      - run: isort --check-only --diff .
+
   dist:
     runs-on: ubuntu-latest
     steps:
@@ -30,6 +38,7 @@ jobs:
     needs:
       - bandit
       - dist
+      - isort
     strategy:
       matrix:
         python-version:

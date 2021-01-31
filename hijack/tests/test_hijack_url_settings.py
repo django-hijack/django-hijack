@@ -1,7 +1,7 @@
 # Test cases for settings-dependent urls/decorators. Need to be run separately from HijackTests
 
-from unittest import skipIf
 import sys
+from unittest import skipIf
 
 from hijack import settings as hijack_settings
 from hijack.tests.test_hijack import BaseHijackTests

@@ -1,19 +1,17 @@
 from urllib.parse import unquote_plus
 
 from django.conf import settings
-from django.contrib.auth.models import User
-from django.test import TestCase, Client, RequestFactory
-from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.models import AnonymousUser, User
+from django.test import Client, RequestFactory, TestCase
 from django.urls import reverse
 from django.utils.module_loading import import_string
 
 from hijack import settings as hijack_settings
 from hijack.helpers import is_authorized
 from hijack.middleware import HijackRemoteUserMiddleware
-from hijack.signals import hijack_started, hijack_ended
+from hijack.signals import hijack_ended, hijack_started
 from hijack.templatetags.hijack_tags import can_hijack
 from hijack.tests.utils import SettingsOverride
-
 
 
 class BaseHijackTests(TestCase):

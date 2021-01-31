@@ -1,10 +1,10 @@
 import contextlib
 
 import django
-from django.core.exceptions import PermissionDenied
+from django.contrib.auth import BACKEND_SESSION_KEY, get_user_model, load_backend, login
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth.signals import user_logged_in
-from django.contrib.auth import login, load_backend, BACKEND_SESSION_KEY, get_user_model
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, resolve_url
 
@@ -16,7 +16,7 @@ else:
 from django.utils.module_loading import import_string
 
 from hijack import settings as hijack_settings
-from hijack.signals import hijack_started, hijack_ended
+from hijack.signals import hijack_ended, hijack_started
 
 
 @contextlib.contextmanager

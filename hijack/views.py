@@ -4,9 +4,12 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
 
-from hijack.decorators import hijack_require_http_methods, hijack_decorator
-from hijack.helpers import login_user, redirect_to_next
-from hijack.helpers import release_hijack as release_hijack_fx
+from hijack.decorators import hijack_decorator, hijack_require_http_methods
+from hijack.helpers import (
+    login_user,
+    redirect_to_next,
+    release_hijack as release_hijack_fx,
+)
 
 
 @hijack_decorator
