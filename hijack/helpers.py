@@ -1,16 +1,19 @@
-# -*- coding: utf-8 -*-
 import contextlib
+
 import django
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth.signals import user_logged_in
-from django.contrib.auth import login, load_backend, BACKEND_SESSION_KEY
+from django.contrib.auth import login, load_backend, BACKEND_SESSION_KEY, get_user_model
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
-from django.utils.http import is_safe_url
+from django.shortcuts import get_object_or_404, resolve_url
 
-from compat import get_user_model, import_string
-from compat import resolve_url
+if django.VERSION >= (3, 0):
+    from django.utils.http import url_has_allowed_host_and_scheme
+else:
+    from django.utils.http import is_safe_url as url_has_allowed_host_and_scheme
+
+from django.utils.module_loading import import_string
 
 from hijack import settings as hijack_settings
 from hijack.signals import hijack_started, hijack_ended
@@ -146,10 +149,8 @@ def login_user(request, hijacked):
 
 def redirect_to_next(request, default_url=hijack_settings.HIJACK_LOGIN_REDIRECT_URL):
     redirect_to = request.GET.get('next', '')
-    # is_safe_url's allowed_hosts keyword was added in Django 1.11, and became required in 2.1:
-    is_safe_url_kwargs = {}
-    if django.VERSION >= (1, 11):
-        is_safe_url_kwargs['allowed_hosts'] = {request.get_host()}
-    if not is_safe_url(redirect_to, **is_safe_url_kwargs):
+    if not url_has_allowed_host_and_scheme(
+        redirect_to, allowed_hosts=request.get_host()
+    ):
         redirect_to = default_url
     return HttpResponseRedirect(resolve_url(redirect_to))

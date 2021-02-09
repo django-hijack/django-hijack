@@ -1,10 +1,12 @@
-# -*- coding: utf-8 -*-
+from urllib.parse import unquote_plus
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import AnonymousUser
+from django.urls import reverse
+from django.utils.module_loading import import_string
 
-from compat import import_string, unquote_plus
 from hijack import settings as hijack_settings
 from hijack.helpers import is_authorized
 from hijack.middleware import HijackRemoteUserMiddleware
@@ -12,10 +14,6 @@ from hijack.signals import hijack_started, hijack_ended
 from hijack.templatetags.hijack_tags import can_hijack
 from hijack.tests.utils import SettingsOverride
 
-try:
-    from django.urls import reverse
-except ImportError:
-    from django.core.urlresolvers import reverse
 
 
 class BaseHijackTests(TestCase):
@@ -346,7 +344,7 @@ class HijackTests(BaseHijackTests):
             self._release_hijack()
 
     def test_middleware_without_remote_user(self):
-        middleware = HijackRemoteUserMiddleware()
+        middleware = HijackRemoteUserMiddleware(lambda r: None)
         factory = RequestFactory()
         request = factory.get('/')
         request.session = {}
@@ -356,7 +354,7 @@ class HijackTests(BaseHijackTests):
         self.assertEqual(request.META.get('REMOTE_USER'), None)
 
     def test_middleware_with_remote_user(self):
-        middleware = HijackRemoteUserMiddleware()
+        middleware = HijackRemoteUserMiddleware(lambda r: None)
         factory = RequestFactory()
         request = factory.get('/')
         request.session = {'is_hijacked_user': True}
