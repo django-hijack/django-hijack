@@ -362,3 +362,8 @@ class HijackTests(BaseHijackTests):
         request.user = self.superuser
         middleware.process_request(request)
         self.assertEqual(request.META.get('REMOTE_USER'), self.superuser_username)
+
+    def test_missing_session(self):
+        with SettingsOverride(settings, MIDDLEWARE=()):
+            response = self.client.get('/hello/')
+            self.assertEqual(response.status_code, 200)
