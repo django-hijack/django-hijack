@@ -11,7 +11,7 @@ from hijack import settings as hijack_settings
 from hijack.helpers import is_authorized
 from hijack.middleware import HijackRemoteUserMiddleware
 from hijack.signals import hijack_started, hijack_ended
-from hijack.templatetags.hijack_tags import can_hijack
+from hijack.templatetags.hijack_tags import can_hijack, is_hijacked, hijack_notification
 from hijack.tests.utils import SettingsOverride
 
 
@@ -364,6 +364,35 @@ class HijackTests(BaseHijackTests):
         self.assertEqual(request.META.get('REMOTE_USER'), self.superuser_username)
 
     def test_missing_session(self):
+        # test check for request is None
+        context = { 'request': None }
+        notification = hijack_notification(context)
+        self.assertEqual(notification, '')
+        self.assertFalse(is_hijacked(context['request']))
+
+        # test check for missing request.sesssion property
+        factory = RequestFactory()
+        request = factory.get('/')
+        context = { 'request': request }
+        notification = hijack_notification(context)
+        self.assertEqual(notification, '')
+        self.assertFalse(is_hijacked(context['request']))
+        
+        # test check for request.sesssion == None
+        request.session = None
+        notification = hijack_notification(context)
+        self.assertEqual(notification, '')
+        self.assertFalse(is_hijacked(context['request']))
+
+        # test all good
+        request.session = {'is_hijacked_user': True, 'display_hijack_warning': True}
+        notification = hijack_notification(context)
+        self.assertTrue(notification != '')
+        self.assertTrue(is_hijacked(context['request']))
+
+        # bring it all together: empty MIDDLEWARE ensures request.session is not set
+        # and hijack_notification and is_hijacked will be invoked from hello template
         with SettingsOverride(settings, MIDDLEWARE=()):
             response = self.client.get('/hello/')
             self.assertEqual(response.status_code, 200)
+
