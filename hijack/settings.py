@@ -19,6 +19,11 @@ SETTINGS = (
         "legacy_name": "ALLOWED_HIJACKING_USER_ATTRIBUTES",
     },
     {
+        "name": "HIJACK_INSERT_BEFORE",
+        "default": "</body>",
+        "legacy_name": None,
+    },
+    {
         "name": "HIJACK_AUTHORIZE_STAFF",
         "default": False,
         "legacy_name": "ALLOW_STAFF_TO_HIJACKUSER",

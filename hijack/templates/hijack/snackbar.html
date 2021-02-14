@@ -1,0 +1,20 @@
+{% load i18n static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}" media="screen">
+<div class="djhj-wrapper">
+  <div class="djhj-notification">
+    <div class="djhj-message">
+      {% blocktrans trimmed with user=request.user %}
+        You are currently working on behalf of <em>{{ user }}</em>.
+      {% endblocktrans %}
+    </div>
+    <div class="djhj-actions">
+      <form action="{% url 'hijack:release' %}" method="POST">
+        {% csrf_token %}
+        <button class="djhj-button">
+          {% trans 'release' %}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
