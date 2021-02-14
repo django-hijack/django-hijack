@@ -1,4 +1,11 @@
+import re
+
+from django.template.loader import render_to_string
 from django.utils.deprecation import MiddlewareMixin
+
+from hijack import settings
+
+_HTML_TYPES = ("text/html", "application/xhtml+xml")
 
 
 class HijackRemoteUserMiddleware(MiddlewareMixin):
@@ -28,3 +35,34 @@ class HijackRemoteUserMiddleware(MiddlewareMixin):
             username = request.user.get_username()
             if username != remote_username:
                 request.META[self.header] = username
+
+    def process_response(self, request, response):
+        if not request.session.get("is_hijacked_user"):
+            return response
+
+        # Check for responses where the toolbar can't be inserted.
+        content_encoding = response.get("Content-Encoding", "")
+        content_type = response.get("Content-Type", "").split(";")[0]
+        if (
+            getattr(response, "streaming", False)
+            or "gzip" in content_encoding
+            or content_type not in _HTML_TYPES
+        ):
+            return response
+
+        rendered = render_to_string(
+            "hijack/notification.html",
+            {"request": request, "csrf_token": request.META["CSRF_COOKIE"]},
+        )
+
+        # Insert the toolbar in the response.
+        content = response.content.decode(response.charset)
+        insert_before = settings.HIJACK_INSERT_BEFORE
+        pattern = re.escape(insert_before)
+        bits = re.split(pattern, content, flags=re.IGNORECASE)
+        if len(bits) > 1:
+            bits[-2] += rendered
+            response.content = insert_before.join(bits)
+            if "Content-Length" in response:
+                response["Content-Length"] = len(response.content)
+        return response

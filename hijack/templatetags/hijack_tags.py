@@ -1,9 +1,7 @@
 import warnings
 
 from django import template
-from django.template.loader import render_to_string
 from django.utils.module_loading import import_string
-from django.utils.safestring import mark_safe
 
 from hijack import settings as hijack_settings
 
@@ -13,31 +11,15 @@ register = template.Library()
 @register.filter
 def hijackNotification(request):
     warnings.warn('Deprecated favoring "hijack_notification".', DeprecationWarning)
-    return _render_hijack_notification(request)
+    return ""
 
 
 @register.simple_tag(takes_context=True)
 def hijack_notification(context):
-    request = context.get("request")
-    return _render_hijack_notification(request)
-
-
-def _render_hijack_notification(request, template_name=None):
-    if template_name is None:
-        if hijack_settings.HIJACK_USE_BOOTSTRAP:
-            template_name = "hijack/notifications_bootstrap.html"
-        else:
-            template_name = "hijack/notifications.html"
-    ans = ""
-    if request is not None and all(
-        [
-            hijack_settings.HIJACK_DISPLAY_WARNING,
-            request.session.get("is_hijacked_user", False),
-            request.session.get("display_hijack_warning", False),
-        ]
-    ):
-        ans = render_to_string(template_name, request=request)
-    return mark_safe(ans)  # nosec
+    warnings.warn(
+        'Deprecated favoring "HijackRemoteUserMiddleware".', DeprecationWarning
+    )
+    return ""
 
 
 @register.filter
@@ -56,7 +38,10 @@ try:
 
     @library.filter
     def jinja_hijack_notification(request, template_name=None):
-        return _render_hijack_notification(request, template_name)
+        warnings.warn(
+            'Deprecated favoring "HijackRemoteUserMiddleware".', DeprecationWarning
+        )
+        return ""
 
 
 except ImportError:

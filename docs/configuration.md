@@ -1,14 +1,11 @@
 
 # Notification bar
-The template used for the notification bar is named "hijack/notifications.html", or "hijack/notifications_bootstrap.html" 
-if Bootstrap is enabled.
+The template used for the notification bar is named `hijack/notification.html`.
+By default, we chose a notification design based on Material's snackbar.
+However, you alter the template to better suite your layout.
 
-## Bootstrap
-If your project uses Bootstrap, you may want to set `HIJACK_USE_BOOTSTRAP = True` in your project settings.
-Django Hijack will use a Bootstrap notification bar that does not overlap with the default navbar.
-
-## Disabling the notification bar
-You can temporarily disable the notification bar by setting `HIJACK_DISPLAY_WARNING = False`. 
+The `HIJACK_INSERT_BEFORE` setting allows you to alter at which point of the DOM
+the notification is injected. Default: `</body>`.
 
 # Permissions
 By default, only superusers are allowed to hijack other users.
@@ -21,8 +18,8 @@ If you want staff to be able to hijack other staff as well, enable `HIJACK_AUTHO
 Note that there is no option to authorize staff members to hijack superusers. This would make the distinction between staff users and superusers useless.
 
 ## Custom authorization function
-Advanced Django developers might want to define their own check whether a user may hijack another user. This can be achieved by 
-setting `HIJACK_AUTHORIZATION_CHECK` to the dotted path of a function which accepts two User 
+Advanced Django developers might want to define their own check whether a user may hijack another user. This can be achieved by
+setting `HIJACK_AUTHORIZATION_CHECK` to the dotted path of a function which accepts two User
 objects – `hijacker` and `hijacked` – and returns a Boolean value. Example:
 
 ```python
@@ -43,7 +40,7 @@ def my_authorization_check(hijacker, hijacked):
 ```
 
 **Warning: The setting `HIJACK_AUTHORIZATION_CHECK` overrides the other hijack authorization settings. Defining a custom authorization function can have dangerous
-effects on your application's authorization system. Potentially, it might allow any user to impersonate 
+effects on your application's authorization system. Potentially, it might allow any user to impersonate
 any other user and to take advantage of all their permissions.**
 
 
@@ -53,8 +50,8 @@ However, you want to forego this protection, e.g. if they want to integrate Djan
 In this case, you can set `HIJACK_ALLOW_GET_REQUESTS = True`.
 
 ## Custom view decorator
-Django Hijack's views are decorated by Django's `staff_member_required` decorator. If you have written your own 
-authorization function, or haven't installed `django.contrib.admin`, you may want to override this behaviour by 
+Django Hijack's views are decorated by Django's `staff_member_required` decorator. If you have written your own
+authorization function, or haven't installed `django.contrib.admin`, you may want to override this behaviour by
 setting `HIJACK_DECORATOR` to the dotted path of a custom decorator. Example:
 
 ```python
@@ -77,10 +74,6 @@ MIDDLEWARE_CLASSES = (
 ```
 
 # Settings overview
-## `HIJACK_DISPLAY_WARNING`
-Hide or display the yellow notification bar show to hijackers. Default: `True`.
-## `HIJACK_USE_BOOTSTRAP`
-Whether a Bootstrap-optimized notification bar is used. Default: `False`.
 ## `HIJACK_USER_URL_PATTERN`
 User model with a custom primary that is not a subclass of either
 `InterField`, `UUIDField` or `SlugField`, you will need to provide a regex URL pattern
@@ -89,6 +82,10 @@ This setting may also be used to hijack users based on other fields than the pri
 ```python
 HIJACK_USER_URL_PATTERN = r'^acquire/(?P<username>\w+)/$'  # hijack a user based on the username
 ```
+## `HIJACK_INSERT_BEFORE`
+Alters at which point of the DOM the notification is injected.
+Default: `</body>`.
+
 ## `HIJACK_AUTHORIZE_STAFF`
 Whether staff members are allowed to hijack. Default: `False`.
 ## `HIJACK_AUTHORIZE_STAFF_TO_HIJACK_STAFF`
