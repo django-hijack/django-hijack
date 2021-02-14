@@ -1,14 +1,9 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-08 11:17+0100\n"
-"PO-Revision-Date: 2021-03-08 11:18+0100\n"
+"POT-Creation-Date: 2021-03-08 09:27+0100\n"
+"PO-Revision-Date: 2021-03-08 11:37+0100\n"
 "Last-Translator: Johannes Maron <info@johanneshoppe.com>\n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -17,18 +12,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.4.2\n"
 
-#: templates/hijack/notifications.html:5
-#: templates/hijack/notifications_bootstrap.html:4
+#: templates/hijack/notification.html:7
 #, python-format
-msgid "You are currently working on behalf of %(user)s."
-msgstr "В данный момент вы работаете от имени %(user)s."
+msgid "You are currently working on behalf of <em>%(user)s</em>."
+msgstr "В данный момент вы работаете от имени <em>%(user)s</em>."
 
-#: templates/hijack/notifications.html:9
-#: templates/hijack/notifications_bootstrap.html:8
-#, python-format
-msgid "release %(user)s"
-msgstr "освободить %(user)s"
-
-#: templates/hijack/notifications.html:13
+#: templates/hijack/notification.html:15
 msgid "hide"
 msgstr "скрыть"
+
+#: templates/hijack/notification.html:18
+msgid "release"
+msgstr "освободить"

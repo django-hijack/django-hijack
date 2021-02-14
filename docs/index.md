@@ -1,131 +1,95 @@
-*With Django Hijack, admins can log in and work on behalf of other users without having to know their credentials. <https://github.com/arteria/django-hijack/>*
+# Django-Hijack
 
-# Installation
+_Log in and work on behalf of other users without having to know their credentials._
+
+![django-hijack-notification](django-hijack.jpg)
+
+* easy integration
+* custom user model support
+* customizable & secure
+* automatic dark-mode theme
+
+## Installation
 
 Get the latest stable release from PyPi:
 
     pip install django-hijack
 
-In your ``settings.py``, add ``hijack`` to your installed apps:
-
-```python
-INSTALLED_APPS = (
-    ...,
-    'hijack',
-)
-```
-
-Finally, add the Django Hijack URLs to ``urls.py``:
-
-```python
-urlpatterns = [
-    ...
-    url(r'^hijack/', include('hijack.urls', namespace='hijack')),
-]
-```
-
-## After installing
-
-### Setting up redirections
-You should specify a `HIJACK_LOGIN_REDIRECT_URL` and a `HIJACK_LOGOUT_REDIRECT_URL`. 
-This is where admins are redirected to after hijacking or releasing a user. 
-Both settings default to `LOGIN_REDIRECT_URL`.
+Add ``hijack`` to your installed apps and the hijack middleware:
 
 ```python
 # settings.py
-HIJACK_LOGIN_REDIRECT_URL = reverse_lazy('profile') # Where admins are redirected to after hijacking a user
-HIJACK_LOGOUT_REDIRECT_URL = reverse_lazy('admin:auth_user_changelist') # Where admins are redirected to after releasing a user
+INSTALLED_APPS = [
+    '…',
+    'hijack',
+]
+
+MIDDLEWARE = [
+    '…',
+    'hijack.middleware.HijackUserMiddleware',
+]
 ```
 
-### Setting up the notification bar
-We strongly recommend displaying a notification bar to everyone who is hijacking another user.
-This reduces the risk of an admin hijacking someone inadvertently or forgetting to release the user afterwards.
+Finally, add the Django Hijack URLs:
 
-To set up the notification bar, add the following lines to your `base.html` or to another template in which you want the notification bar to be displayed.
+```python
+# urls.py
+from django.urls import include, path
 
-```html
-<!-- At the top -->
-{% load static %}
-{% load hijack_tags %}
 
-...
-
-<!-- In the head -->
-<link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}" />
-
-...
-
-<!-- Directly after <body> -->
-{% hijack_notification %}
-
-...
+urlpatterns = [
+    path('hijack/', include('hijack.urls')),
+    # …
+]
 ```
 
-If your project uses Bootstrap you may want to set `HIJACK_USE_BOOTSTRAP = True` in your project settings.
-Django Hijack will display a Bootstrap notification bar that does not overlap with the default navbar.
+## Usage
 
-### Generic template filter
-We also provide a generic template filter to check if you are currently hijacking a user. This is useful for displaying/hiding elements besides the notification bar.
+### Hijacking another user
 
-```html
-{% load hijack_tags %}
-{% if request|is_hijacked %}
-...
-{% endif %}
-```
-
-# Usage
-
-Superusers can hijack a user by by sending a POST request to a `/hijack/...` URL.
-
-The following URLs are available by default:
-
-* `/hijack/<user id>` (`{% url "hijack:login_with_id" user_id=user.pk %}`)
-* `/hijack/username/<username>` (`{% url "hijack:login_with_username" username=user.username %}`)
-* `/hijack/email/<user email>` (`{% url "hijack:login_with_email" email=user.email %}`)
-
-If the hijacking is successful, the user is redirected to the `HIJACK_LOGIN_REDIRECT_URL`, 
-and the yellow notification bar is displayed at the top of the landing page.
-
-Here is a reference implementation of a button that allows a superuser to hijack the user referenced by the context variable `user`:
+The following example shows how to integrate a hijack button into your template.
 
 ```html
-<form action="{% url 'hijack:login_with_id' user_id=user.pk %}" method="post">
-    {% csrf_token %}
-    <button type="submit">Hijack {{ user.username }}</button>
+{% load hijack %}
+<html>
+<body>
+{# … #}
+{% if request.user|can_hijack:another_user %}
+<form action="{% url 'hijack:acquire' %}" method="POST">
+  {% csrf_token %}
+  <input type="hidden" name="user_pk" value="{{ another_user.pk }}">
+  <button type="submit">hijack {{ another_user }}</button>
+  <input type="hidden" name="next" value="{{ request.path }}">
 </form>
+{% endif %}
+{# … #}
+</body>
+</html>
 ```
 
-## Ending the hijack
-In order to end the hijack and switch back to your admin account, push the "Release" button in the yellow notification bar:
+A form is used to perform a POST including a [CSRF][CSRF]-token for security reasons.
+The field `user_pk` is mandatory and the value most be set to the  target users primary
+key. The optional field `next` determines where a users is forwared  after a success
+full hijack. If not provided, users are forwared to the
+[LOGIN_REDIRECT_URL][LOGIN_REDIRECT_URL].
 
-![Screenshot of the release button in the notification bar](release-button.png)
+Do not forget to load the `hijack` template tags to use the `can_hijack` filter.
+The `can_hijack` returns a boolean value, the first argument should be user hijacker,
+the second value should be the hijacked.
 
-As an alternative, send a POST request to `/hijack/release-hijack/` (`{% url "hijack:release_hijack" %}`).
+[CSRF]: https://docs.djangoproject.com/en/stable/ref/csrf/
+[LOGIN_REDIRECT_URL]: https://docs.djangoproject.com/en/stable/ref/settings/#login-redirect-url
 
-After releasing, you are redirected to the `HIJACK_LOGOUT_REDIRECT_URL`.
 
-## Django admin integration
+### Django admin integration
 
-If you want to display the hijack button in the Django admin's user list which is usually located at `/admin/auth/user/`, 
-have a look at the <https://github.com/arteria/django-hijack-admin> app 
+If you want to display the hijack button in the Django admin's user list which is
+usually located at `/admin/auth/user/`,
+have a look at the <https://github.com/arteria/django-hijack-admin> app
 that was originally a part of the core and has since been moved to a separate app.
 
 Example screenshot:
 
 ![Screenshot of the django admin user list with a hijack column](admin-screenshot.png)
 
-## Signals
-You can catch a signal when someone is hijacked or released. Here is an example:
 
-```python
-from hijack.signals import hijack_started, hijack_ended
-
-def print_hijack_started(sender, hijacker_id, hijacked_id, request, **kwargs):
-    print('%d has hijacked %d' % (hijacker_id, hijacked_id))
-hijack_started.connect(print_hijack_started)
-    
-def print_hijack_ended(sender, hijacker_id, hijacked_id, request, **kwargs):
-    print('%d has released %d' % (hijacker_id, hijacked_id))
-hijack_ended.connect(print_hijack_ended)
-```
