@@ -1,73 +1,70 @@
 .djhj-wrapper {
   position: fixed;
-  bottom: 0;
+  top: 0;
   width: 100%;
   height: auto;
-  z-index: 300;
+  z-index: 10000;
+  display: flex;
+  text-align: center;
+  justify-content: center;
 }
 
 .djhj-notification {
+  position: fixed;
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
+  flex-wrap: nowrap;
   border-radius: 0.5rem;
-  padding: 1rem 1rem 0;
   margin: 1rem;
   max-width: 540px;
+  background: #FDC66A;
+  color: #322715;
   box-shadow: 0 0 .5em rgba(0, 0, 0, 0.3);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: sans-serif;
   font-size: initial;
+  background-image: linear-gradient(45deg, #ffdb9e 16.67%, #fdc66a 16.67%, #fdc66a 50%, #ffdb9e 50%, #ffdb9e 66.67%, #fdc66a 66.67%, #fdc66a 100%);
+  background-size: 21.21px 21.21px;
+  justify-items: stretch;
+  align-items: stretch;
+  cursor: grab;
 }
 
-.djhj-message, .djhj-actions {
-  padding: 0 0 1rem;
-  width: 100%;
+.djhj-notification._draggble {
+  cursor: grabbing;
 }
 
 .djhj-message {
-  flex: 1 1 auto;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  font-size: initial;
+ padding: .5rem 1rem;
+ align-self: center;
 }
 
 .djhj-actions {
-  flex: 0 1 auto;
-  text-align: right;
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  border-color: #d19f44;
+  border-left: 1px solid #d19f44;
+}
+
+.djhj-actions form {
+  height: 100%;
 }
 
 .djhj-button {
-  border: none;
-  font-weight: 500;
-  text-transform: uppercase;
-  padding: 0 0 0 1em;
+  transition: .3s;
+  padding: .2rem 1.5rem;
   cursor: pointer;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  font-size: initial;
+  border-bottom: 1px solid;
+  color: #000;
+  background: transparent;
+  border-color: inherit;
+  height: 100%;
 }
 
-@media (prefers-color-scheme: dark) {
-  .djhj-notification, .djhj-actions button {
-    background: #333;
-    color: white;
-  }
+.djhj-button:hover {
+  background-color: rgba(255, 255, 255, .3);
 }
 
-@media (prefers-color-scheme: light) {
-  .djhj-notification, .djhj-actions button {
-    background: whitesmoke;
-    color: #111111;
-  }
-}
-
-@media screen and (min-width: 600px){
-  .djhj-notification {
-    flex-wrap: nowrap;
-    margin: 1rem auto;
-  }
-
-  .djhj-message, .djhj-actions {
-    width: auto;
-  }
+.djhj-button:last-child {
+  border-bottom: 0;
 }
