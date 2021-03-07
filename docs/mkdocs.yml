@@ -2,7 +2,7 @@ site_name: Django Hijack
 repo_url: https://github.com/django-heroku/django-hijack/
 pages:
 - Overview: index.md
-- Configuration: configuration.md
+- Customizatino: customization.md
 - Troubleshooting: troubleshooting.md
-- About: about.md
+- Security: security.md
 theme: readthedocs

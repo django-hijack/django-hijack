@@ -1,0 +1,1 @@
+/Users/johannes/GitHub/django-hijack/docs/secuirty.md

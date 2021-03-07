@@ -1,8 +1,8 @@
-from hijack.helpers import is_authorized_default
+from hijack.permissions import has_hijack_perm
 
 
 def can_hijack_default(hijacker, hijacked):
-    return is_authorized_default(hijacker, hijacked)
+    return has_hijack_perm(hijacker, hijacked)
 
 
 def everybody_can_hijack(hijacker, hijacked):

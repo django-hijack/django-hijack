@@ -1,0 +1,15 @@
+{% load hijack %}
+<html>
+<body>
+{% for another_user in object_list %}
+  {% if request.user|can_hijack:another_user %}
+    <form action="{% url 'hijack:acquire' %}" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="user_pk" value="{{ another_user.pk }}">
+      <button type="submit">hijack {{ another_user }}</button>
+      <input type="hidden" name="next" value="{{ request.path }}">
+    </form>
+  {% endif %}
+{% endfor %}
+</body>
+</html>

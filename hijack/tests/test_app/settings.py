@@ -1,11 +1,13 @@
 """Settings that need to be set in order to run the tests."""
 import os
 
+from django.urls import reverse_lazy
+
 DEBUG = True
 
 SITE_ID = 1
 
-APP_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+APP_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
 DATABASES = {
     "default": {
@@ -14,9 +16,6 @@ DATABASES = {
     }
 }
 
-LOGIN_REDIRECT_URL = "/hello"
-HIJACK_LOGIN_REDIRECT_URL = "/hello/"
-HIJACK_LOGOUT_REDIRECT_URL = "/hello/"
 
 ROOT_URLCONF = "hijack.tests.urls"
 
@@ -44,9 +43,9 @@ MIDDLEWARE = (
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "hijack.middleware.HijackUserMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "hijack.middleware.HijackRemoteUserMiddleware",
 )
 
 MIDDLEWARE_CLASSES = MIDDLEWARE
@@ -106,3 +105,7 @@ SECRET_KEY = "foobar"
 LANGUAGE_CODE = "en-us"
 USE_I18N = True
 USE_L10N = True
+
+LOGOUT_REDIRECT_URL = reverse_lazy("test_app:bye-bye")
+
+AUTH_USER_MODEL = "test_app.CustomUser"

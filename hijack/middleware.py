@@ -3,41 +3,25 @@ import re
 from django.template.loader import render_to_string
 from django.utils.deprecation import MiddlewareMixin
 
-from hijack import settings
+from hijack.conf import settings
+
+__all__ = ["HijackUserMiddleware"]
 
 _HTML_TYPES = ("text/html", "application/xhtml+xml")
 
 
-class HijackRemoteUserMiddleware(MiddlewareMixin):
-    """
-    Middleware for hijack RemoteUser.
-
-    One must place this middleware between
-    'django.contrib.auth.middleware.AuthenticationMiddleware' and
-    'django.contrib.auth.middleware.RemoteUserMiddleware' in MIDDLEWARE_CLASSES
-
-    Just makes remote user same as hijacked
-    """
-
-    header = "REMOTE_USER"
+class HijackUserMiddleware(MiddlewareMixin):
+    """Set `is_hijacked` attribute; render and inject notification."""
 
     def process_request(self, request):
-        is_hijacked = request.session.get("is_hijacked_user", False)
-        remote_username = request.META.get(self.header, None)
-        if not is_hijacked or not remote_username:
-            return
-        # Ok, we hijacked and remote. Just assign hijacked user to remote
-        if callable(request.user.is_authenticated):
-            is_authenticated = request.user.is_authenticated()
-        else:
-            is_authenticated = request.user.is_authenticated
-        if is_authenticated:
-            username = request.user.get_username()
-            if username != remote_username:
-                request.META[self.header] = username
+        """Set `is_hijacked` and override REMOTE_USER header."""
+        request.user.is_hijacked = bool(request.session.get("hijack_history", []))
+        if "REMOTE_USER" in request.META and request.user.is_hijacked:
+            request.META["REMOTE_USER"] = request.user.get_username()
 
     def process_response(self, request, response):
-        if not request.session.get("is_hijacked_user"):
+        """Render hijack notification and inject into HTML response."""
+        if not getattr(request.user, "is_hijacked", False):
             return response
 
         # Check for responses where the toolbar can't be inserted.

@@ -1,8 +1,10 @@
-{% load hijack_tags %}
-Notification tag:
-{% hijack_notification %}
+<html>
+<body>
 <h1>Hello</h1>
 <p>{{ user }}</p>
-{% if request|is_hijacked %}
+{% if request.user.is_hijacked %}
 <p>You are hijacking this user</p>
 {% endif %}
+Notification tag:
+</body>
+</html>
