@@ -8,12 +8,11 @@ jobs:
   PyPI:
     runs-on: ubuntu-latest
     steps:
+      - run: sudo apt install -y gettext
       - uses: actions/setup-python@v2
+      - uses: actions/setup-node@v2
       - uses: actions/checkout@v2
-      - name: Install Python dependencies
-        run: python -m pip install --upgrade pip setuptools wheel twine
-      - name: Build dist packages
-        run: python setup.py sdist bdist_wheel
+      - run: make dist
       - name: Upload packages
         run: python -m twine upload dist/*
         env:

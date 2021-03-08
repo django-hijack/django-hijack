@@ -1,0 +1,30 @@
+{
+  "name": "django-hijack",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "postcss hijack/static/hijack/hijack-styles.scss -o hijack/static/hijack/hijack-styles.scss",
+    "build:watch": "postcss hijack/static/hijack/hijack-styles.scss -o hijack/static/hijack/hijack-styles.scss -w",
+    "lint:scss": "stylelint \"**/*.scss\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/django-hijack/django-hijack.git"
+  },
+  "author": "Johannes Maron",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/django-hijack/django-hijack/issues"
+  },
+  "homepage": "https://github.com/django-hijack/django-hijack#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.2.5",
+    "cssnano": "^4.1.10",
+    "postcss": "^8.2.7",
+    "postcss-cli": "^8.3.1",
+    "postcss-nested": "^5.0.5",
+    "sass": "^1.32.8",
+    "stylelint": "^13.11.0",
+    "stylelint-config-standard": "^20.0.0",
+    "stylelint-scss": "^3.19.0"
+  }
+}
