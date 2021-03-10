@@ -45,7 +45,7 @@ To set up the notification bar, add the following lines to your `base.html` or t
 
 ```html
 <!-- At the top -->
-{% load staticfiles %}
+{% load static %}
 {% load hijack_tags %}
 
 ...
