@@ -93,6 +93,7 @@ EXTERNAL_APPS = [
 
 INTERNAL_APPS = [
     "hijack",
+    "hijack.contrib.admin",
     "hijack.tests.test_app",
 ]
 
