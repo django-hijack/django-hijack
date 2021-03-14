@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 
 class HijackAdminConfig(AppConfig):
     name = "hijack.contrib.admin"
-    label = "hijack admin"
+    label = "hijack_admin"
 
     def ready(self):
         from django.contrib import admin
@@ -15,6 +15,8 @@ class HijackAdminConfig(AppConfig):
         UserModelAdmin = type(admin.site._registry[UserModel])
         admin.site.unregister(UserModel)
 
+        # We create a subclass including the HijackUserAdminMixin but keep the name
+        # and module, to keep output form failing checks consistent.
         HijackUserModelAdmin = type(
             UserModelAdmin.__name__, (HijackUserAdminMixin, UserModelAdmin), {}
         )

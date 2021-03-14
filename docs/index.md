@@ -90,4 +90,18 @@ Example screenshot:
 
 ![Screenshot of the django admin user list with a hijack column](admin-screenshot.png)
 
+You may also add the button to other models, that have a foreign relation to the user
+model.
 
+```python
+# admin.py
+from django.contrib import admin
+from hijack.contrib.admin import HijackUserAdminMixin
+
+from . import models
+
+@admin.register(models.Post)
+class PostAdmin(HijackUserAdminMixin, admin.ModelAdmin):
+    def get_hijack_user(self, obj):
+        return obj.author  # or any other attribute that points to a user
+```

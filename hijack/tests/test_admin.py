@@ -1,13 +1,20 @@
 from django.urls import reverse
 
+from hijack.tests.test_app.models import Post
+
 
 class TestHijackUserAdminMixin:
-    url = reverse("admin:test_app_customuser_changelist")
-
     def test_user_admin(self, admin_client):
-        response = admin_client.get(self.url)
+        url = reverse("admin:test_app_customuser_changelist")
+        response = admin_client.get(url)
         assert response.status_code == 200
         assert (
-            b'<button type="submit" class="button">hijack admin</button>'
-            in response.content
+            b'<button type="submit" class="button">hijack</button>' in response.content
         )
+
+    def test_related_user(self, admin_client, admin_user):
+        url = reverse("admin:test_app_post_changelist")
+        Post.objects.create(author=admin_user)
+        response = admin_client.get(url)
+        assert response.status_code == 200
+        assert b"hijack admin" in response.content
