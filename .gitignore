@@ -74,3 +74,4 @@ node_modules/
 
 # minified static files
 *.min.*
+*.css
