@@ -5,10 +5,10 @@
     {% csrf_token %}
     <input type="hidden" name="user_pk" value="{{ another_user.pk }}">
     {% if is_user_admin %}
-      <button type="submit" class="button">{% trans 'hijack' %}</button>
+      <button type="submit" class="button">{% trans 'hijack'|upper %}</button>
     {% else %}
       <button type="submit" class="button">
-        {% blocktrans %}hijack {{ username }}{% endblocktrans %}
+        {% blocktrans %}Hijack {{ username }}{% endblocktrans %}
       </button>
     {% endif %}
     <input type="hidden" name="next" value="{{ request.path }}">

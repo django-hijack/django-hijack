@@ -22,8 +22,8 @@ msgstr "secuestrar"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:11
 #, python-format
-msgid "hijack %(username)s"
-msgstr "secuestrar %(username)s"
+msgid "Hijack %(username)s"
+msgstr "Secuestrar %(username)s"
 
 #: templates/hijack/notification.html:7
 #, python-format

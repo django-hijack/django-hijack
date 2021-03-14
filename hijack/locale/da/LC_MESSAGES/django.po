@@ -23,8 +23,8 @@ msgstr "kapre"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:11
 #, python-format
-msgid "hijack %(username)s"
-msgstr "kapre %(username)s"
+msgid "Hijack %(username)s"
+msgstr "Kapre %(username)s"
 
 #: templates/hijack/notification.html:7
 #, python-format

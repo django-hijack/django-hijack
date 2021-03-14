@@ -25,8 +25,8 @@ msgstr "détourner"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:11
 #, python-format
-msgid "hijack %(username)s"
-msgstr "détourner les %(username)s"
+msgid "Hijack %(username)s"
+msgstr "Détourner les %(username)s"
 
 #: templates/hijack/notification.html:7
 #, python-format

@@ -14,16 +14,16 @@ msgstr ""
 
 #: contrib/admin/admin.py:35
 msgid "hijack user"
-msgstr "участник угона"
+msgstr "захватить пользователя"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:8
 msgid "hijack"
-msgstr "совершить налёт на"
+msgstr "захватить"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:11
 #, python-format
-msgid "hijack %(username)s"
-msgstr "угон %(username)s"
+msgid "Hijack %(username)s"
+msgstr "Захватить %(username)s"
 
 #: templates/hijack/notification.html:7
 #, python-format

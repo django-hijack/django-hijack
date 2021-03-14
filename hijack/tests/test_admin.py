@@ -9,7 +9,7 @@ class TestHijackUserAdminMixin:
         response = admin_client.get(url)
         assert response.status_code == 200
         assert (
-            b'<button type="submit" class="button">hijack</button>' in response.content
+            b'<button type="submit" class="button">HIJACK</button>' in response.content
         )
 
     def test_related_user(self, admin_client, admin_user):
@@ -17,4 +17,4 @@ class TestHijackUserAdminMixin:
         Post.objects.create(author=admin_user)
         response = admin_client.get(url)
         assert response.status_code == 200
-        assert b"hijack admin" in response.content
+        assert b"Hijack admin" in response.content

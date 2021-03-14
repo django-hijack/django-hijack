@@ -23,7 +23,7 @@ msgstr "entführen"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:11
 #, python-format
-msgid "hijack %(username)s"
+msgid "Hijack %(username)s"
 msgstr "%(username)s entführen"
 
 #: templates/hijack/notification.html:7
