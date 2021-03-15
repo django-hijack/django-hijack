@@ -26,7 +26,7 @@ nvm use
 After installing the non-Python dependencies, its as easy as calling:
 
 ```shell
-python setyp.py develop
+python setup.py develop
 ```
 
 ## Tests
