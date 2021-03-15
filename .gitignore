@@ -65,3 +65,13 @@ target/
 
 # IDE
 .idea/
+
+# Node
+node_modules/
+
+# GNU gettext binaries
+*.mo
+
+# minified static files
+*.min.*
+*.css
