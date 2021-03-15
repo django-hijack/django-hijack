@@ -2,16 +2,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-08 09:27+0100\n"
-"PO-Revision-Date: 2021-03-08 11:37+0100\n"
+"POT-Creation-Date: 2021-03-14 11:27+0100\n"
+"PO-Revision-Date: 2021-03-14 11:34+0100\n"
+"Last-Translator: Johannes Maron <info@johanneshoppe.com>\n"
+"Language-Team: \n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Last-Translator: Johannes Maron <info@johanneshoppe.com>\n"
-"Language-Team: \n"
 "X-Generator: Poedit 2.4.2\n"
+
+#: contrib/admin/admin.py:35
+msgid "hijack user"
+msgstr "Nutzer entführen"
+
+#: contrib/admin/templates/hijack/contrib/admin/button.html:8
+msgid "hijack"
+msgstr "entführen"
+
+#: contrib/admin/templates/hijack/contrib/admin/button.html:11
+#, python-format
+msgid "Hijack %(username)s"
+msgstr "%(username)s entführen"
 
 #: templates/hijack/notification.html:7
 #, python-format

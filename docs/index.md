@@ -83,13 +83,25 @@ the second value should be the hijacked.
 
 ### Django admin integration
 
-If you want to display the hijack button in the Django admin's user list which is
-usually located at `/admin/auth/user/`,
-have a look at the <https://github.com/arteria/django-hijack-admin> app
-that was originally a part of the core and has since been moved to a separate app.
+If you want to display the hijack button in the Django admin's user list, you can simply
+add `hijack.contrib.admin` to you `INSTALLED_APPS` setting.
 
 Example screenshot:
 
 ![Screenshot of the django admin user list with a hijack column](admin-screenshot.png)
 
+You may also add the button to other models, that have a foreign relation to the user
+model.
 
+```python
+# admin.py
+from django.contrib import admin
+from hijack.contrib.admin import HijackUserAdminMixin
+
+from . import models
+
+@admin.register(models.Post)
+class PostAdmin(HijackUserAdminMixin, admin.ModelAdmin):
+    def get_hijack_user(self, obj):
+        return obj.author  # or any other attribute that points to a user
+```
