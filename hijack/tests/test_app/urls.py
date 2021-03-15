@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import TemplateView
 
@@ -11,4 +12,5 @@ urlpatterns = [
     path(
         "bye-bye/", TemplateView.as_view(template_name="bye_bye.html"), name="bye-bye"
     ),
+    path("admin/", admin.site.urls),
 ]
