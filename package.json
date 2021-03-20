@@ -2,7 +2,7 @@
   "name": "django-hijack",
   "version": "1.0.0",
   "scripts": {
-    "build": "postcss hijack/static/hijack/hijack.scss -o hijack/static/hijack/hijack.min.css",
+    "build": "postcss hijack/static/hijack/hijack.scss -o \"${BUILD_LIB:-.}/hijack/static/hijack/hijack.min.css\"",
     "build:watch": "postcss hijack/static/hijack/hijack.scss -o hijack/static/hijack/hijack.min.css -w",
     "lint:scss": "stylelint \"**/*.scss\""
   },
