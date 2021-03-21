@@ -1,10 +1,30 @@
 import datetime
 import time
 from importlib import import_module
+from unittest.mock import MagicMock
 
 import pytest
 from django.contrib.sessions.models import Session
 from django.urls import reverse_lazy
+
+from hijack import views
+
+
+class TestSuccessUrlMixin:
+    def test_get_success_url__path(self):
+        view = views.SuccessUrlMixin()
+        get_redirect_url = MagicMock()
+        get_redirect_url.return_value = ""
+        setattr(view, "get_redirect_url", get_redirect_url)
+        assert view.get_success_url() == "/"
+
+    def test_get_success_url__pattern(self):
+        view = views.SuccessUrlMixin()
+        view.success_url = "bye-bye"
+        get_redirect_url = MagicMock()
+        get_redirect_url.return_value = ""
+        setattr(view, "get_redirect_url", get_redirect_url)
+        assert view.get_success_url() == "/bye-bye/"
 
 
 class TestAcquireUserView:
