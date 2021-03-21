@@ -5,7 +5,7 @@ from django.contrib.auth import BACKEND_SESSION_KEY, get_user_model, load_backen
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db import transaction
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, resolve_url
 from django.utils.decorators import method_decorator
 from django.utils.module_loading import import_string
 from django.views import View
@@ -45,7 +45,7 @@ class SuccessUrlMixin:
 
     def get_success_url(self):
         url = self.get_redirect_url()
-        return url or self.success_url
+        return url or resolve_url(self.success_url)
 
     def get_redirect_url(self):
         """Return the user-originating redirect URL if it's safe."""
