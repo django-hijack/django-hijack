@@ -82,3 +82,61 @@ class TestHijackRemoteUserMiddleware:
         )
         assert response["Content-Length"] == "21"
         assert response.content == b"<body>HIJACKED</body>"
+
+    def test_process_response__broken_html_parsing_1(self, rf, monkeypatch):
+        request = rf.get("/")
+        request.user = get_user_model()
+        request.user.is_hijacked = True
+        request.META["CSRF_COOKIE"] = "123456"
+
+        render_to_string = MagicMock()
+        render_to_string.return_value = "HIJACKED"
+        monkeypatch.setattr("hijack.middleware.render_to_string", render_to_string)
+
+        original_html = (
+            b"<!DOCTYPE html>"
+            b"<html>"
+            b"<body><p>Hello There</p></body>"
+            b"<!-- This is a comment that will break the middleware </body> -->"
+            b"</html>"
+        )
+        expected_html = (
+            b"<!DOCTYPE html>"
+            b"<html>"
+            b"<body><p>Hello There</p>HIJACKED</body>"
+            b"<!-- This is a comment that will break the middleware </body> -->"
+            b"</html>"
+        )
+
+        response = HttpResponse(original_html)
+        processed_response = self.middleware.process_response(request, response)
+
+        assert processed_response is response
+        render_to_string.assert_called_once_with(
+            "hijack/notification.html",
+            {"request": request, "csrf_token": "123456"},
+        )
+        assert response.content == expected_html
+
+    def test_process_response__broken_html_parsing_2(self, rf, monkeypatch):
+        request = rf.get("/")
+        request.user = get_user_model()
+        request.user.is_hijacked = True
+        request.META["CSRF_COOKIE"] = "123456"
+
+        render_to_string = MagicMock()
+        render_to_string.return_value = "HIJACKED"
+        monkeypatch.setattr("hijack.middleware.render_to_string", render_to_string)
+
+        original_html = b"<body></body   >"
+        expected_html = b"<body>HIJACKED</body   >"
+
+        response = HttpResponse(original_html)
+        processed_response = self.middleware.process_response(request, response)
+
+        assert processed_response is response
+        render_to_string.assert_called_once_with(
+            "hijack/notification.html",
+            {"request": request, "csrf_token": "123456"},
+        )
+        assert response.content == expected_html
