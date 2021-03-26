@@ -1,9 +1,17 @@
 from django.middleware.csrf import get_token
+from django.shortcuts import resolve_url
 from django.template.loader import render_to_string
 from django.utils.translation import gettext_lazy as _
 
+from hijack.conf import settings
+
 
 class HijackUserAdminMixin:
+    """Add hijack button to changelist admin view."""
+
+    hijack_success_url = None
+    """Return URL to which one will be forwarded to after hijacking another user."""
+
     def get_hijack_user(self, obj):
         """
         Return the user based on the current object.
@@ -11,6 +19,15 @@ class HijackUserAdminMixin:
         This method may be overridden to support hijack keys on related objects.
         """
         return obj
+
+    def get_hijack_success_url(self, request, obj):
+        """Return URL to which one will be forwarded to after hijacking another user."""
+        success_url = settings.LOGIN_REDIRECT_URL
+        if self.hijack_success_url:
+            success_url = self.hijack_success_url
+        elif hasattr(obj, "get_absolute_url"):
+            success_url = obj
+        return resolve_url(success_url)
 
     def hijack_button(self, request, obj):
         """
@@ -29,6 +46,7 @@ class HijackUserAdminMixin:
                 "another_user": user,
                 "username": str(user),
                 "is_user_admin": self.model == type(user),
+                "next": self.get_hijack_success_url(request, obj),
             },
         )
 
