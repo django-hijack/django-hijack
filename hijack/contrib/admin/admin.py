@@ -50,13 +50,13 @@ class HijackUserAdminMixin:
             },
         )
 
-    hijack_button.short_description = _("hijack user")
-
     def get_changelist_instance(self, request):
         # We inject the request for the CSRF token, see also:
         # https://code.djangoproject.com/ticket/13659
         def hijack_field(obj):
             return self.hijack_button(request, obj)
+
+        hijack_field.short_description = _("hijack user")
 
         # we
         list_display = [*self.get_list_display(request), hijack_field]
