@@ -11,6 +11,6 @@
         {% blocktrans %}Hijack {{ username }}{% endblocktrans %}
       </button>
     {% endif %}
-    <input type="hidden" name="next" value="{{ request.path }}">
+    <input type="hidden" name="next" value="{{ next }}">
   </form>
 {% endif %}
