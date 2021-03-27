@@ -52,7 +52,9 @@
   }
 
   &-button {
+    appearance: none;
     border: none;
+    background-color: transparent;
     font-weight: 500;
     text-transform: uppercase;
     padding: 0.5em;
