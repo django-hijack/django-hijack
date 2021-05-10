@@ -1,6 +1,6 @@
 bandit==1.7.0
 black==21.5b0
-flake8==3.9.1
+flake8==3.9.2
 isort==5.8.0
 msgcheck==3.1
 pydocstyle==6.0.0
