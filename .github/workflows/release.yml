@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: sudo apt install -y gettext
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v2.2.2
       - uses: actions/setup-node@v2
       - uses: actions/checkout@v2.3.4
       - name: Install Python dependencies
