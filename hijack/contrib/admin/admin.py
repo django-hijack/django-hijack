@@ -1,4 +1,4 @@
-from django.middleware.csrf import get_token
+from django import forms
 from django.shortcuts import resolve_url
 from django.template.loader import render_to_string
 from django.utils.translation import gettext_lazy as _
@@ -11,6 +11,10 @@ class HijackUserAdminMixin:
 
     hijack_success_url = None
     """Return URL to which one will be forwarded to after hijacking another user."""
+
+    @property
+    def media(self):
+        return super().media + forms.Media(js=["hijack/hijack.js"])
 
     def get_hijack_user(self, obj):
         """
@@ -42,7 +46,6 @@ class HijackUserAdminMixin:
             "hijack/contrib/admin/button.html",
             {
                 "request": request,
-                "csrf_token": get_token(request),
                 "another_user": user,
                 "username": str(user),
                 "is_user_admin": self.model == type(user),

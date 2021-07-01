@@ -1,16 +1,12 @@
 {% load i18n hijack %}
 
 {% if request.user|can_hijack:another_user %}
-  <form action="{% url 'hijack:acquire' %}" method="POST">
-    {% csrf_token %}
-    <input type="hidden" name="user_pk" value="{{ another_user.pk }}">
+  <button type="button" class="button" data-hijack-user="{{ another_user.pk }}"
+          data-hijack-next="{{ next }}" data-hijack-url="{% url 'hijack:acquire' %}">
     {% if is_user_admin %}
-      <button type="submit" class="button">{% trans 'hijack'|upper %}</button>
+      {% trans 'hijack'|upper %}
     {% else %}
-      <button type="submit" class="button">
-        {% blocktrans %}Hijack {{ username }}{% endblocktrans %}
-      </button>
+      {% blocktrans %}Hijack {{ username }}{% endblocktrans %}
     {% endif %}
-    <input type="hidden" name="next" value="{{ next }}">
-  </form>
+  </button>
 {% endif %}
