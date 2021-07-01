@@ -11,9 +11,7 @@ class TestHijackUserAdminMixin:
         url = reverse("admin:test_app_customuser_changelist")
         response = admin_client.get(url)
         assert response.status_code == 200
-        assert (
-            b'<button type="submit" class="button">HIJACK</button>' in response.content
-        )
+        assert b"data-hijack-user" in response.content
 
     def test_related_user(self, admin_client, admin_user):
         url = reverse("admin:test_app_post_changelist")
