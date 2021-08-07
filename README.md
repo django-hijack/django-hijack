@@ -9,7 +9,10 @@
 With Django Hijack, admins can log in and work on behalf of other users without having to know their credentials.
 
 ## Docs
-See http://django-hijack.readthedocs.org/en/stable/.
+
+**3.x** docs are available in the [docs](/docs) folder. This version provides a security first design, easy integration, customisation, out-of-the-box Django admin support and dark-mode. It is a complete rewrite and all former APIs are broken.
+
+**2.x** docs are available on Read the Docs http://django-hijack.readthedocs.org/en/stable/.
 
 ## Testimonials
 
