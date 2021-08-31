@@ -115,7 +115,7 @@ jobs:
     - name: Upgrade Python setuptools
       run: python -m pip install --upgrade pip setuptools wheel codecov
     - name: Install Django ${{ matrix.django-version }}
-      run: python -m pip install django${{ matrix.django-version }}
+      run: python -m pip install "django${{ matrix.django-version }}"
     - run: python setup.py develop
     - name: Run tests
       run: python setup.py test
