@@ -21,7 +21,7 @@
     "cssnano": "^5.0.8",
     "postcss": "^8.3.6",
     "postcss-cli": "^8.3.1",
-    "postcss-nested": "^5.0.5",
+    "postcss-nested": "^5.0.6",
     "sass": "^1.38.2",
     "stylelint": "^13.13.1",
     "stylelint-config-standard": "^22.0.0",
