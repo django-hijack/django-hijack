@@ -15,16 +15,16 @@ msgstr ""
 
 #: contrib/admin/admin.py:35
 msgid "hijack user"
-msgstr "Nutzer entführen"
+msgstr "Nutzer übernehmen"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:8
 msgid "hijack"
-msgstr "entführen"
+msgstr "Als Nutzer anmelden"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:11
 #, python-format
 msgid "Hijack %(username)s"
-msgstr "%(username)s entführen"
+msgstr "Als %(username)s anmelden"
 
 #: templates/hijack/notification.html:7
 #, python-format
@@ -37,4 +37,4 @@ msgstr "Ausblenden"
 
 #: templates/hijack/notification.html:18
 msgid "release"
-msgstr "freigeben"
+msgstr "Übernahme beenden"
