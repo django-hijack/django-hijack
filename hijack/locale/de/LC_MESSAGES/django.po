@@ -33,7 +33,7 @@ msgstr "Sie arbeiten mit dem Account von <em>%(user)s</em>."
 
 #: templates/hijack/notification.html:15
 msgid "hide"
-msgstr "Ausblenden"
+msgstr "ausblenden"
 
 #: templates/hijack/notification.html:18
 msgid "release"
