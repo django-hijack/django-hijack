@@ -37,4 +37,4 @@ msgstr "ausblenden"
 
 #: templates/hijack/notification.html:18
 msgid "release"
-msgstr "Übernahme beenden"
+msgstr "beenden"
