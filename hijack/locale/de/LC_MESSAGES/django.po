@@ -24,7 +24,7 @@ msgstr "übernehmen"
 #: contrib/admin/templates/hijack/contrib/admin/button.html:11
 #, python-format
 msgid "Hijack %(username)s"
-msgstr "Als %(username)s anmelden"
+msgstr "%(username)s übernehmen"
 
 #: templates/hijack/notification.html:7
 #, python-format
