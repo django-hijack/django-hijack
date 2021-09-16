@@ -19,7 +19,7 @@ msgstr "Nutzer übernehmen"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:8
 msgid "hijack"
-msgstr "Als Nutzer anmelden"
+msgstr "übernehmen"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:11
 #, python-format
