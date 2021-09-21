@@ -6,6 +6,7 @@ from unittest.mock import MagicMock
 import pytest
 from django.contrib.sessions.models import Session
 from django.urls import reverse_lazy
+from django.utils import timezone
 
 from hijack import views
 
@@ -161,7 +162,7 @@ class TestIntegration:
         session = engine.SessionStore(
             admin_client.cookies[settings.SESSION_COOKIE_NAME].value
         )
-        expire_date = datetime.datetime.now() + datetime.timedelta(hours=30)
+        expire_date = timezone.now() + datetime.timedelta(hours=30)
         session.set_expiry(expire_date)
         session.save()
         time.sleep(0.1)
