@@ -1,3 +1,4 @@
+import django
 from django import forms
 from django.shortcuts import resolve_url
 from django.template.loader import render_to_string
@@ -71,7 +72,7 @@ class HijackUserAdminMixin:
             list_display = ["action_checkbox", *list_display]
         sortable_by = self.get_sortable_by(request)
         ChangeList = self.get_changelist(request)
-        return ChangeList(
+        args = [
             request,
             self.model,
             list_display,
@@ -85,4 +86,7 @@ class HijackUserAdminMixin:
             self.list_editable,
             self,
             sortable_by,
-        )
+        ]
+        if django.VERSION >= (4, 0):
+            args.append(self.search_help_text)
+        return ChangeList(*args)

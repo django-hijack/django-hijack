@@ -103,7 +103,7 @@ SECRET_KEY = "foobar"
 
 LANGUAGE_CODE = "en-us"
 USE_I18N = True
-USE_L10N = True
+USE_TZ = True
 
 LOGOUT_REDIRECT_URL = reverse_lazy("bye-bye")
 
