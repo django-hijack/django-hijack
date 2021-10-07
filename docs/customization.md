@@ -113,12 +113,14 @@ A hijacked user can be identified in you template or application via
 
 ### `HIJACK_INSERT_BEFORE`
 
-Alters at which point of the DOM the notification is injected.
+Alters at which point of the DOM the notification is injected.  The notification will not be injected if set to `None`.
+
 Default: `</body>`.
 
 ### `HIJACK_PERMISSION_CHECK`
 Dotted path of a function checking whether `hijacker` is allowed to hijack `hijacked`.
 The function must accept two keyword arguments `hijacker` and `hijacked`.
+
 Default: `'hijack.permissions.has_hijack_perm'`.
 
 ## Signals
