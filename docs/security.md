@@ -44,9 +44,11 @@ all possible scenarios to prevent permission escalation.
 
 ### Undeliberate action
 
-The hijack notification can not be permanently hidden, but only for a single request.
-This is to protect users from performing operations as another user without their
-knowledge.
+The built-in hijack notification can only be permanently hidden by setting the 
+`HIJACK_INSERT_BEFORE` setting to `None`.
+To protect users from performing operations as another user without their
+knowledge, it should only be set to `None` if an equivalent global notification has been
+built into your project - for example, in a project-wide layout file.
 
 ### Session expiration extension
 
