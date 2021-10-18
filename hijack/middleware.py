@@ -21,7 +21,8 @@ class HijackUserMiddleware(MiddlewareMixin):
 
     def process_response(self, request, response):
         """Render hijack notification and inject into HTML response."""
-        if not getattr(request.user, "is_hijacked", False):
+        insert_before = settings.HIJACK_INSERT_BEFORE
+        if not getattr(request.user, "is_hijacked", False) or insert_before is None:
             return response
 
         # Check for responses where the toolbar can't be inserted.
@@ -41,7 +42,6 @@ class HijackUserMiddleware(MiddlewareMixin):
 
         # Insert the toolbar in the response.
         content = response.content.decode(response.charset)
-        insert_before = settings.HIJACK_INSERT_BEFORE
         pattern = re.escape(insert_before)
         bits = re.split(pattern, content, flags=re.IGNORECASE)
         if len(bits) > 1:
