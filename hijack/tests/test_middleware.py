@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse, JsonResponse
 
-from hijack import conf, middleware
+from hijack import middleware
 
 
 class TestHijackRemoteUserMiddleware:
@@ -83,8 +83,8 @@ class TestHijackRemoteUserMiddleware:
         assert response["Content-Length"] == "21"
         assert response.content == b"<body>HIJACKED</body>"
 
-    def test_process_response__insert_before__is_none(self, rf, monkeypatch):
-        conf.settings.HIJACK_INSERT_BEFORE = None
+    def test_process_response__insert_before__is_none(self, rf, settings, monkeypatch):
+        settings.HIJACK_INSERT_BEFORE = None
         request = rf.get("/")
         request.user = get_user_model()
         request.user.is_hijacked = True
