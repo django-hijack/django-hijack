@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-14 11:27+0100\n"
-"PO-Revision-Date: 2021-03-14 11:34+0100\n"
-"Last-Translator: Johannes Maron <info@johanneshoppe.com>\n"
+"PO-Revision-Date: 2021-11-03 22:15-0500\n"
+"Last-Translator: Daniel Garcia <daniel@danielgarcia.co>\n"
 "Language-Team: \n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -14,16 +14,16 @@ msgstr ""
 
 #: contrib/admin/admin.py:35
 msgid "hijack user"
-msgstr "secuestrar al usuario"
+msgstr "suplantar al usuario"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:8
 msgid "hijack"
-msgstr "secuestrar"
+msgstr "suplantar"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:11
 #, python-format
 msgid "Hijack %(username)s"
-msgstr "Secuestrar %(username)s"
+msgstr "Suplantar a %(username)s"
 
 #: templates/hijack/notification.html:7
 #, python-format
