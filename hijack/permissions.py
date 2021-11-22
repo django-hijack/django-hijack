@@ -1,9 +1,9 @@
-def superusers_only(*, hijacker=None, hijacked=None):
+def superusers_only(*, hijacker, hijacked):
     """Superusers may hijack any other user."""
     return hijacked.is_active and hijacker.is_superuser
 
 
-def superusers_and_staff(*, hijacker=None, hijacked=None):
+def superusers_and_staff(*, hijacker, hijacked):
     """
     Superusers and staff members may hijack other users.
 
