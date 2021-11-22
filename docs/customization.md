@@ -45,12 +45,12 @@ a boolean value. Example:
 ```python
 # mysite/permissions.py
 
-def hijack_superusers_only(*, hijacker=None, hijacked=None):
+def hijack_superusers_only(*, hijacker, hijacked):
     """Only superusers may hijack other users."""
     return hijacked.is_active and hijacker.is_superuser
 
 
-def hijack_staff_other_staff(*, hijacker=None, hijacked=None):
+def hijack_staff_other_staff(*, hijacker, hijacked):
     """Staff members may hijack other staff and regular users, but not superusers."""
     if not hijacked.is_active:
         return False
