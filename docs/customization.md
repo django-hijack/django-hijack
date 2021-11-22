@@ -18,17 +18,17 @@ We provide a couple of builtin permission functions for your convenience.
 
 #### `hijack.permissions.superusers_only`
 
-A superuser may hijack any other user.
+A superuser may hijack any other user (except inactive once).
 Used by default.
 
 #### `hijack.permissions.superusers_and_staff`
 
-Superusers and staff members may hijack other users.
+Superusers and staff members may hijack other users (except inactive once).
 
 A superuser may hijack any other user.
 A staff member may hijack any user, except another staff member or superuser.
 
-Can be enabled by chaning your settings to:
+Can be enabled by changing your settings to:
 
 ```python
 # settings.py
@@ -47,11 +47,14 @@ a boolean value. Example:
 
 def hijack_superusers_only(*, hijacker=None, hijacked=None):
     """Only superusers may hijack other users."""
-    return hijacker.is_superuser
+    return hijacked.is_active and hijacker.is_superuser
 
 
 def hijack_staff_other_staff(*, hijacker=None, hijacked=None):
     """Staff members may hijack other staff and regular users, but not superusers."""
+    if not hijacked.is_active:
+        return False
+
     if hijacker.is_superuser:
         return True
 
@@ -62,6 +65,9 @@ def hijack_staff_other_staff(*, hijacker=None, hijacked=None):
 **Warning: Writing custom permission check functions is highly dangerous.**
 If you create your own permission check, make sure to test your implementation against
 all possible scenarios to prevent permission escalation.
+
+Hijacking inactive users (i.e. users with `is_active=False`) is not allowed to prevent
+dead locks, since an inactive user cannot be released.
 
 ## Notification Layout
 
@@ -115,7 +121,7 @@ A hijacked user can be identified in you template or application via
 
 Alters at which point of the DOM the notification is injected.  The notification will not be injected if set to `None`.
 
-**Warning: Hiding the notification increases the risk of [undeliberate action](security.md#undeliberate-action).  
+**Warning: Hiding the notification increases the risk of [undeliberate action](security.md#undeliberate-action).
 Ensure your project has its own notification mechanism before setting this to `None`.**
 
 Default: `</body>`.
