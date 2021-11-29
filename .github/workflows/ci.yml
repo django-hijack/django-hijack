@@ -26,7 +26,7 @@ jobs:
   msgcheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-python@v2.3.0
+      - uses: actions/setup-python@v2.3.1
       - uses: actions/checkout@v2.4.0
       - run: sudo apt install -y gettext aspell libenchant-dev
       - uses: actions/cache@v2.1.7
@@ -50,7 +50,7 @@ jobs:
           - "pydocstyle ."
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-python@v2.3.0
+      - uses: actions/setup-python@v2.3.1
       - uses: actions/checkout@v2.4.0
       - uses: actions/cache@v2.1.7
         with:
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: sudo apt install -y gettext
-      - uses: actions/setup-python@v2.3.0
+      - uses: actions/setup-python@v2.3.1
       - uses: actions/setup-node@v2.4.1
       - uses: actions/checkout@v2.4.0
       - name: Install Python dependencies
@@ -115,7 +115,7 @@ jobs:
     steps:
     - run: sudo apt install -y gettext
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2.3.0
+      uses: actions/setup-python@v2.3.1
       with:
         python-version: ${{ matrix.python-version }}
     - uses: actions/setup-node@v2.4.1
