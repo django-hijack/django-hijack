@@ -1,5 +1,5 @@
 bandit==1.7.1
-black==21.11b1
+black==21.12b0
 flake8==4.0.1
 isort==5.10.1
 msgcheck==3.1
