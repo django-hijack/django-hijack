@@ -1,6 +1,8 @@
+import logging
 from unittest.mock import MagicMock
 
 import pytest
+from django.contrib.auth.admin import UserAdmin
 from django.urls import reverse
 
 from hijack.contrib.admin import HijackUserAdminMixin
@@ -16,16 +18,38 @@ class TestHijackUserAdminMixin:
         assert b"data-hijack-user" in response.content
 
     @pytest.fixture()
-    def no_user_admin(self, settings):
+    def no_user_admin(self):
+        from django.contrib import admin
+
+        custom_user_admin = admin.site._registry.pop(CustomUser)
+        yield
+        admin.site._registry[CustomUser] = custom_user_admin
+
+    @pytest.fixture()
+    def custom_hijack_user_admin(self):
         from django.contrib import admin
 
         CustomUserAdmin = admin.site._registry.pop(CustomUser)
+        HijackAdmin = type(UserAdmin.__name__, (HijackUserAdminMixin, UserAdmin), {})
+        HijackAdmin.__module__ = UserAdmin.__module__
+        admin.site.register(CustomUser, HijackAdmin)
         yield
+        admin.site.unregister(CustomUser)
         admin.site._registry[CustomUser] = CustomUserAdmin
 
     def test_user_admin__unregistered(self, no_user_admin, admin_client):
         with pytest.warns(UserWarning, match="CustomUser is not registered"):
             HijackAdminConfig.ready(None)
+
+    def test_user_admin__custom_subclass(
+        self, custom_hijack_user_admin, admin_client, caplog
+    ):
+        with caplog.at_level(logging.DEBUG):
+            HijackAdminConfig.ready(None)
+        assert (
+            "UserModelAdmin already is a subclass of HijackUserAdminMixin."
+            in caplog.text
+        )
 
     def test_related_user(self, admin_client, admin_user):
         url = reverse("admin:test_app_post_changelist")

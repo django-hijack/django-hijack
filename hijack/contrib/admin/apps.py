@@ -1,7 +1,10 @@
+import logging
 import warnings
 
 from django.apps import AppConfig
 from django.contrib.auth import get_user_model
+
+logger = logging.getLogger(__name__)
 
 
 class HijackAdminConfig(AppConfig):
@@ -25,13 +28,18 @@ class HijackAdminConfig(AppConfig):
                 UserWarning,
             )
         else:
-            admin.site.unregister(UserModel)
+            if issubclass(UserModelAdmin, HijackUserAdminMixin):
+                logger.debug(
+                    "UserModelAdmin already is a subclass of HijackUserAdminMixin."
+                )
+            else:
+                admin.site.unregister(UserModel)
 
-            # We create a subclass including the HijackUserAdminMixin but keep the name
-            # and module, to keep output form failing checks consistent.
-            HijackUserModelAdmin = type(
-                UserModelAdmin.__name__, (HijackUserAdminMixin, UserModelAdmin), {}
-            )
-            HijackUserModelAdmin.__module__ = UserModelAdmin.__module__
+                # We create a subclass including the HijackUserAdminMixin but keep the name
+                # and module, to keep output form failing checks consistent.
+                HijackUserModelAdmin = type(
+                    UserModelAdmin.__name__, (HijackUserAdminMixin, UserModelAdmin), {}
+                )
+                HijackUserModelAdmin.__module__ = UserModelAdmin.__module__
 
-            admin.site.register(UserModel, HijackUserModelAdmin)
+                admin.site.register(UserModel, HijackUserModelAdmin)
