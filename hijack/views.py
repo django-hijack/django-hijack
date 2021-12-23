@@ -45,7 +45,7 @@ class SuccessUrlMixin:
 
     def get_success_url(self):
         url = self.get_redirect_url()
-        return url or resolve_url(self.success_url)
+        return url or resolve_url(self.success_url or "/")
 
     def get_redirect_url(self):
         """Return the user-originating redirect URL if it's safe."""
