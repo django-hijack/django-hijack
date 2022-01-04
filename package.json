@@ -20,7 +20,7 @@
     "autoprefixer": "^10.4.1",
     "cssnano": "^5.0.12",
     "postcss": "^8.4.5",
-    "postcss-cli": "^9.0.2",
+    "postcss-cli": "^9.1.0",
     "postcss-nested": "^5.0.6",
     "sass": "^1.45.2",
     "stylelint": "^14.2.0",
