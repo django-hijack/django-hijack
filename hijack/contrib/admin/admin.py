@@ -34,6 +34,12 @@ class HijackUserAdminMixin:
             success_url = obj
         return resolve_url(success_url)
 
+    def get_hijack_button_template(self):
+        if hasattr(settings, 'HIJACK_ADMIN_BUTTON_TEMPLATE'):
+            return settings.HIJACK_ADMIN_BUTTON_TEMPLATE
+        else:
+            return "hijack/contrib/admin/button.html"
+
     def hijack_button(self, request, obj):
         """
         Render hijack button.
@@ -43,8 +49,9 @@ class HijackUserAdminMixin:
         as the table layout suggests that the button targets the current user.
         """
         user = self.get_hijack_user(obj)
+        hijack_button_template = self.get_hijack_button_template()
         return render_to_string(
-            "hijack/contrib/admin/button.html",
+            hijack_button_template,
             {
                 "request": request,
                 "another_user": user,
