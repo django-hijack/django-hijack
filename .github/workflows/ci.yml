@@ -48,6 +48,7 @@ jobs:
           - "flake8 ."
           - "isort --check-only --diff ."
           - "pydocstyle ."
+          - "mkdocs build --strict --verbose"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-python@v2.3.1

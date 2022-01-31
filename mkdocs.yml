@@ -1,0 +1,9 @@
+site_name: Django Hijack
+site_description: Django Hijack allows superusers to hijack (=login as) and work on behalf of another user.
+repo_url: https://github.com/django-hijack/django-hijack/
+nav:
+- Overview: index.md
+- Customization: customization.md
+- Troubleshooting: troubleshooting.md
+- Security: security.md
+theme: readthedocs
