@@ -18,7 +18,7 @@
   "homepage": "https://github.com/django-hijack/django-hijack#readme",
   "devDependencies": {
     "autoprefixer": "^10.4.1",
-    "cssnano": "^5.0.12",
+    "cssnano": "^5.0.16",
     "postcss": "^8.4.5",
     "postcss-cli": "^9.1.0",
     "postcss-nested": "^5.0.6",
