@@ -19,7 +19,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.1",
     "cssnano": "^5.0.16",
-    "postcss": "^8.4.5",
+    "postcss": "^8.4.6",
     "postcss-cli": "^9.1.0",
     "postcss-nested": "^5.0.6",
     "sass": "^1.45.2",
