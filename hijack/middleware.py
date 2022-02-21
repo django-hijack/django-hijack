@@ -15,6 +15,9 @@ class HijackUserMiddleware(MiddlewareMixin):
 
     def process_request(self, request):
         """Set `is_hijacked` and override REMOTE_USER header."""
+        if request.session.is_empty():
+            # do not touch empty sessions to avoid unnecessary vary on cookie header
+            return
         request.user.is_hijacked = bool(request.session.get("hijack_history", []))
         if "REMOTE_USER" in request.META and request.user.is_hijacked:
             request.META["REMOTE_USER"] = request.user.get_username()
