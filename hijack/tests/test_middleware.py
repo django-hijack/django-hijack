@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock
 
 from django.contrib.auth import get_user_model
+from django.contrib.sessions.backends.file import SessionStore
 from django.http import HttpResponse, JsonResponse
 
 from hijack import middleware
@@ -9,17 +10,25 @@ from hijack import middleware
 class TestHijackRemoteUserMiddleware:
     middleware = middleware.HijackUserMiddleware(lambda x: None)
 
+    def test_process_request__session_not_accessed(self, rf, bob):
+        request = rf.get("/")
+        request.user = bob
+        request.session = SessionStore()
+        self.middleware.process_request(request)
+        assert not request.session.accessed
+
     def test_process_request__hijacked(self, rf, bob, alice):
         request = rf.get("/")
         request.user = bob
-        request.session = {"hijack_history": [str(alice.pk)]}
+        request.session = SessionStore()
+        request.session["hijack_history"] = [str(alice.pk)]
         self.middleware.process_request(request)
         assert bob.is_hijacked
 
     def test_process_request__not_hijacked(self, rf, bob):
         request = rf.get("/")
         request.user = bob
-        request.session = {}
+        request.session = SessionStore("some_session_key")
         self.middleware.process_request(request)
         assert not bob.is_hijacked
 
@@ -27,7 +36,8 @@ class TestHijackRemoteUserMiddleware:
         request = rf.get("/")
         request.user = bob
         request.META["REMOTE_USER"] = "eve"
-        request.session = {"hijack_history": [str(alice.pk)]}
+        request.session = SessionStore()
+        request.session["hijack_history"] = [str(alice.pk)]
         self.middleware.process_request(request)
         assert bob.is_hijacked
         assert request.META["REMOTE_USER"] == "bob"
@@ -36,7 +46,7 @@ class TestHijackRemoteUserMiddleware:
         request = rf.get("/")
         request.user = bob
         request.META["REMOTE_USER"] = "eve"
-        request.session = {}
+        request.session = SessionStore("some_session_key")
         self.middleware.process_request(request)
         assert not bob.is_hijacked
         assert request.META["REMOTE_USER"] == "eve"
