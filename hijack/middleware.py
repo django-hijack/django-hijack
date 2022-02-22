@@ -24,6 +24,10 @@ class HijackUserMiddleware(MiddlewareMixin):
 
     def process_response(self, request, response):
         """Render hijack notification and inject into HTML response."""
+        if request.session.is_empty():
+            # do not touch empty sessions to avoid unnecessary vary on cookie header
+            return response
+
         insert_before = settings.HIJACK_INSERT_BEFORE
         if not getattr(request.user, "is_hijacked", False) or insert_before is None:
             return response

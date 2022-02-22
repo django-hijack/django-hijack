@@ -51,10 +51,19 @@ class TestHijackRemoteUserMiddleware:
         assert not bob.is_hijacked
         assert request.META["REMOTE_USER"] == "eve"
 
+    def test_process_response__session_not_accessed(self, rf, monkeypatch, bob):
+        request = rf.get("/")
+        request.user = bob
+        request.session = SessionStore()
+        response = HttpResponse("")
+        assert self.middleware.process_response(request, response) is response
+        assert not request.session.accessed
+
     def test_process_response__html(self, rf, monkeypatch):
         request = rf.get("/")
         request.user = get_user_model()
         request.user.is_hijacked = True
+        request.session = SessionStore("some_session_key")
         request.META["CSRF_COOKIE"] = "123456"
         render_to_string = MagicMock()
         response = HttpResponse("")
@@ -69,6 +78,7 @@ class TestHijackRemoteUserMiddleware:
         request = rf.get("/")
         request.user = get_user_model()
         request.user.is_hijacked = True
+        request.session = SessionStore("some_session_key")
         render_to_string = MagicMock()
         response = JsonResponse({})
         monkeypatch.setattr("hijack.middleware.render_to_string", render_to_string)
@@ -79,6 +89,7 @@ class TestHijackRemoteUserMiddleware:
         request = rf.get("/")
         request.user = get_user_model()
         request.user.is_hijacked = True
+        request.session = SessionStore("some_session_key")
         request.META["CSRF_COOKIE"] = "123456"
         render_to_string = MagicMock()
         render_to_string.return_value = "HIJACKED"
@@ -98,6 +109,7 @@ class TestHijackRemoteUserMiddleware:
         request = rf.get("/")
         request.user = get_user_model()
         request.user.is_hijacked = True
+        request.session = SessionStore("some_session_key")
         request.META["CSRF_COOKIE"] = "123456"
         render_to_string = MagicMock()
         monkeypatch.setattr("hijack.middleware.render_to_string", render_to_string)
