@@ -105,7 +105,7 @@ please refer to Django's guide on [overriding templates][overriding-templates].
 ```
 
 The `next` field is optional as well, but with a different default. If not provided
-a user will be forwared to the [LOGOUT_REDIRECT_URL][LOGOUT_REDIRECT_URL].
+a user will be forwarded to the [LOGOUT_REDIRECT_URL][LOGOUT_REDIRECT_URL].
 
 [overriding-templates]: https://docs.djangoproject.com/en/3.1/howto/overriding-templates/
 [LOGOUT_REDIRECT_URL]: https://docs.djangoproject.com/en/stable/ref/settings/#logout-redirect-url
