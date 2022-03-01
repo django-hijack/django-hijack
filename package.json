@@ -25,6 +25,6 @@
     "sass": "^1.49.7",
     "stylelint": "^14.3.0",
     "stylelint-config-standard": "^24.0.0",
-    "stylelint-scss": "^3.21.0"
+    "stylelint-scss": "^4.1.0"
   }
 }
