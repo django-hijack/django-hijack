@@ -2,8 +2,8 @@
   "name": "django-hijack",
   "version": "1.0.0",
   "scripts": {
-    "build": "postcss hijack/static/hijack/hijack.scss -o \"${BUILD_LIB:-.}/hijack/static/hijack/hijack.min.css\"",
-    "build:watch": "postcss hijack/static/hijack/hijack.scss -o hijack/static/hijack/hijack.min.css -w",
+    "build": "gulp css",
+    "build:watch": "gulp css:watch",
     "lint:scss": "stylelint \"**/*.scss\""
   },
   "repository": {
@@ -19,9 +19,11 @@
   "devDependencies": {
     "autoprefixer": "^10.4.2",
     "cssnano": "^5.1.0",
+    "gulp": "^4.0.2",
+    "gulp-postcss": "^9.0.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^5.1.0",
     "postcss": "^8.4.7",
-    "postcss-cli": "^9.1.0",
-    "postcss-nested": "^5.0.6",
     "sass": "^1.49.9",
     "stylelint": "^14.3.0",
     "stylelint-config-standard": "^25.0.0",
