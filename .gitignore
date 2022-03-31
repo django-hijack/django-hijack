@@ -73,5 +73,5 @@ node_modules/
 *.mo
 
 # minified static files
-*.min.*
-*.css
+*.min.js
+*.min.css

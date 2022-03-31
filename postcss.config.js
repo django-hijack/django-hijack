@@ -1,7 +1,1 @@
-module.exports = {
-  plugins: {
-    autoprefixer: {},
-    cssnano: {},
-    'postcss-nested': {}
-  }
-}
+module.exports = { plugins: ['autoprefixer'] }

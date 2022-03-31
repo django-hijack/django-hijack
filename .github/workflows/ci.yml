@@ -85,12 +85,21 @@ jobs:
       - run: npm ci
       - run: npm run lint:scss
 
+  standardjs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v3.0.0
+      - uses: actions/checkout@v3
+      - run: npm ci
+      - run: npm run lint:js
+
   pytest:
     runs-on: ubuntu-latest
     needs:
       - readme
       - lint
       - stylelint
+      - standardjs
       - msgcheck
     strategy:
       matrix:
