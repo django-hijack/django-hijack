@@ -10,19 +10,6 @@ on:
 
 jobs:
 
-  analyze:
-    name: CodeQL
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v1
-        with:
-          languages: python
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v1
-
   msgcheck:
     runs-on: ubuntu-latest
     steps:
