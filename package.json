@@ -2,8 +2,10 @@
   "name": "django-hijack",
   "version": "1.0.0",
   "scripts": {
-    "build": "postcss hijack/static/hijack/hijack.scss -o \"${BUILD_LIB:-.}/hijack/static/hijack/hijack.min.css\"",
-    "build:watch": "postcss hijack/static/hijack/hijack.scss -o hijack/static/hijack/hijack.min.css -w",
+    "build": "webpack --mode=production",
+    "build:watch": "webpack --mode=production --watch",
+    "lint": "npm run lint:js && npm run lint:scss",
+    "lint:js": "standard \"**/*.js\"",
     "lint:scss": "stylelint \"**/*.scss\""
   },
   "repository": {
@@ -18,13 +20,23 @@
   "homepage": "https://github.com/django-hijack/django-hijack#readme",
   "devDependencies": {
     "autoprefixer": "^10.4.2",
-    "cssnano": "^5.1.0",
-    "postcss": "^8.4.7",
-    "postcss-cli": "^9.1.0",
-    "postcss-nested": "^5.0.6",
-    "sass": "^1.49.9",
+    "css-loader": "^6.7.1",
+    "mini-css-extract-plugin": "^2.6.0",
+    "postcss": "^8.4.12",
+    "postcss-loader": "^6.2.1",
+    "sass": "^1.49.10",
+    "sass-loader": "^12.6.0",
+    "standard": "^16.0.4",
     "stylelint": "^14.3.0",
-    "stylelint-config-standard": "^25.0.0",
-    "stylelint-scss": "^4.1.0"
+    "stylelint-config-standard-scss": "^3.0.0",
+    "stylelint-scss": "^4.1.0",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2"
+  },
+  "standard": {
+    "globals": [
+      "fetch",
+      "FormData"
+    ]
   }
 }

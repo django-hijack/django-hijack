@@ -15,7 +15,7 @@ class HijackUserAdminMixin:
 
     @property
     def media(self):
-        return super().media + forms.Media(js=["hijack/hijack.js"])
+        return super().media + forms.Media(js=["hijack/hijack.min.js"])
 
     def get_hijack_user(self, obj):
         """
