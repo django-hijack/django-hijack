@@ -68,10 +68,9 @@ The following example shows how to integrate a hijack button into your template.
 ```
 
 A form is used to perform a POST including a [CSRF][CSRF]-token for security reasons.
-The field `user_pk` is mandatory and the value most be set to the  target users primary
-key. The optional field `next` determines where a users is forwarded  after a success
-full hijack. If not provided, users are forwarded to the
-[LOGIN_REDIRECT_URL][LOGIN_REDIRECT_URL].
+The field `user_pk` is mandatory and the value must be set to the target users' primary
+key. The optional field `next` determines where a user is forwarded after a successful hijack. 
+If not provided, users are forwarded to the [LOGIN_REDIRECT_URL][LOGIN_REDIRECT_URL].
 
 Do not forget to load the `hijack` template tags to use the `can_hijack` filter.
 The `can_hijack` returns a boolean value, the first argument should be user hijacker,
