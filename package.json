@@ -22,7 +22,7 @@
     "autoprefixer": "^10.4.2",
     "css-loader": "^6.7.1",
     "mini-css-extract-plugin": "^2.6.0",
-    "postcss": "^8.4.12",
+    "postcss": "^8.4.13",
     "postcss-loader": "^6.2.1",
     "sass": "^1.49.10",
     "sass-loader": "^12.6.0",
