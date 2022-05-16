@@ -54,7 +54,7 @@ jobs:
     steps:
       - run: sudo apt install -y gettext
       - uses: actions/setup-python@v3
-      - uses: actions/setup-node@v3.1.1
+      - uses: actions/setup-node@v3.2.0
       - uses: actions/checkout@v3
       - name: Install Python dependencies
         run: python -m pip install --upgrade pip build wheel twine readme-renderer
@@ -67,7 +67,7 @@ jobs:
   stylelint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-node@v3.1.1
+      - uses: actions/setup-node@v3.2.0
       - uses: actions/checkout@v3
       - run: npm ci
       - run: npm run lint:scss
@@ -75,7 +75,7 @@ jobs:
   standardjs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-node@v3.1.1
+      - uses: actions/setup-node@v3.2.0
       - uses: actions/checkout@v3
       - run: npm ci
       - run: npm run lint:js
@@ -106,7 +106,7 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
-    - uses: actions/setup-node@v3.1.1
+    - uses: actions/setup-node@v3.2.0
     - uses: actions/checkout@v3
     - name: Upgrade Python setuptools
       run: python -m pip install --upgrade pip setuptools wheel codecov
