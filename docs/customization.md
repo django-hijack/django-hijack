@@ -3,7 +3,7 @@
 ## Hijack permission
 
 By default, only superusers are allowed to hijack other users. This behavior
-can be adapted to your liking. However, be aware of the potential secuirty implications.
+can be adapted to your liking. However, be aware of the potential security implications.
 
 You alter the permission check, including that of the `can_hijack` template tag via the
 `HIJACK_PERMISSION_CHECK` setting.
