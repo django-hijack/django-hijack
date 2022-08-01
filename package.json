@@ -29,7 +29,7 @@
     "standard": "^17.0.0",
     "stylelint": "^14.9.1",
     "stylelint-config-standard-scss": "^4.0.0",
-    "stylelint-scss": "^4.1.0",
+    "stylelint-scss": "^4.3.0",
     "webpack": "^5.72.1",
     "webpack-cli": "^4.10.0"
   },
