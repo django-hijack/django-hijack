@@ -72,7 +72,7 @@ dead locks, since an inactive user cannot be released.
 ## Notification Layout
 
 There is no "one size fits all" solution, when it comes to the notification layout.
-Therefore, it is recommened to create your own template and adapt the notification
+Therefore, it is recommended to create your own template and adapt the notification
 to your site specific layout.
 
 Create a template called `hijack/notification.html` in your template folder.
