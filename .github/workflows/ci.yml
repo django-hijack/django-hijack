@@ -13,7 +13,7 @@ jobs:
   msgcheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-python@v4.1.0
+      - uses: actions/setup-python@v4.2.0
       - uses: actions/checkout@v3
       - run: sudo apt install -y gettext aspell libenchant-dev
       - uses: actions/cache@v3
@@ -38,7 +38,7 @@ jobs:
           - "mkdocs build --strict --verbose"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-python@v4.1.0
+      - uses: actions/setup-python@v4.2.0
       - uses: actions/checkout@v3
       - uses: actions/cache@v3
         with:
@@ -53,7 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: sudo apt install -y gettext
-      - uses: actions/setup-python@v4.1.0
+      - uses: actions/setup-python@v4.2.0
       - uses: actions/setup-node@v3.4.1
       - uses: actions/checkout@v3
       - name: Install Python dependencies
@@ -103,7 +103,7 @@ jobs:
     steps:
     - run: sudo apt install -y gettext
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4.1.0
+      uses: actions/setup-python@v4.2.0
       with:
         python-version: ${{ matrix.python-version }}
     - uses: actions/setup-node@v3.4.1
