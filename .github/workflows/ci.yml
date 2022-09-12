@@ -109,4 +109,4 @@ jobs:
       - run: python -m pip install -e .[test]
       - run: python -m pip install django~=${{ matrix.django-version }}.0
       - run: python -m pytest
-      - uses: codecov/codecov-action@v2
+      - uses: codecov/codecov-action@v3
