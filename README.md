@@ -10,9 +10,14 @@ With Django Hijack, admins can log in and work on behalf of other users without 
 
 ## Docs
 
-**3.x** docs are available in the [docs](/docs) folder. This version provides a security first design, easy integration, customisation, out-of-the-box Django admin support and dark-mode. It is a complete rewrite and all former APIs are broken.
+Docs are available on Read the Docs http://django-hijack.readthedocs.org/en/stable/, both for **v2.x** and **v3.x**.
 
-**2.x** docs are available on Read the Docs http://django-hijack.readthedocs.org/en/stable/.
+## Versions
+
+There are two versions available: **v2.x** and **v3.x**.
+
+**v3.x** provides a security first design, easy integration, customisation, out-of-the-box Django admin support and dark-mode.
+It is a complete rewrite and all former APIs are broken.
 
 ## Testimonials
 
