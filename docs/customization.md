@@ -115,6 +115,28 @@ a user will be forwarded to the [LOGOUT_REDIRECT_URL][LOGOUT_REDIRECT_URL].
 A hijacked user can be identified in you template or application via
 `request.user.is_hijacked`. This attribute will be true for hijacked users.
 
+## Hijack admin button
+
+You can override the hijack button that renders in the admin.
+
+Create a template called hijack/contrib/admin/button.html in your template folder.
+You can use the default template as a cheat-sheet.
+
+```
+{% load i18n l10n hijack %}
+
+{% if request.user|can_hijack:another_user %}
+  <button type="button" class="button" data-hijack-user="{{ another_user.pk|unlocalize }}"
+          data-hijack-next="{{ next }}" data-hijack-url="{% url 'hijack:acquire' %}">
+    {% if is_user_admin %}
+      {% trans 'hijack'|upper %}
+    {% else %}
+      {% blocktrans %}Hijack {{ username }}{% endblocktrans %}
+    {% endif %}
+  </button>
+{% endif %}
+```
+
 ## Settings
 
 ### `HIJACK_INSERT_BEFORE`
