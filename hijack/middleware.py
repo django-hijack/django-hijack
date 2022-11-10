@@ -44,7 +44,8 @@ class HijackUserMiddleware(MiddlewareMixin):
 
         rendered = render_to_string(
             "hijack/notification.html",
-            {"request": request, "csrf_token": request.META["CSRF_COOKIE"]},
+            {"request": request},
+            request=request,
         )
 
         # Insert the toolbar in the response.
