@@ -71,7 +71,8 @@ class TestHijackRemoteUserMiddleware:
         assert self.middleware.process_response(request, response) is response
         render_to_string.assert_called_once_with(
             "hijack/notification.html",
-            {"request": request, "csrf_token": "123456"},
+            {"request": request},
+            request=request,
         )
 
     def test_process_response__non_html(self, rf, monkeypatch):
@@ -99,7 +100,8 @@ class TestHijackRemoteUserMiddleware:
         assert self.middleware.process_response(request, response) is response
         render_to_string.assert_called_once_with(
             "hijack/notification.html",
-            {"request": request, "csrf_token": "123456"},
+            {"request": request},
+            request=request,
         )
         assert response["Content-Length"] == "21"
         assert response.content == b"<body>HIJACKED</body>"

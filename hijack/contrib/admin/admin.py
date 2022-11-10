@@ -52,6 +52,7 @@ class HijackUserAdminMixin:
                 "is_user_admin": self.model == type(user),
                 "next": self.get_hijack_success_url(request, obj),
             },
+            request=request,
         )
 
     def get_changelist_instance(self, request):
