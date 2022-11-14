@@ -10,7 +10,7 @@ module.exports = {
   },
   output: {
     filename: '[name].min.js',
-    path: path.resolve(__dirname, 'hijack', 'static', 'hijack'),
+    path: path.resolve(process.env.BUILD_LIB || __dirname, 'hijack', 'static', 'hijack'),
     clean: false
   },
   plugins: [new MiniCssExtractPlugin({ filename: '[name].min.css' })],
