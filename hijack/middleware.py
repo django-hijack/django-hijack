@@ -1,7 +1,9 @@
+import copy
 import re
 
 from django.template.loader import render_to_string
 from django.utils.deprecation import MiddlewareMixin
+from django.utils.functional import SimpleLazyObject
 
 from hijack.conf import settings
 
@@ -13,18 +15,22 @@ _HTML_TYPES = ("text/html", "application/xhtml+xml")
 class HijackUserMiddleware(MiddlewareMixin):
     """Set `is_hijacked` attribute; render and inject notification."""
 
+    @staticmethod
+    def setup_user(request, user):
+        """Set `is_hijacked` attribute."""
+        user.is_hijacked = bool(request.session.get("hijack_history", []))
+        return user
+
     def process_request(self, request):
         """Set `is_hijacked` and override REMOTE_USER header."""
-        if request.session.is_empty():
-            # do not touch empty sessions to avoid unnecessary vary on cookie header
-            return
-        request.user.is_hijacked = bool(request.session.get("hijack_history", []))
+        user = copy.copy(request.user)  # prevent recursion error
+        request.user = SimpleLazyObject(lambda: self.setup_user(request, user))
         if "REMOTE_USER" in request.META and request.user.is_hijacked:
             request.META["REMOTE_USER"] = request.user.get_username()
 
     def process_response(self, request, response):
         """Render hijack notification and inject into HTML response."""
-        if request.session.is_empty():
+        if request.session.is_empty() or not request.session.accessed:
             # do not touch empty sessions to avoid unnecessary vary on cookie header
             return response
 
