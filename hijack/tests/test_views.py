@@ -7,8 +7,18 @@ import pytest
 from django.contrib.sessions.models import Session
 from django.urls import reverse_lazy
 from django.utils import timezone
+from django.views import View
 
 from hijack import views
+
+
+class TestLockUserTableMixin:
+    @pytest.mark.django_db(transaction=True)
+    def test_dispatch__custom_manager(self, admin_user, rf):
+        class LockedView(views.LockUserTableMixin, View):
+            pass
+
+        LockedView().dispatch(rf.get("/"))
 
 
 class TestSuccessUrlMixin:
