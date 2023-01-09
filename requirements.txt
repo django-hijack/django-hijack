@@ -4,4 +4,4 @@ flake8==6.0.0
 isort==5.11.4
 mkdocs==1.4.2
 msgcheck==4.0.0
-pydocstyle==6.2.2
+pydocstyle==6.2.3
