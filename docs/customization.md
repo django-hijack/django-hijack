@@ -18,12 +18,12 @@ We provide a couple of builtin permission functions for your convenience.
 
 #### `hijack.permissions.superusers_only`
 
-A superuser may hijack any other user (except inactive once).
+A superuser may hijack any other user (except inactive ones).
 Used by default.
 
 #### `hijack.permissions.superusers_and_staff`
 
-Superusers and staff members may hijack other users (except inactive once).
+Superusers and staff members may hijack other users (except inactive ones).
 
 A superuser may hijack any other user.
 A staff member may hijack any user, except another staff member or superuser.
