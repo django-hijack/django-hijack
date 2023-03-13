@@ -26,7 +26,7 @@ nvm use
 After installing the non-Python dependencies, its as easy as calling:
 
 ```shell
-python setup.py develop
+python -m pip install -e '.[test]'
 ```
 
 ## Tests
@@ -34,5 +34,5 @@ python setup.py develop
 Simply run:
 
 ```shell
-python setup.py test
+py.test
 ```
