@@ -1,0 +1,39 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-03-15 07:56+0900\n"
+"PO-Revision-Date: 2023-03-15 07:56+0900\n"
+"Last-Translator: Kumamoto-Hamachi <onioni9999nagare@gmail.com>\n"
+"Language-Team: \n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: hijack/contrib/admin/admin.py:64
+msgid "hijack user"
+msgstr "ユーザーハイジャック"
+
+#: hijack/contrib/admin/templates/hijack/contrib/admin/button.html:7
+msgid "hijack"
+msgstr "ハイジャック"
+
+#: hijack/contrib/admin/templates/hijack/contrib/admin/button.html:9
+#, python-format
+msgid "Hijack %(username)s"
+msgstr "%(username)sをハイジャック"
+
+#: hijack/templates/hijack/notification.html:8
+#, python-format
+msgid "You are currently working on behalf of <em>%(user)s</em>."
+msgstr "現在、あなたは<em>%(user)s</em>の代理として作業しています。"
+
+#: hijack/templates/hijack/notification.html:16
+msgid "hide"
+msgstr "非表示"
+
+#: hijack/templates/hijack/notification.html:19
+msgid "release"
+msgstr "解放"
