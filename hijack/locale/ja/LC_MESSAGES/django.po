@@ -28,7 +28,7 @@ msgstr "%(username)sをハイジャック"
 #: hijack/templates/hijack/notification.html:8
 #, python-format
 msgid "You are currently working on behalf of <em>%(user)s</em>."
-msgstr "現在,あなたは<em>%(user)s</em>の代理として作業しています."
+msgstr "現在、あなたは<em>%(user)s</em>の代理として作業しています。"
 
 #: hijack/templates/hijack/notification.html:16
 msgid "hide"
