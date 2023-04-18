@@ -29,7 +29,7 @@ msgstr "Przejmij %(username)s"
 #: hijack/templates/hijack/notification.html:8
 #, python-format
 msgid "You are currently working on behalf of <em>%(user)s</em>."
-msgstr "Obecnie pracujesz w imieniu <em>%(user)s</em>"
+msgstr "Obecnie pracujesz w imieniu <em>%(user)s</em>."
 
 #: hijack/templates/hijack/notification.html:16
 msgid "hide"
