@@ -6,6 +6,7 @@ import subprocess  # nosec
 from distutils.cmd import Command
 from distutils.command.build import build as _build
 from distutils.command.install import install as _install
+from pathlib import Path
 
 from setuptools import setup
 
@@ -26,11 +27,15 @@ class compile_translations(Command):
         pattern = "hijack/locale/*/LC_MESSAGES/django.po"
         for file in glob.glob(pattern):
             name, ext = os.path.splitext(file)
-            cmd = ["msgfmt", "-c", "-o", f"{self.build_lib}/{name}.mo", file]
+            path = Path(self.build_lib) / f"{name}.mo"
+            path.parent.mkdir(parents=True, exist_ok=True)
+            cmd = ["msgfmt", "-c", "-o", str(path), file]
             self.announce(
                 "running command: %s" % " ".join(cmd), level=distutils.log.INFO
             )
-            subprocess.check_call(cmd, cwd=BASE_DIR)  # nosec
+            self.announce(
+                subprocess.check_output(cmd, cwd=BASE_DIR), level=distutils.log.DEBUG
+            )  # nosec
 
 
 class compile_scss(Command):
@@ -50,8 +55,11 @@ class compile_scss(Command):
 
         cmd = ["npm", "run", "build"]
         self.announce("running command: %s" % " ".join(cmd), level=distutils.log.INFO)
-        subprocess.check_call(
-            cmd, cwd=BASE_DIR, env={**os.environ, "BUILD_LIB": self.build_lib}
+        self.announce(
+            subprocess.check_output(
+                cmd, cwd=BASE_DIR, env={**os.environ, "BUILD_LIB": self.build_lib}
+            ),
+            level=distutils.log.DEBUG,
         )  # nosec
 
 
