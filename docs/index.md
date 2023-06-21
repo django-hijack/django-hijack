@@ -83,7 +83,7 @@ the second value should be the hijacked.
 ### Django admin integration
 
 If you want to display the hijack button in the Django admin's user list, you can simply
-add `hijack.contrib.admin` to you `INSTALLED_APPS` setting.
+add `hijack.contrib.admin` to your `INSTALLED_APPS` setting.
 
 Example screenshot:
 
