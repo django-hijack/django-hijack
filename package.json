@@ -30,7 +30,7 @@
     "stylelint": "^15.6.2",
     "stylelint-config-standard-scss": "^9.0.0",
     "stylelint-scss": "^5.0.0",
-    "webpack": "^5.81.0",
+    "webpack": "^5.88.1",
     "webpack-cli": "^5.1.1"
   },
   "standard": {
