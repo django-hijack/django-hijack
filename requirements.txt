@@ -2,6 +2,6 @@ bandit==1.7.5
 black==23.7.0
 flake8==6.0.0
 isort==5.12.0
-mkdocs==1.5.1
+mkdocs==1.5.2
 msgcheck==4.0.0
 pydocstyle==6.3.0
