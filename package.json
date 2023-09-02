@@ -20,7 +20,7 @@
   "homepage": "https://github.com/django-hijack/django-hijack#readme",
   "devDependencies": {
     "autoprefixer": "^10.4.15",
-    "css-loader": "^6.7.3",
+    "css-loader": "^6.8.1",
     "mini-css-extract-plugin": "^2.7.6",
     "postcss": "^8.4.24",
     "postcss-loader": "^7.3.3",
