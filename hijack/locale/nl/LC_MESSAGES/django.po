@@ -23,12 +23,12 @@ msgstr "gebruiker kapen"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:8
 msgid "hijack"
-msgstr "kaping"
+msgstr "kapen"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:11
 #, python-format
 msgid "Hijack %(username)s"
-msgstr "Kapen %(username)s"
+msgstr "Kaap %(username)s"
 
 #: templates/hijack/notification.html:7
 #, python-format
