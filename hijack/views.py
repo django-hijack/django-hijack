@@ -97,7 +97,7 @@ class AcquireUserView(
             hijacked = self.get_object()
 
             # Lock user row to avoid race conditions
-            get_user_model()._base_manager.select_for_update().get(pk=hijacker.pk)
+            get_user_model()._base_manager.select_for_update().get(pk=hijacked.pk)
 
             hijack_history = request.session.get("hijack_history", [])
             hijack_history.append(request.user._meta.pk.value_to_string(hijacker))
