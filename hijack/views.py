@@ -69,7 +69,6 @@ class LockUserTableMixin:
 
 
 class AcquireUserView(
-    LockUserTableMixin,
     LoginRequiredMixin,
     UserPassesTestMixin,
     SuccessUrlMixin,
@@ -93,31 +92,35 @@ class AcquireUserView(
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
-        hijacker = request.user
-        hijacked = self.get_object()
+        with transaction.atomic():
+            hijacker = request.user
+            hijacked = self.get_object()
 
-        hijack_history = request.session.get("hijack_history", [])
-        hijack_history.append(request.user._meta.pk.value_to_string(hijacker))
+            # Lock user row to avoid race conditions
+            get_user_model()._base_manager.select_for_update().get(pk=hijacker.pk)
 
-        backend = get_used_backend(request)
-        backend = f"{backend.__module__}.{backend.__class__.__name__}"
+            hijack_history = request.session.get("hijack_history", [])
+            hijack_history.append(request.user._meta.pk.value_to_string(hijacker))
 
-        with signals.no_update_last_login(), keep_session_age(request.session):
-            login(request, hijacked, backend=backend)
+            backend = get_used_backend(request)
+            backend = f"{backend.__module__}.{backend.__class__.__name__}"
 
-        request.session["hijack_history"] = hijack_history
+            with signals.no_update_last_login(), keep_session_age(request.session):
+                login(request, hijacked, backend=backend)
 
-        signals.hijack_started.send(
-            sender=None,
-            request=request,
-            hijacker=hijacker,
-            hijacked=hijacked,
-        )
-        return HttpResponseRedirect(self.get_success_url())
+            request.session["hijack_history"] = hijack_history
+
+            signals.hijack_started.send(
+                sender=None,
+                request=request,
+                hijacker=hijacker,
+                hijacked=hijacked,
+            )
+            return HttpResponseRedirect(self.get_success_url())
 
 
 class ReleaseUserView(
-    LockUserTableMixin, LoginRequiredMixin, UserPassesTestMixin, SuccessUrlMixin, View
+    LoginRequiredMixin, UserPassesTestMixin, SuccessUrlMixin, View
 ):
     raise_exception = True
 
@@ -128,21 +131,26 @@ class ReleaseUserView(
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
-        hijack_history = request.session.get("hijack_history", [])
-        hijacked = request.user
-        user_pk = hijack_history.pop()
-        hijacker = get_object_or_404(get_user_model(), pk=user_pk)
-        backend = get_used_backend(request)
-        backend = f"{backend.__module__}.{backend.__class__.__name__}"
-        with signals.no_update_last_login(), keep_session_age(request.session):
-            login(request, hijacker, backend=backend)
+        with transaction.atomic():
+            hijack_history = request.session.get("hijack_history", [])
+            hijacked = request.user
+            user_pk = hijack_history.pop()
+            hijacker = get_object_or_404(get_user_model(), pk=user_pk)
 
-        request.session["hijack_history"] = hijack_history
+            # Lock user row to avoid race conditions
+            get_user_model()._base_manager.select_for_update().get(pk=hijacker.pk)
 
-        signals.hijack_ended.send(
-            sender=None,
-            request=request,
-            hijacker=hijacker,
-            hijacked=hijacked,
-        )
-        return HttpResponseRedirect(self.get_success_url())
+            backend = get_used_backend(request)
+            backend = f"{backend.__module__}.{backend.__class__.__name__}"
+            with signals.no_update_last_login(), keep_session_age(request.session):
+                login(request, hijacker, backend=backend)
+
+            request.session["hijack_history"] = hijack_history
+
+            signals.hijack_ended.send(
+                sender=None,
+                request=request,
+                hijacker=hijacker,
+                hijacked=hijacked,
+            )
+            return HttpResponseRedirect(self.get_success_url())
