@@ -119,9 +119,7 @@ class AcquireUserView(
             return HttpResponseRedirect(self.get_success_url())
 
 
-class ReleaseUserView(
-    LoginRequiredMixin, UserPassesTestMixin, SuccessUrlMixin, View
-):
+class ReleaseUserView(LoginRequiredMixin, UserPassesTestMixin, SuccessUrlMixin, View):
     raise_exception = True
 
     success_url = settings.LOGOUT_REDIRECT_URL
