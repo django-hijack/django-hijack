@@ -63,12 +63,13 @@ class SuccessUrlMixin:
 class LockUserTableMixin:
     @transaction.atomic()
     def dispatch(self, request, *args, **kwargs):
-        # Lock entire user table to avoid race conditions
-        next(get_user_model()._base_manager.select_for_update().iterator())
+        # Lock user row to avoid race conditions
+        get_user_model()._base_manager.select_for_update().get(pk=request.user.pk)
         return super().dispatch(request, *args, **kwargs)
 
 
 class AcquireUserView(
+    LockUserTableMixin,
     LoginRequiredMixin,
     UserPassesTestMixin,
     SuccessUrlMixin,
@@ -91,13 +92,9 @@ class AcquireUserView(
         return super().dispatch(request, *args, **kwargs)
 
     @method_decorator(csrf_protect)
-    @transaction.atomic()
     def post(self, request, *args, **kwargs):
         hijacker = request.user
         hijacked = self.get_object()
-
-        # Lock user row to avoid race conditions
-        get_user_model()._base_manager.select_for_update().get(pk=hijacked.pk)
 
         hijack_history = request.session.get("hijack_history", [])
         hijack_history.append(request.user._meta.pk.value_to_string(hijacker))
@@ -119,7 +116,9 @@ class AcquireUserView(
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ReleaseUserView(LoginRequiredMixin, UserPassesTestMixin, SuccessUrlMixin, View):
+class ReleaseUserView(
+    LockUserTableMixin, LoginRequiredMixin, UserPassesTestMixin, SuccessUrlMixin, View
+):
     raise_exception = True
 
     success_url = settings.LOGOUT_REDIRECT_URL
@@ -128,16 +127,11 @@ class ReleaseUserView(LoginRequiredMixin, UserPassesTestMixin, SuccessUrlMixin, 
         return bool(self.request.session.get("hijack_history", []))
 
     @method_decorator(csrf_protect)
-    @transaction.atomic()
     def post(self, request, *args, **kwargs):
         hijack_history = request.session.get("hijack_history", [])
         hijacked = request.user
         user_pk = hijack_history.pop()
         hijacker = get_object_or_404(get_user_model(), pk=user_pk)
-
-        # Lock user row to avoid race conditions
-        get_user_model()._base_manager.select_for_update().get(pk=hijacker.pk)
-
         backend = get_used_backend(request)
         backend = f"{backend.__module__}.{backend.__class__.__name__}"
         with signals.no_update_last_login(), keep_session_age(request.session):
