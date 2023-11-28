@@ -18,7 +18,9 @@ class TestLockUserTableMixin:
         class LockedView(views.LockUserTableMixin, View):
             pass
 
-        LockedView().dispatch(rf.get("/"))
+        request = rf.get("/")
+        request.user = admin_user
+        LockedView().dispatch(request)
 
 
 class TestSuccessUrlMixin:
