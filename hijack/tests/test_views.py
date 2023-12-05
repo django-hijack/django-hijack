@@ -2,9 +2,12 @@ import datetime
 import time
 from importlib import import_module
 from unittest.mock import MagicMock
+from urllib.parse import urlencode, urlunparse
 
 import pytest
+from django.conf import settings
 from django.contrib.sessions.models import Session
+from django.shortcuts import resolve_url
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import View
@@ -81,6 +84,20 @@ class TestAcquireUserView:
         response = admin_client.post(self.url)
         assert response.status_code == 400
 
+    def test_unauthenticated(self, client, bob):
+        response = client.post(self.url, {"user_pk": bob.pk})
+        assert response.status_code == 302
+        assert response["Location"] == urlunparse(
+            (
+                "",
+                "",
+                resolve_url(settings.LOGIN_URL),
+                "",
+                urlencode({"next": self.url}, safe="/"),
+                "",
+            ),
+        )
+
 
 class TestReleaseUserView:
     release_url = reverse_lazy("hijack:release")
@@ -130,6 +147,10 @@ class TestReleaseUserView:
         response = bob_client.post(self.release_url, {"next": "/somewhere/else"})
         assert response.status_code == 302
         assert response["Location"] == "/somewhere/else"
+
+    def test_unauthenticated(self, client, alice):
+        response = client.post(self.release_url, {"user_pk": alice.pk})
+        assert response.status_code == 403
 
 
 class TestIntegration:
