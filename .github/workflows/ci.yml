@@ -93,10 +93,18 @@ jobs:
           - "3.9"
           - "3.10"
           - "3.11"
+          - "3.12"
         django-version:
           - "3.2"
           - "4.1"
           - "4.2"
+        exclude:
+          - django-version: "3.2"
+            python-version: "3.11"
+          - django-version: "3.2"
+            python-version: "3.12"
+          - django-version: "4.1"
+            python-version: "3.12"
     steps:
       - uses: actions/checkout@v4
       - run: sudo apt install -y gettext

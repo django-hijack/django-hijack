@@ -34,5 +34,5 @@ python -m pip install -e '.[test]'
 Simply run:
 
 ```shell
-py.test
+pytest
 ```
