@@ -69,8 +69,8 @@ class LockUserTableMixin:
 
 
 class AcquireUserView(
-    LockUserTableMixin,
     LoginRequiredMixin,
+    LockUserTableMixin,
     UserPassesTestMixin,
     SuccessUrlMixin,
     SingleObjectMixin,
@@ -117,7 +117,11 @@ class AcquireUserView(
 
 
 class ReleaseUserView(
-    LockUserTableMixin, LoginRequiredMixin, UserPassesTestMixin, SuccessUrlMixin, View
+    LoginRequiredMixin,
+    LockUserTableMixin,
+    UserPassesTestMixin,
+    SuccessUrlMixin,
+    View,
 ):
     raise_exception = True
 
