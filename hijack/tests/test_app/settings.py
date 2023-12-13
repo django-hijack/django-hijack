@@ -1,6 +1,7 @@
 """Settings that need to be set in order to run the tests."""
 import os
 
+import django
 from django.urls import reverse_lazy
 
 DEBUG = True
@@ -100,4 +101,5 @@ LOGOUT_REDIRECT_URL = reverse_lazy("bye-bye")
 
 AUTH_USER_MODEL = "test_app.CustomUser"
 
-SESSION_SERIALIZER = "django.contrib.sessions.serializers.PickleSerializer"
+if django.VERSION < (4, 0):
+    SESSION_SERIALIZER = "django.contrib.sessions.serializers.PickleSerializer"
