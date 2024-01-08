@@ -1,6 +1,6 @@
 bandit==1.7.6
 black==23.12.1
-flake8==6.1.0
+flake8==7.0.0
 isort==5.13.2
 mkdocs==1.5.3
 msgcheck==4.0.0
