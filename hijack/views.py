@@ -2,7 +2,7 @@ from contextlib import contextmanager
 
 from django.contrib.auth import BACKEND_SESSION_KEY, get_user_model, load_backend, login
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.db import transaction, ConnectionRouter
+from django.db import ConnectionRouter, transaction
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, resolve_url
 from django.utils.decorators import method_decorator
