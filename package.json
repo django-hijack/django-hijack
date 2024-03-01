@@ -23,7 +23,7 @@
     "css-loader": "^6.10.0",
     "mini-css-extract-plugin": "^2.8.0",
     "postcss": "^8.4.32",
-    "postcss-loader": "^8.1.0",
+    "postcss-loader": "^8.1.1",
     "sass": "^1.70.0",
     "sass-loader": "^14.1.0",
     "standard": "^17.1.0",
