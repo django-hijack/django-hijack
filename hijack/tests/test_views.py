@@ -6,8 +6,12 @@ from urllib.parse import urlencode, urlunparse
 
 import pytest
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.sessions.models import Session
+from django.db import connections
 from django.shortcuts import resolve_url
+from django.test import Client
+from django.test.utils import CaptureQueriesContext
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import View
@@ -96,6 +100,34 @@ class TestAcquireUserView:
                 urlencode({"next": self.url}, safe="/"),
                 "",
             ),
+        )
+
+    @pytest.mark.django_db(databases=["default", "other"])
+    def test_locking_secondary_db(self, other_db_router):
+        # Users are in the "other" db since we're using the other_db_router fixture.
+        james = get_user_model().objects.create(username="james")
+        frank = get_user_model().objects.create(
+            username="frank", is_staff=True, is_superuser=True
+        )
+        frank_client = Client()
+        frank_client.force_login(frank)
+        assert (
+            frank_client.get(self.user_detail_url).content == b'{"username": "frank"}'
+        )
+
+        with (
+            CaptureQueriesContext(connections["default"]) as ctx_default,
+            CaptureQueriesContext(connections["other"]) as ctx_other,
+        ):
+            response = frank_client.post(self.url, {"user_pk": james.pk})
+
+        # Ensure that transaction.atomic was routed to the "other" db.
+        assert any("SAVEPOINT" in query["sql"] for query in ctx_other.captured_queries)
+        # Ensure no queries were made against the "default" db.
+        assert len(ctx_default.captured_queries) == 0
+        assert response.status_code == 302
+        assert (
+            frank_client.get(self.user_detail_url).content == b'{"username": "james"}'
         )
 
 

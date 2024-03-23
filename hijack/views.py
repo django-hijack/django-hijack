@@ -2,7 +2,7 @@ from contextlib import contextmanager
 
 from django.contrib.auth import BACKEND_SESSION_KEY, get_user_model, load_backend, login
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.db import transaction
+from django.db import ConnectionRouter, transaction
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, resolve_url
 from django.utils.decorators import method_decorator
@@ -56,11 +56,12 @@ class SuccessUrlMixin:
 
 
 class LockUserTableMixin:
-    @transaction.atomic()
     def dispatch(self, request, *args, **kwargs):
+        write_db = ConnectionRouter().db_for_write(get_user_model())
         # Lock user row to avoid race conditions
-        get_user_model()._base_manager.select_for_update().get(pk=request.user.pk)
-        return super().dispatch(request, *args, **kwargs)
+        with transaction.atomic(using=write_db):
+            get_user_model()._base_manager.select_for_update().get(pk=request.user.pk)
+            return super().dispatch(request, *args, **kwargs)
 
 
 class AcquireUserView(
