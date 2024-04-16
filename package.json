@@ -21,7 +21,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.19",
     "css-loader": "^6.10.0",
-    "mini-css-extract-plugin": "^2.8.0",
+    "mini-css-extract-plugin": "^2.8.1",
     "postcss": "^8.4.38",
     "postcss-loader": "^8.1.1",
     "sass": "^1.71.1",
