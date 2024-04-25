@@ -5,11 +5,11 @@
 By default, only superusers are allowed to hijack other users. This behavior
 can be adapted to your liking. However, be aware of the potential security implications.
 
-You alter the permission check, including that of the `can_hijack` template tag via the
+You alter the permission check, including that of `can_hijack` / `can_hijack_tag` template filter / tag via the
 `HIJACK_PERMISSION_CHECK` setting.
 
 The setting is a dotted/Python path to permission function.
-The function must accept two keyword arguments `hijacker` and `hijacked`.
+The function must accept two keyword arguments `hijacker` and `hijacked` and can accept a `request` keyword argument.
 Default: `'hijack.permissions.superusers_only'`.
 
 ### Builtin permission functions
@@ -68,6 +68,45 @@ all possible scenarios to prevent permission escalation.
 
 Hijacking inactive users (i.e. users with `is_active=False`) is not allowed to prevent
 dead locks, since an inactive user cannot be released.
+
+### Permission functions depending on the request
+
+In case you need to check the request object in your permission function, you can do so by adding a `request` keyword argument.
+
+This might be needed if the permission depends on the path or other request attributes.
+
+```python
+# mysite/permissions.py
+
+def subpath_permission(*, hijacker, hijacked, request):
+    """Only superusers may hijack other users."""
+    return hijacked.is_active and is_path_owner(request.path, hijacker)
+```
+
+WARNING:
+**Be careful when using request in your permission function.**
+
+While you can use the current request to check if the hijacker can hijack the hijacked user, once hijacked,
+the original user will be able to perform actions on behalf of the hijacked user without any further checks,
+so don't use this to restrict actions solely based on the hijacked user.
+
+
+NOTE:
+**Be careful when using request in your permission function.**
+
+The request object is not always available, e.g. when using the `can_hijack` filter.
+In such cases, the function will raise an exceptionl, and you should use the `can_hijack_tag` templatetag instead.
+
+If the `request` argument is made optional, you can use it with the `can_hijack` filter too.
+
+```python
+# mysite/permissions.py
+
+def subpath_permission(*, hijacker, hijacked, request=None):
+    """Only superusers may hijack other users."""
+    owner = is_path_owner(request.path, hijacker) if request else False
+    return hijacked.is_active and (owner or hijacker.is_superuser)
+```
 
 ## Notification Layout
 

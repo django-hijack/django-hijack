@@ -7,12 +7,11 @@ from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, resolve_url
 from django.utils.decorators import method_decorator
 from django.utils.http import url_has_allowed_host_and_scheme
-from django.utils.module_loading import import_string
 from django.views import View
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic.detail import SingleObjectMixin
 
-from hijack import signals
+from hijack import permissions, signals
 from hijack.conf import settings
 
 
@@ -75,8 +74,9 @@ class AcquireUserView(
     success_url = settings.LOGIN_REDIRECT_URL
 
     def test_func(self):
-        func = import_string(settings.HIJACK_PERMISSION_CHECK)
-        return func(hijacker=self.request.user, hijacked=self.get_object())
+        return permissions.can_hijack_user(
+            hijacker=self.request.user, hijacked=self.get_object(), request=self.request
+        )
 
     def get_object(self, queryset=None):
         return get_object_or_404(self.model, pk=self.request.POST["user_pk"])

@@ -8,6 +8,7 @@ app_name = "test_app"
 urlpatterns = [
     path("hijack/", include("hijack.urls", namespace="hijack")),
     path("users/", views.UserListView.as_view(), name="user-list"),
+    path("users-with-tag/", views.UserListTagView.as_view(), name="user-list-tag"),
     path("accounts/profile/", views.UserDetailView.as_view(), name="user-detail"),
     path(
         "bye-bye/", TemplateView.as_view(template_name="bye_bye.html"), name="bye-bye"
