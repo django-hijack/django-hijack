@@ -115,11 +115,9 @@ class TestAcquireUserView:
             frank_client.get(self.user_detail_url).content == b'{"username": "frank"}'
         )
 
-        with (
-            CaptureQueriesContext(connections["default"]) as ctx_default,
-            CaptureQueriesContext(connections["other"]) as ctx_other,
-        ):
-            response = frank_client.post(self.url, {"user_pk": james.pk})
+        with CaptureQueriesContext(connections["default"]) as ctx_default:
+            with CaptureQueriesContext(connections["other"]) as ctx_other:
+                response = frank_client.post(self.url, {"user_pk": james.pk})
 
         # Ensure that transaction.atomic was routed to the "other" db.
         assert any("SAVEPOINT" in query["sql"] for query in ctx_other.captured_queries)
