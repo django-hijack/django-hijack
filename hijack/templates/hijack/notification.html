@@ -13,10 +13,10 @@
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ request.path }}">
         <button class="djhj-button" onclick="document.getElementById('djhj').style.display = 'none';" type="button">
-          {% trans 'hide' %}
+          {% trans 'hide' context 'verb' %}
         </button>
         <button class="djhj-button" type="submit">
-          {% trans 'release' %}
+          {% translate 'stop' context 'verb' %}
         </button>
       </form>
     </div>

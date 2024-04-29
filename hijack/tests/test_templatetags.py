@@ -8,7 +8,7 @@ from .test_app.permissions import allow_all, deny_all
 def test_can_hijack__integration(admin_client):
     response = admin_client.get(reverse("user-list"))
     assert response.status_code == 200
-    assert b'<button type="submit">hijack admin</button>' in response.content
+    assert b'<button type="submit">impersonate admin</button>' in response.content
 
 
 def test_can_hijack__import_string(settings):

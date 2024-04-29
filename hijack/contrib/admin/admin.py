@@ -61,7 +61,7 @@ class HijackUserAdminMixin:
         def hijack_field(obj):
             return self.hijack_button(request, obj)
 
-        hijack_field.short_description = _("hijack user")
+        hijack_field.short_description = _("impersonate user")
 
         # we
         list_display = [*self.get_list_display(request), hijack_field]
