@@ -14,17 +14,17 @@ msgstr ""
 
 #: contrib/admin/admin.py:64
 msgid "impersonate user"
-msgstr "выдавать себя за пользователя"
+msgstr "притвориться пользователем"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:7
 msgctxt "verb"
 msgid "impersonate"
-msgstr "выдавать себя за человека"
+msgstr "притвориться"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:9
 #, python-format
 msgid "impersonate %(username)s"
-msgstr "захватить %(username)s"
+msgstr "притвориться %(username)s"
 
 #: templates/hijack/notification.html:8
 #, python-format
@@ -39,4 +39,4 @@ msgstr "скрыть"
 #: templates/hijack/notification.html:19
 msgctxt "verb"
 msgid "stop"
-msgstr "стоп"
+msgstr "прекратить"
