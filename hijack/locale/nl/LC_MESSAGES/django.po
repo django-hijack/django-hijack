@@ -19,17 +19,17 @@ msgstr ""
 
 #: contrib/admin/admin.py:64
 msgid "impersonate user"
-msgstr "zich voordoen als gebruiker"
+msgstr "gebruiker overnemen"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:7
 msgctxt "verb"
 msgid "impersonate"
-msgstr "zich voordoen als"
+msgstr "overnemen"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:9
 #, python-format
 msgid "impersonate %(username)s"
-msgstr "zich voordoen %(username)s"
+msgstr "%(username)s overnemen"
 
 #: templates/hijack/notification.html:8
 #, python-format

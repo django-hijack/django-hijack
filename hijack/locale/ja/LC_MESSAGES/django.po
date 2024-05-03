@@ -15,17 +15,17 @@ msgstr ""
 
 #: contrib/admin/admin.py:64
 msgid "impersonate user"
-msgstr "なりすましユーザー"
+msgstr "権限借用ユーザー"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:7
 msgctxt "verb"
 msgid "impersonate"
-msgstr "なりすます"
+msgstr "権限借用"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:9
 #, python-format
 msgid "impersonate %(username)s"
-msgstr "%(username)sをハイジャック"
+msgstr "%(username)sを権限借用"
 
 #: templates/hijack/notification.html:8
 #, python-format
