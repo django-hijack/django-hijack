@@ -1,7 +1,7 @@
 {% load i18n static %}
 
 {% block content %}
-  <link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack.min.css' %}" media="screen">
+  <link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack.css' %}" media="screen">
   <div class="djhj" id="djhj">
     <div class="djhj-notification">
       <div class="djhj-message">
@@ -13,10 +13,10 @@
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ request.path }}">
         <button class="djhj-button" onclick="document.getElementById('djhj').style.display = 'none';" type="button">
-          {% trans 'hide' context 'verb' %}
+          {% trans 'hide warning' %}
         </button>
         <button class="djhj-button" type="submit">
-          {% translate 'stop' context 'verb' %}
+          {% translate 'stop impersonating' %}
         </button>
       </form>
     </div>
