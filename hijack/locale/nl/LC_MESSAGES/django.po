@@ -38,8 +38,8 @@ msgstr "U werkt nu namens <em>%(user)s</em>."
 
 #: templates/hijack/notification.html:16
 msgid "hide warning"
-msgstr "waarschuwing verbergen"
+msgstr "melding verbergen"
 
 #: templates/hijack/notification.html:19
 msgid "stop impersonating"
-msgstr "stop met je voor te doen als"
+msgstr "overname beëindigen"
