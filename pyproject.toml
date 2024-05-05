@@ -39,12 +39,9 @@ test = [
   "pytest-django",
 ]
 lint = [
-  "bandit==1.7.8",
   "black==24.4.2",
-  "flake8==7.0.0",
-  "isort==5.13.2",
+  "ruff==0.4.3",
   "msgcheck==4.0.0",
-  "pydocstyle==6.3.0",
 ]
 docs = [
   "mkdocs==1.6.0",
@@ -79,16 +76,27 @@ omit = ["hijack/tests/*", "hijack/_version.py"]
 show_missing = true
 skip_covered = true
 
-[tool.isort]
-atomic = true
-line_length = 88
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-known_first_party = "hijack"
-default_section = "THIRDPARTY"
-combine_as_imports = true
+[tool.ruff]
+src = ["hijack", "tests"]
 
-[tool.pydocstyle]
-add_ignore = "D1"
+[tool.ruff.lint]
+select = [
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "F", # pyflakes
+    "I", # isort
+    "S", # flake8-bandit
+    "D", # pydocstyle
+    "UP", # pyupgrade
+]
+
+ignore = ["B904", "D1", "E501", "S101"]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+split-on-trailing-comma = true
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+force-wrap-aliases = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"

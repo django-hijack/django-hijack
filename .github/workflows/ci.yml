@@ -15,11 +15,8 @@ jobs:
       fail-fast: false
       matrix:
         lint-command:
-          - "bandit -r hijack -x hijack/tests"
           - "black --check --diff ."
-          - "flake8 ."
-          - "isort --check-only --diff ."
-          - "pydocstyle ."
+          - "ruff check --output-format=github ."
           - "msgcheck -n hijack/locale/*/LC_MESSAGES/*.po"
     runs-on: ubuntu-latest
     steps:
