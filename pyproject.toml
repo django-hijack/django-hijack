@@ -39,7 +39,6 @@ test = [
   "pytest-django",
 ]
 lint = [
-  "black==24.4.2",
   "ruff==0.4.3",
   "msgcheck==4.0.0",
 ]
@@ -78,6 +77,15 @@ skip_covered = true
 
 [tool.ruff]
 src = ["hijack", "tests"]
+line-length = 88
+indent-width = 4
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+preview = true
 
 [tool.ruff.lint]
 select = [

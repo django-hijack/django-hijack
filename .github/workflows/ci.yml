@@ -15,7 +15,6 @@ jobs:
       fail-fast: false
       matrix:
         lint-command:
-          - "black --check --diff ."
           - "ruff check --output-format=github ."
           - "msgcheck -n hijack/locale/*/LC_MESSAGES/*.po"
     runs-on: ubuntu-latest
