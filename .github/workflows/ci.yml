@@ -16,6 +16,7 @@ jobs:
       matrix:
         lint-command:
           - "ruff check --output-format=github ."
+          - "ruff format --check ."
           - "msgcheck -n hijack/locale/*/LC_MESSAGES/*.po"
     runs-on: ubuntu-latest
     steps:
