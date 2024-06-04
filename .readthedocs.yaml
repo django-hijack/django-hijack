@@ -15,5 +15,8 @@ mkdocs:
   configuration: mkdocs.yml
 
 python:
-   install:
-     - requirements: requirements.txt
+  install:
+    - method: pip
+      path: .
+      extra_requirements:
+        - docs

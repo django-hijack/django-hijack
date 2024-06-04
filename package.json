@@ -2,11 +2,10 @@
   "name": "django-hijack",
   "version": "1.0.0",
   "scripts": {
-    "build": "webpack --mode=production",
-    "build:watch": "webpack --mode=production --watch",
-    "lint": "npm run lint:js && npm run lint:scss",
-    "lint:js": "standard \"**/*.js\"",
-    "lint:scss": "stylelint \"**/*.scss\""
+    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" jest",
+    "lint": "npm run lint:js && npm run lint:css",
+    "lint:js": "standard \"hijack/static/hijack/*.mjs\"",
+    "lint:css": "stylelint \"hijack/static/hijack/*.css\""
   },
   "repository": {
     "type": "git",
@@ -14,24 +13,27 @@
   },
   "author": "Johannes Maron",
   "license": "MIT",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/django-hijack/django-hijack/issues"
   },
   "homepage": "https://github.com/django-hijack/django-hijack#readme",
+  "jest": {
+    "testEnvironment": "jsdom",
+    "transform": {},
+    "transformIgnorePatterns": [],
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "hijack/static/hijack/*"
+    ]
+  },
   "devDependencies": {
-    "autoprefixer": "^10.4.19",
-    "css-loader": "^7.1.2",
-    "mini-css-extract-plugin": "^2.9.0",
-    "postcss": "^8.4.38",
-    "postcss-loader": "^8.1.1",
-    "sass": "^1.77.4",
-    "sass-loader": "^14.2.1",
-    "standard": "^17.1.0",
-    "stylelint": "^15.11.0",
-    "stylelint-config-standard-scss": "^11.1.0",
-    "stylelint-scss": "^5.3.2",
-    "webpack": "^5.91.0",
-    "webpack-cli": "^5.1.4"
+    "jest": "*",
+    "jest-environment-jsdom": "*",
+    "standard": "*",
+    "stylelint": "*",
+    "stylelint-config-standard-scss": "*",
+    "stylelint-scss": "*"
   },
   "standard": {
     "globals": [
