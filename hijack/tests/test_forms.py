@@ -45,7 +45,6 @@ class TestAsset:
 
 
 class TestESM:
-
     def test_str(self, settings):
         settings.STORAGES = {
             "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
