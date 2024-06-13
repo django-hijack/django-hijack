@@ -4,3 +4,11 @@ def allow_all(*, hijacker, hijacked):
 
 def deny_all(*, hijacker, hijacked):
     return False
+
+
+def require_request_required(*, hijacker, hijacked, request):
+    return True
+
+
+def require_request_optional(*, hijacker, hijacked, request=None):
+    return True

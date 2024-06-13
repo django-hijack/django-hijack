@@ -8,6 +8,11 @@ class UserListView(generic.ListView):
     template_name = "user_list.html"
 
 
+class UserListTagView(generic.ListView):
+    model = get_user_model()
+    template_name = "user_list_tag.html"
+
+
 class UserDetailView(generic.View):
     def get(self, request, *args, **kwargs):
         return JsonResponse({"username": request.user.username})
