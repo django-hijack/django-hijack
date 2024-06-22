@@ -5,6 +5,7 @@ from django.template.loader import render_to_string
 from django.utils.translation import gettext_lazy as _
 
 from hijack.conf import settings
+from hijack.forms import ESM
 
 
 class HijackUserAdminMixin:
@@ -15,7 +16,7 @@ class HijackUserAdminMixin:
 
     @property
     def media(self):
-        return super().media + forms.Media(js=["hijack/hijack.min.js"])
+        return super().media + forms.Media(js=[ESM("hijack/hijack.mjs")])
 
     def get_hijack_user(self, obj):
         """

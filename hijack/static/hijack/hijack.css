@@ -1,14 +1,14 @@
-/* stylelint-disable-next-line */
-$system-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-
 .djhj {
+  /* stylelint-disable-next-line */
+  --system-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   z-index: 300;
 
-  &-notification {
+  .djhj-notification {
     display: flex;
     flex-flow: row wrap;
     align-items: center;
@@ -17,7 +17,7 @@ $system-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, 
     margin: 1rem;
     max-width: 540px;
     box-shadow: 0 0 0.5em rgba(0 0 0 / 30%);
-    font-family: $system-font;
+    font-family: var(--system-font);
     font-size: initial;
     background: whitesmoke;
     color: #111;
@@ -28,15 +28,15 @@ $system-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, 
     }
   }
 
-  &-message,
-  &-actions {
+  .djhj-message,
+  .djhj-actions {
     padding: 0 0 1rem;
     width: 100%;
   }
 
-  &-message {
+  .djhj-message {
     flex: 1 1 auto;
-    font-family: $system-font;
+    font-family: var(--system-font);
     font-size: initial;
 
     em {
@@ -44,23 +44,26 @@ $system-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, 
     }
   }
 
-  &-actions {
+  .djhj-actions {
     display: flex;
     flex: 0 1 auto;
     text-align: center;
     justify-content: flex-end;
   }
 
-  &-button {
+  .djhj-button {
     appearance: none;
     border: none;
     background-color: transparent;
     font-weight: 500;
-    text-transform: capitalize;
     padding: 0.5em;
     cursor: pointer;
-    font-family: $system-font;
+    font-family: var(--system-font);
     font-size: initial;
+
+    &::first-letter {
+      text-transform: capitalize;
+    }
 
     @media (prefers-color-scheme: dark) {
       background: #333;

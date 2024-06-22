@@ -82,7 +82,7 @@ please refer to Django's guide on [overriding templates][overriding-templates].
 
 ```html
 <!-- hijack/notification.html -->
-<link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack.min.css' %}" media="screen">
+<link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack.css' %}" media="screen">
 <div class="djhj" id="djhj">
   <div class="djhj-notification">
     <div class="djhj-message">

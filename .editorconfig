@@ -11,7 +11,7 @@ charset = utf-8
 end_of_line = lf
 max_line_length = 88
 
-[*.{js,json,yml,yaml}]
+[*.{js,json,yml,yaml,toml}]
 indent_size = 2
 
 [*.{scss,sass,css}]

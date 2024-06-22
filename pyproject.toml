@@ -1,0 +1,110 @@
+[build-system]
+requires = ["flit-gettext", "flit_scm", "wheel"]
+build-backend = "flit_gettext.scm"
+
+[project]
+name = "django-hijack"
+authors = [
+  { name = "arteria GmbH", email = "admin@arteria.ch" },
+  { name = "Johannes Maron", email = "johannes@maron.family" },
+]
+readme = "README.md"
+license = { file = "LICENSE" }
+keywords = ["Markdown", "Django", "email", "templates", "HTML"]
+dynamic = ["version", "description"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Web Environment",
+  "License :: OSI Approved :: MIT License",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Framework :: Django",
+  "Framework :: Django :: 4.2",
+  "Framework :: Django :: 5.0",
+]
+requires-python = ">=3.8"
+dependencies = ["django>=4.2"]
+
+[project.optional-dependencies]
+test = [
+  "pytest",
+  "pytest-cov",
+  "pytest-django",
+]
+lint = [
+  "ruff==0.4.10",
+  "msgcheck==4.0.0",
+]
+docs = [
+  "mkdocs==1.6.0",
+]
+
+[project.urls]
+Project-URL = "https://github.com/django-hijack/django-hijack"
+Changelog = "https://github.com/django-hijack/django-hijack/releases"
+
+[tool.flit.module]
+name = "hijack"
+
+[tool.setuptools_scm]
+write_to = "hijack/_version.py"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--cov --tb=short -rxs"
+testpaths = ["hijack/tests"]
+filterwarnings = [
+  "ignore::DeprecationWarning",
+  "error::RuntimeWarning",
+]
+
+DJANGO_SETTINGS_MODULE = "hijack.tests.test_app.settings"
+
+[tool.coverage.run]
+source = ["hijack"]
+omit = ["hijack/tests/*", "hijack/_version.py"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+[tool.ruff]
+src = ["hijack", "tests"]
+line-length = 88
+indent-width = 4
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+preview = true
+
+[tool.ruff.lint]
+select = [
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "F", # pyflakes
+    "I", # isort
+    "S", # flake8-bandit
+    "D", # pydocstyle
+    "UP", # pyupgrade
+]
+
+ignore = ["B904", "D1", "E501", "S101"]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+split-on-trailing-comma = true
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+force-wrap-aliases = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"

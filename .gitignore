@@ -75,3 +75,6 @@ node_modules/
 # minified static files
 *.min.js
 *.min.css
+
+# setuptools SCM
+_version.py
