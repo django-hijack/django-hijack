@@ -10,7 +10,7 @@ With Django Hijack, admins can log in and work on behalf of other users without 
 
 ## Docs
 
-Docs are available on Read the Docs http://django-hijack.readthedocs.org/en/stable/, both for **v2.x** and **v3.x**.
+Docs are available on Read the Docs https://django-hijack.readthedocs.org/en/stable/, both for **v2.x** and **v3.x**.
 
 ## Versions
 
