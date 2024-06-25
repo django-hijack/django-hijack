@@ -131,7 +131,7 @@ You can use the default template as a cheat-sheet.
     {% if is_user_admin %}
       {% trans 'hijack'|upper %}
     {% else %}
-      {% blocktrans %}Hijack {{ username }}{% endblocktrans %}
+      {% blocktrans %}impersonate {{ username }}{% endblocktrans %}
     {% endif %}
   </button>
 {% endif %}

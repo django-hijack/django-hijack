@@ -4,9 +4,11 @@
   <button type="button" class="button" data-hijack-user="{{ another_user.pk|unlocalize }}"
           data-hijack-next="{{ next }}" data-hijack-url="{% url 'hijack:acquire' %}">
     {% if is_user_admin %}
-      {% trans 'hijack'|upper %}
+      {% translate 'impersonate'|capfirst context 'verb' %}
     {% else %}
-      {% blocktrans %}Hijack {{ username }}{% endblocktrans %}
+      {% blocktranslate trimmed %}
+        impersonate {{ username }}
+      {% endblocktranslate %}
     {% endif %}
   </button>
 {% endif %}

@@ -6,7 +6,7 @@
 
 ![Screenshot of the notification seen while hijacking another user.](https://github.com/django-hijack/django-hijack/raw/master/docs/django-hijack.jpg)
 
-With Django Hijack, admins can log in and work on behalf of other users without having to know their credentials.
+With Django Hijack, admins can impersonate and work on behalf of other users without having to know their credentials.
 
 ## Docs
 
