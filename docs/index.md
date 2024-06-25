@@ -58,7 +58,7 @@ The following example shows how to integrate a hijack button into your template.
 <form action="{% url 'hijack:acquire' %}" method="POST">
   {% csrf_token %}
   <input type="hidden" name="user_pk" value="{{ another_user.pk }}">
-  <button type="submit">hijack {{ another_user }}</button>
+  <button type="submit">impersonate {{ another_user }}</button>
   <input type="hidden" name="next" value="{{ request.path }}">
 </form>
 {% endif %}
@@ -69,7 +69,7 @@ The following example shows how to integrate a hijack button into your template.
 
 A form is used to perform a POST including a [CSRF][CSRF]-token for security reasons.
 The field `user_pk` is mandatory and the value must be set to the target users' primary
-key. The optional field `next` determines where a user is forwarded after a successful hijack. 
+key. The optional field `next` determines where a user is forwarded after a successful hijack.
 If not provided, users are forwarded to the [LOGIN_REDIRECT_URL][LOGIN_REDIRECT_URL].
 
 Do not forget to load the `hijack` template tags to use the `can_hijack` filter.

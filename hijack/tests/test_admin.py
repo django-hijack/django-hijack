@@ -56,7 +56,7 @@ class TestHijackUserAdminMixin:
         Post.objects.create(author=admin_user)
         response = admin_client.get(url)
         assert response.status_code == 200
-        assert b"Hijack admin" in response.content
+        assert b"impersonate admin" in response.content
 
     def test_get_hijack_success_url__obj_absolute_url(self, rf):
         obj = Post()

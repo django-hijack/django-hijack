@@ -6,8 +6,9 @@
     {% if is_user_admin %}
       {% translate 'impersonate'|capfirst context 'verb' %}
     {% else %}
-      {% blocktrans as "cta" %}impersonate {{ username }}{% endblocktrans %}
-      {{ cta|capfirst }}
+      {% blocktranslate trimmed %}
+        impersonate {{ username }}
+      {% endblocktranslate %}
     {% endif %}
   </button>
 {% endif %}
