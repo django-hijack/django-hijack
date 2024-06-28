@@ -10,8 +10,8 @@ class Asset:
         self.path = path
 
     def __eq__(self, other):
-        return (self.__class__ == other.__class__ and self.path == other.path) or (
-            other.__class__ == str and self.path == other
+        return (self.__class__ is other.__class__ and self.path == other.path) or (
+            other.__class__ is str and self.path == other
         )
 
     def __hash__(self):
