@@ -4,7 +4,7 @@
   "scripts": {
     "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" jest",
     "lint": "npm run lint:js && npm run lint:css",
-    "lint:js": "standard \"hijack/static/hijack/*.mjs\"",
+    "lint:js": "standard \"hijack/static/hijack/*.js\"",
     "lint:css": "stylelint \"hijack/static/hijack/*.css\""
   },
   "repository": {
