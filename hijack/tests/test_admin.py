@@ -17,7 +17,7 @@ class TestHijackUserAdminMixin:
         assert response.status_code == 200
         assert b"data-hijack-user" in response.content
 
-    @pytest.fixture()
+    @pytest.fixture
     def no_user_admin(self):
         from django.contrib import admin
 
@@ -25,7 +25,7 @@ class TestHijackUserAdminMixin:
         yield
         admin.site._registry[CustomUser] = custom_user_admin
 
-    @pytest.fixture()
+    @pytest.fixture
     def custom_hijack_user_admin(self):
         from django.contrib import admin
 

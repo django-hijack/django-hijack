@@ -18,8 +18,7 @@ from hijack.conf import settings
 
 def get_used_backend(request):
     backend_str = request.session[BACKEND_SESSION_KEY]
-    backend = load_backend(backend_str)
-    return backend
+    return load_backend(backend_str)
 
 
 @contextmanager

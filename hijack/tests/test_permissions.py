@@ -10,7 +10,7 @@ inactive_user = get_user_model()(is_active=False)
 
 
 @pytest.mark.parametrize(
-    "hijacker, hijacked, has_perm",
+    ("hijacker", "hijacked", "has_perm"),
     [
         (superuser, None, False),
         (superuser, superuser, True),
@@ -34,7 +34,7 @@ def test_superusers_only(hijacker, hijacked, has_perm):
 
 
 @pytest.mark.parametrize(
-    "hijacker, hijacked, has_perm",
+    ("hijacker", "hijacked", "has_perm"),
     [
         (superuser, None, False),
         (superuser, superuser, True),

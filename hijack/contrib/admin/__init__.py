@@ -1,3 +1,3 @@
-from .admin import HijackUserAdminMixin  # noqa
+from .admin import HijackUserAdminMixin
 
 __all__ = ["HijackUserAdminMixin"]

@@ -89,16 +89,29 @@ preview = true
 
 [tool.ruff.lint]
 select = [
+    "D", # pydocstyle
     "E", # pycodestyle errors
-    "W", # pycodestyle warnings
+    "EXE", # flake8-executable
     "F", # pyflakes
     "I", # isort
+    "PGH", # pygrep-hooks
+    "PL", # Pylint
+    "PT", # flake8-pytest-style
+    "RET", # flake8-return
     "S", # flake8-bandit
-    "D", # pydocstyle
+    "SIM", # flake8-simplify
     "UP", # pyupgrade
+    "W", # pycodestyle warnings
 ]
 
-ignore = ["B904", "D1", "E501", "S101"]
+ignore = ["D1", "PT004"]
+
+[tool.ruff.lint.per-file-ignores]
+"*/test*.py" = ["S101", "PLR2004"]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = false
+mark-parentheses = false
 
 [tool.ruff.lint.isort]
 combine-as-imports = true

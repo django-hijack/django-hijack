@@ -35,7 +35,7 @@ class TestSuccessUrlMixin:
         view = views.SuccessUrlMixin()
         get_redirect_url = MagicMock()
         get_redirect_url.return_value = ""
-        setattr(view, "get_redirect_url", get_redirect_url)
+        view.get_redirect_url = get_redirect_url
         assert view.get_success_url() == "/"
 
     def test_get_success_url__pattern(self):
@@ -43,7 +43,7 @@ class TestSuccessUrlMixin:
         view.success_url = "bye-bye"
         get_redirect_url = MagicMock()
         get_redirect_url.return_value = ""
-        setattr(view, "get_redirect_url", get_redirect_url)
+        view.get_redirect_url = get_redirect_url
         assert view.get_success_url() == "/bye-bye/"
 
 
@@ -115,9 +115,10 @@ class TestAcquireUserView:
             frank_client.get(self.user_detail_url).content == b'{"username": "frank"}'
         )
 
-        with CaptureQueriesContext(connections["default"]) as ctx_default:
-            with CaptureQueriesContext(connections["other"]) as ctx_other:
-                response = frank_client.post(self.url, {"user_pk": james.pk})
+        with CaptureQueriesContext(
+            connections["default"]
+        ) as ctx_default, CaptureQueriesContext(connections["other"]) as ctx_other:
+            response = frank_client.post(self.url, {"user_pk": james.pk})
 
         # Ensure that transaction.atomic was routed to the "other" db.
         assert any("SAVEPOINT" in query["sql"] for query in ctx_other.captured_queries)
