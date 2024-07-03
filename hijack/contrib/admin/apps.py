@@ -35,8 +35,8 @@ class HijackAdminConfig(AppConfig):
             else:
                 admin.site.unregister(UserModel)
 
-                # We create a subclass including the HijackUserAdminMixin but keep the name
-                # and module, to keep output form failing checks consistent.
+                # We create a subclass including the HijackUserAdminMixin but keep
+                # the name and module, to keep output form failing checks consistent.
                 HijackUserModelAdmin = type(
                     UserModelAdmin.__name__, (HijackUserAdminMixin, UserModelAdmin), {}
                 )
