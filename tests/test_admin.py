@@ -7,7 +7,7 @@ from django.urls import reverse
 
 from hijack.contrib.admin import HijackUserAdminMixin
 from hijack.contrib.admin.apps import HijackAdminConfig
-from hijack.tests.test_app.models import CustomUser, Post
+from tests.test_app.models import CustomUser, Post
 
 
 class TestHijackUserAdminMixin:

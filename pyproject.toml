@@ -59,13 +59,13 @@ write_to = "hijack/_version.py"
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "--cov --tb=short -rxs"
-testpaths = ["hijack/tests"]
+testpaths = ["tests"]
 filterwarnings = [
   "ignore::DeprecationWarning",
   "error::RuntimeWarning",
 ]
 
-DJANGO_SETTINGS_MODULE = "hijack.tests.test_app.settings"
+DJANGO_SETTINGS_MODULE = "tests.test_app.settings"
 
 [tool.coverage.run]
 source = ["hijack"]
@@ -118,6 +118,7 @@ combine-as-imports = true
 split-on-trailing-comma = true
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 force-wrap-aliases = true
+known-first-party = ["hijack", "tests"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "pep257"

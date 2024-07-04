@@ -41,4 +41,4 @@ def eve_client(eve):
 
 @pytest.fixture
 def other_db_router(settings):
-    settings.DATABASE_ROUTERS = ["hijack.tests.test_app.routers.TestAppRouter"]
+    settings.DATABASE_ROUTERS = ["tests.test_app.routers.TestAppRouter"]

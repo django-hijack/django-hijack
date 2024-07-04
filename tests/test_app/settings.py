@@ -23,7 +23,7 @@ DATABASES = {
 }
 
 
-ROOT_URLCONF = "hijack.tests.test_app.urls"
+ROOT_URLCONF = "tests.test_app.urls"
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(APP_ROOT, "../app_static")
@@ -91,7 +91,7 @@ EXTERNAL_APPS = [
 INTERNAL_APPS = [
     "hijack",
     "hijack.contrib.admin",
-    "hijack.tests.test_app",
+    "tests.test_app",
 ]
 
 INSTALLED_APPS = EXTERNAL_APPS + INTERNAL_APPS
