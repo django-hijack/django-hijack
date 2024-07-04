@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import * as hijack from '../hijack'
+import * as hijack from '../../hijack/static/hijack/hijack.js'
 
 jest.useFakeTimers()
 

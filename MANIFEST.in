@@ -1,3 +1,0 @@
-prune .github
-exclude .gitignore
-include hijack/locale/*/LC_MESSAGES/django.mo hijack/static/hijack/hijack.*

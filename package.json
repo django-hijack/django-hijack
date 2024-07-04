@@ -24,7 +24,7 @@
     "transformIgnorePatterns": [],
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "hijack/static/hijack/*"
+      "tests/*"
     ]
   },
   "devDependencies": {

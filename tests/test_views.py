@@ -191,7 +191,7 @@ class TestIntegration:
     user_detail_url = reverse_lazy("user-detail")
 
     def test_acquire_release(self, settings, admin_client, bob, alice):
-        settings.HIJACK_PERMISSION_CHECK = "hijack.tests.test_app.permissions.allow_all"
+        settings.HIJACK_PERMISSION_CHECK = "tests.test_app.permissions.allow_all"
         assert (
             admin_client.get(self.user_detail_url).content == b'{"username": "admin"}'
         )
