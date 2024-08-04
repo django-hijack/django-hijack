@@ -50,7 +50,7 @@ class HijackUserAdminMixin:
                 "request": request,
                 "another_user": user,
                 "username": str(user),
-                "is_user_admin": self.model == type(user),
+                "is_user_admin": self.model is type(user),
                 "next": self.get_hijack_success_url(request, obj),
             },
             request=request,
