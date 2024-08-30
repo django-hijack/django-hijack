@@ -43,7 +43,7 @@ lint = [
   "msgcheck==4.0.0",
 ]
 docs = [
-  "mkdocs==1.6.0",
+  "mkdocs==1.6.1",
 ]
 
 [project.urls]
