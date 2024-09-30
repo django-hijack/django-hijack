@@ -10,7 +10,7 @@ authors = [
 ]
 readme = "README.md"
 license = { file = "LICENSE" }
-keywords = ["Markdown", "Django", "email", "templates", "HTML"]
+keywords = ["Django", "authentication", "security", "admin", "impersonation"]
 dynamic = ["version", "description"]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
