@@ -37,6 +37,9 @@ class SuccessUrlMixin:
 
     success_url = "/"
 
+    def redirect(self):
+        return HttpResponseRedirect(self.get_success_url())
+
     def get_success_url(self):
         url = self.get_redirect_url()
         return url or resolve_url(self.success_url or "/")
@@ -108,7 +111,8 @@ class AcquireUserView(
             hijacker=hijacker,
             hijacked=hijacked,
         )
-        return HttpResponseRedirect(self.get_success_url())
+
+        return self.redirect()
 
 
 class ReleaseUserView(
@@ -144,4 +148,5 @@ class ReleaseUserView(
             hijacker=hijacker,
             hijacked=hijacked,
         )
-        return HttpResponseRedirect(self.get_success_url())
+
+        return self.redirect()
