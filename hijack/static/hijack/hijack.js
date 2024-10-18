@@ -33,7 +33,7 @@ export function mount (fn, query) {
  * @return {Promise<void>}
  */
 export async function hijack (event) {
-  const element = event.target
+  const element = event.currentTarget
   const form = new FormData()
   form.append('csrfmiddlewaretoken', document.querySelector('input[name=csrfmiddlewaretoken]').value)
   form.append('user_pk', element.dataset.hijackUser)
