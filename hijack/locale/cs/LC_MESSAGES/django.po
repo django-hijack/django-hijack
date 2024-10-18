@@ -25,7 +25,7 @@ msgstr "vydávat se za"
 #: contrib/admin/templates/hijack/contrib/admin/button.html:9
 #, python-format
 msgid "impersonate %(username)s"
-msgstr "uvolnit %(username)s"
+msgstr "vydávat se za %(username)s"
 
 #: templates/hijack/notification.html:8
 #, python-format
