@@ -19,7 +19,7 @@ describe('ready', () => {
 
   test('ready', () => {
     const spy = jest.fn()
-    Object.defineProperty(global.document, 'readyState', {
+    Object.defineProperty(globalThis.document, 'readyState', {
       writable: true,
       value: 'loading'
     })
@@ -37,7 +37,7 @@ describe('ready', () => {
 describe('mount', () => {
   test('mount exists', () => {
     document.body.innerHTML = '<div class="foo"></div>'
-    Object.defineProperty(global.document, 'readyState', {
+    Object.defineProperty(globalThis.document, 'readyState', {
       writable: true,
       value: 'loading'
     })
@@ -48,7 +48,7 @@ describe('mount', () => {
   })
 
   test('mount does not exist', () => {
-    Object.defineProperty(global.document, 'readyState', {
+    Object.defineProperty(globalThis.document, 'readyState', {
       writable: true,
       value: 'loading'
     })
@@ -72,9 +72,9 @@ describe('hijack', () => {
       }
     }
     document.body.innerHTML = '<input name="csrfmiddlewaretoken" value="token">'
-    global.fetch = jest.fn()
+    globalThis.fetch = jest.fn()
     await hijack.hijack(event)
-    expect(global.fetch).toHaveBeenCalledWith('/hijack/', {
+    expect(globalThis.fetch).toHaveBeenCalledWith('/hijack/', {
       method: 'POST',
       body: expect.any(FormData),
       credentials: 'same-origin'
