@@ -1,62 +1,64 @@
-import { jest } from '@jest/globals'
+import 'global-jsdom/register'
+import assert from 'node:assert'
+import { afterEach, describe, mock, test } from 'node:test'
 import * as hijack from '../../hijack/static/hijack/hijack.js'
 
-jest.useFakeTimers()
-
 afterEach(() => {
-  jest.clearAllMocks()
-
+  mock.restoreAll()
 })
 
 describe('ready', () => {
   test('already', () => {
-    const spy = jest.fn()
-    expect(document.readyState).toBe('complete')
+    const spy = mock.fn()
+    assert(document.readyState === 'complete')
 
     hijack.ready(spy)
-    expect(spy).toHaveBeenCalled()
+    assert(spy.mock.callCount())
   })
 
   test('ready', () => {
-    const spy = jest.fn()
-    Object.defineProperty(global.document, 'readyState', {
+    const spy = mock.fn()
+    Object.defineProperty(globalThis.document, 'readyState', {
       writable: true,
       value: 'loading'
     })
-    expect(document.readyState).toBe('loading')
+    assert(document.readyState === 'loading')
 
     hijack.ready(spy)
-    expect(spy).not.toHaveBeenCalled()
+    assert(!spy.mock.callCount())
 
-    document.dispatchEvent(new Event('DOMContentLoaded'))
+    document.dispatchEvent(new window.Event('DOMContentLoaded'))
 
-    expect(spy).toHaveBeenCalled()
+    assert(spy.mock.callCount())
   })
 })
 
 describe('mount', () => {
   test('mount exists', () => {
     document.body.innerHTML = '<div class="foo"></div>'
-    Object.defineProperty(global.document, 'readyState', {
+    Object.defineProperty(globalThis.document, 'readyState', {
       writable: true,
       value: 'loading'
     })
-    const spy = jest.fn()
+    const spy = mock.fn()
     hijack.mount(spy, 'div.foo')
-    document.dispatchEvent(new Event('DOMContentLoaded'))
-    expect(spy).toHaveBeenLastCalledWith(document.querySelector('div.foo'))
+    document.dispatchEvent(new window.Event('DOMContentLoaded'))
+    assert(
+      spy.mock.calls[0].arguments[0] === document.querySelector('div.foo')
+    )
   })
 
   test('mount does not exist', () => {
-    Object.defineProperty(global.document, 'readyState', {
+    Object.defineProperty(globalThis.document, 'readyState', {
       writable: true,
       value: 'loading'
     })
-    const spy = jest.fn()
+    const spy = mock.fn()
     document.body.innerHTML = '<div class="foo"></div>'
     hijack.mount(spy, 'div.does-not-exist')
-    document.dispatchEvent(new Event('DOMContentLoaded'))
-    expect(spy).not.toHaveBeenCalled()
+    document.dispatchEvent(new window.Event('DOMContentLoaded'))
+    console.warn(spy.mock.calls)
+    assert(!spy.mock.callCount())
   })
 })
 
@@ -71,13 +73,16 @@ describe('hijack', () => {
         }
       }
     }
-    document.body.innerHTML = '<input name="csrfmiddlewaretoken" value="token">'
-    global.fetch = jest.fn()
+    document.body.innerHTML =
+      '<input name="csrfmiddlewaretoken" value="token">'
+    globalThis.fetch = mock.fn()
     await hijack.hijack(event)
-    expect(global.fetch).toHaveBeenCalledWith('/hijack/', {
-      method: 'POST',
-      body: expect.any(FormData),
-      credentials: 'same-origin'
-    })
+    const call = globalThis.fetch.mock.calls[0]
+    assert(call.arguments[0] === '/hijack/')
+    assert(call.arguments[1].method === 'POST')
+    assert(call.arguments[1].credentials === 'same-origin')
+    assert(call.arguments[1].body.get('csrfmiddlewaretoken') === 'token')
+    assert(call.arguments[1].body.get('user_pk') === '1')
+    assert(call.arguments[1].body.get('next') === '/')
   })
 })

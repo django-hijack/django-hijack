@@ -45,7 +45,7 @@ export async function hijack (event) {
     body: form,
     credentials: 'same-origin'
   })
-  window.location.href = element.dataset.hijackNext
+  globalThis.location.href = element.dataset.hijackNext
 }
 
 mount(function (element) { element.addEventListener('click', hijack) }, '[data-hijack-user]')
