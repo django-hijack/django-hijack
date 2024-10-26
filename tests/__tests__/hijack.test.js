@@ -65,7 +65,7 @@ describe('mount', () => {
 describe('hijack', () => {
   test('hijack', async () => {
     const event = {
-      target: {
+      currentTarget: {
         dataset: {
           hijackUser: '1',
           hijackNext: '/',
