@@ -2,7 +2,7 @@
   "name": "django-hijack",
   "version": "1.0.0",
   "scripts": {
-    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" jest",
+    "test": "node --test",
     "lint": "npm run lint:js && npm run lint:css",
     "lint:js": "standard \"hijack/static/hijack/*.js\"",
     "lint:css": "stylelint \"hijack/static/hijack/*.css\""
@@ -18,18 +18,9 @@
     "url": "https://github.com/django-hijack/django-hijack/issues"
   },
   "homepage": "https://github.com/django-hijack/django-hijack#readme",
-  "jest": {
-    "testEnvironment": "jsdom",
-    "transform": {},
-    "transformIgnorePatterns": [],
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "tests/*"
-    ]
-  },
   "devDependencies": {
-    "jest": "*",
-    "jest-environment-jsdom": "*",
+    "global-jsdom": "*",
+    "jsdom": "*",
     "standard": "*",
     "stylelint": "*",
     "stylelint-config-standard-scss": "*",
