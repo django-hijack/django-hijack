@@ -115,9 +115,10 @@ class TestAcquireUserView:
             frank_client.get(self.user_detail_url).content == b'{"username": "frank"}'
         )
 
-        with CaptureQueriesContext(
-            connections["default"]
-        ) as ctx_default, CaptureQueriesContext(connections["other"]) as ctx_other:
+        with (
+            CaptureQueriesContext(connections["default"]) as ctx_default,
+            CaptureQueriesContext(connections["other"]) as ctx_other,
+        ):
             response = frank_client.post(self.url, {"user_pk": james.pk})
 
         # Ensure that transaction.atomic was routed to the "other" db.
