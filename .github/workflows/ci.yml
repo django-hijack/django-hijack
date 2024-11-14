@@ -83,7 +83,7 @@ jobs:
       - run: npm test
         env:
           NODE_OPTIONS: "--experimental-vm-modules"
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           flags: "javascript"
 
@@ -122,7 +122,7 @@ jobs:
       - run: python -m pip install -e .[test]
       - run: python -m pip install django~=${{ matrix.django-version }}.0
       - run: python -m pytest
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           flags: "python"
 
