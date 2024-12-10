@@ -6,6 +6,7 @@ __all__ = ["settings"]
 class LazySettings:
     HIJACK_PERMISSION_CHECK = "hijack.permissions.superusers_only"
     HIJACK_INSERT_BEFORE = "</body>"
+    HIJACK_IGNORE_NEXT_URL = False
 
     def __getattribute__(self, name):
         try:

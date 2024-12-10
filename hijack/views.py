@@ -38,8 +38,11 @@ class SuccessUrlMixin:
     success_url = "/"
 
     def get_success_url(self):
+        default_url = resolve_url(self.success_url or "/")
+        if settings.HIJACK_IGNORE_NEXT_URL:
+            return default_url
         url = self.get_redirect_url()
-        return url or resolve_url(self.success_url or "/")
+        return url or default_url
 
     def get_redirect_url(self):
         """Return the user-originating redirect URL if it's safe."""
