@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.sessions.models import Session
 from django.db import connections
 from django.shortcuts import resolve_url
-from django.test import Client
+from django.test import Client, override_settings
 from django.test.utils import CaptureQueriesContext
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -45,6 +45,15 @@ class TestSuccessUrlMixin:
         get_redirect_url.return_value = ""
         view.get_redirect_url = get_redirect_url
         assert view.get_success_url() == "/bye-bye/"
+
+    @override_settings(HIJACK_IGNORE_NEXT_URL=True)
+    def test_get_success_url__ignore_next_url(self):
+        view = views.SuccessUrlMixin()
+        view.success_url = "/forced_redirect_url/"
+        get_redirect_url = MagicMock()
+        get_redirect_url.return_value = "/next_url/"
+        view.get_redirect_url = get_redirect_url
+        assert view.get_success_url() == "/forced_redirect_url/"
 
 
 class TestAcquireUserView:
