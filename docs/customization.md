@@ -82,26 +82,30 @@ please refer to Django's guide on [overriding templates][overriding-templates].
 
 ```html
 <!-- hijack/notification.html -->
-<link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack.css' %}" media="screen">
-<div class="djhj" id="djhj">
-  <div class="djhj-notification">
-    <div class="djhj-message">
-      {% blocktrans trimmed with user=request.user %}
-        You are currently working on behalf of <em>{{ user }}</em>.
-      {% endblocktrans %}
+{% load i18n static %}
+
+{% block content %}
+  <link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack.css' %}" media="screen">
+  <div class="djhj" id="djhj">
+    <div class="djhj-notification">
+      <div class="djhj-message">
+        {% blocktrans trimmed with user=request.user %}
+          You are currently working on behalf of <em>{{ user }}</em>.
+        {% endblocktrans %}
+      </div>
+      <form action="{% url 'hijack:release' %}" method="POST" class="djhj-actions">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button class="djhj-button" onclick="document.getElementById('djhj').style.display = 'none';" type="button">
+          {% trans 'hide warning' %}
+        </button>
+        <button class="djhj-button" type="submit">
+          {% translate 'stop impersonating' %}
+        </button>
+      </form>
     </div>
-    <form action="{% url 'hijack:release' %}" method="POST" class="djhj-actions">
-      {% csrf_token %}
-      <input type="hidden" name="next" value="{{ request.path }}">
-      <button class="djhj-button" onclick="document.getElementById('djhj').style.display = 'none';" type="button">
-        {% trans 'hide' %}
-      </button>
-      <button class="djhj-button" type="submit">
-        {% trans 'release' %}
-      </button>
-    </form>
   </div>
-</div>
+{% endblock content %}
 ```
 
 The `next` field is optional as well, but with a different default. If not provided
