@@ -23,29 +23,43 @@ export function ready (fn, context) {
  */
 export function mount (fn, query) {
   ready(() => {
-    document.querySelectorAll(query).forEach(element => fn(element))
+    document.querySelectorAll(query).forEach((element) => fn(element))
   })
 }
 
 /**
  * Hijack user session.
  * @param {Event} event - Click event.
- * @return {Promise<void>}
+ * @returns {void}
  */
-export async function hijack (event) {
+export function hijack (event) {
   const element = event.currentTarget
-  const form = new FormData()
-  form.append('csrfmiddlewaretoken', document.querySelector('input[name=csrfmiddlewaretoken]').value)
-  form.append('user_pk', element.dataset.hijackUser)
+  const form = document.createElement('form')
+  form.method = 'POST'
+  form.style.display = 'none'
+  form.action = element.dataset.hijackUrl
+  const csrfTokenInput = document.createElement('input')
+  csrfTokenInput.type = 'hidden'
+  csrfTokenInput.name = 'csrfmiddlewaretoken'
+  csrfTokenInput.value =
+    document.querySelector('input[name=csrfmiddlewaretoken]').value
+  form.appendChild(csrfTokenInput)
+  const userPkInput = document.createElement('input')
+  userPkInput.type = 'hidden'
+  userPkInput.name = 'user_pk'
+  userPkInput.value = element.dataset.hijackUser
+  form.appendChild(userPkInput)
   if (element.dataset.hijackNext) {
-    form.append('next', element.dataset.hijackNext)
+    const nextInput = document.createElement('input')
+    nextInput.type = 'hidden'
+    nextInput.name = 'next'
+    nextInput.value = element.dataset.hijackNext
+    form.appendChild(nextInput)
   }
-  await fetch(element.dataset.hijackUrl, {
-    method: 'POST',
-    body: form,
-    credentials: 'same-origin'
-  })
-  globalThis.location.href = element.dataset.hijackNext
+  document.body.appendChild(form)
+  form.submit()
 }
 
-mount(function (element) { element.addEventListener('click', hijack) }, '[data-hijack-user]')
+mount(function (element) {
+  element.addEventListener('click', hijack)
+}, '[data-hijack-user]')
