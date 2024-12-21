@@ -63,7 +63,7 @@ describe('mount', () => {
 })
 
 describe('hijack', () => {
-  test('hijack', async () => {
+  test('hijack', () => {
     const event = {
       currentTarget: {
         dataset: {
@@ -73,16 +73,10 @@ describe('hijack', () => {
         }
       }
     }
-    document.body.innerHTML =
-      '<input name="csrfmiddlewaretoken" value="token">'
-    globalThis.fetch = mock.fn()
-    await hijack.hijack(event)
-    const call = globalThis.fetch.mock.calls[0]
-    assert(call.arguments[0] === '/hijack/')
-    assert(call.arguments[1].method === 'POST')
-    assert(call.arguments[1].credentials === 'same-origin')
-    assert(call.arguments[1].body.get('csrfmiddlewaretoken') === 'token')
-    assert(call.arguments[1].body.get('user_pk') === '1')
-    assert(call.arguments[1].body.get('next') === '/')
+    document.body.innerHTML = '<input name="csrfmiddlewaretoken" value="token">'
+    hijack.hijack(event)
+    assert.equal(
+      document.body.innerHTML,
+      '<input name="csrfmiddlewaretoken" value="token"><form method="POST" style="display: none;" action="/hijack/"><input type="hidden" name="csrfmiddlewaretoken" value="token"><input type="hidden" name="user_pk" value="1"><input type="hidden" name="next" value="/"></form>')
   })
 })
