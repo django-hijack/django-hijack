@@ -19,13 +19,8 @@
     box-shadow: 0 0 0.5em rgba(0 0 0 / 30%);
     font-family: var(--system-font);
     font-size: initial;
-    background: whitesmoke;
-    color: #111;
-
-    @media (prefers-color-scheme: dark) {
-      background: #333;
-      color: white;
-    }
+    background: light-dark(whitesmoke, #333);
+    color: light-dark(#111, white);
   }
 
   .djhj-message,
@@ -63,11 +58,6 @@
 
     &::first-letter {
       text-transform: capitalize;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      background: #333;
-      color: white;
     }
   }
 }
