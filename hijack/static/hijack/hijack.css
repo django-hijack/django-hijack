@@ -59,8 +59,5 @@
     &::first-letter {
       text-transform: capitalize;
     }
-
-    background: light-dark(transparent, #333);
-    color: light-dark(inherit, white);
   }
 }
