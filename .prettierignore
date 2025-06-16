@@ -1,0 +1,8 @@
+# Ignore artifacts:
+coverage
+**/node_modules/
+venv/
+
+# Ignore all HTML and Markdown files:
+**/*.html
+**/*.md

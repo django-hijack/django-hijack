@@ -35,8 +35,7 @@ jobs:
       fail-fast: false
       matrix:
         lint-command:
-          - "npm run lint:js"
-          - "npm run lint:css"
+          - "npm run lint"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

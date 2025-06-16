@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "test": "node --test",
-    "lint": "npm run lint:js && npm run lint:css",
-    "lint:js": "standard \"hijack/static/hijack/*.js\"",
-    "lint:css": "stylelint \"hijack/static/hijack/*.css\""
+    "lint": "prettier . --check"
   },
   "repository": {
     "type": "git",
@@ -18,13 +16,17 @@
     "url": "https://github.com/django-hijack/django-hijack/issues"
   },
   "homepage": "https://github.com/django-hijack/django-hijack#readme",
+  "prettier": {
+    "semi": false,
+    "plugins": [
+      "prettier-plugin-jsdoc"
+    ]
+  },
   "devDependencies": {
     "global-jsdom": "*",
     "jsdom": "*",
-    "standard": "*",
-    "stylelint": "*",
-    "stylelint-config-standard-scss": "*",
-    "stylelint-scss": "*"
+    "prettier": "*",
+    "prettier-plugin-jsdoc": "*"
   },
   "standard": {
     "globals": [
