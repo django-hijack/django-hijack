@@ -1,9 +1,0 @@
-{
-  "extends": "stylelint-config-standard-scss",
-  "plugins": [
-    "stylelint-scss"
-  ],
-  "ignoreFiles": [
-    "venv/**"
-  ]
-}
