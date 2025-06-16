@@ -6,10 +6,9 @@ on:
       - master
   pull_request:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
 
 jobs:
-
   py-lint:
     strategy:
       fail-fast: false
