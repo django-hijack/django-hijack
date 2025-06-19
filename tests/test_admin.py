@@ -2,6 +2,7 @@ import logging
 from unittest.mock import MagicMock
 
 import pytest
+from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.urls import reverse
 
@@ -19,16 +20,12 @@ class TestHijackUserAdminMixin:
 
     @pytest.fixture
     def no_user_admin(self):
-        from django.contrib import admin
-
         custom_user_admin = admin.site._registry.pop(CustomUser)
         yield
         admin.site._registry[CustomUser] = custom_user_admin
 
     @pytest.fixture
     def custom_hijack_user_admin(self):
-        from django.contrib import admin
-
         CustomUserAdmin = admin.site._registry.pop(CustomUser)
         HijackAdmin = type(UserAdmin.__name__, (HijackUserAdminMixin, UserAdmin), {})
         HijackAdmin.__module__ = UserAdmin.__module__

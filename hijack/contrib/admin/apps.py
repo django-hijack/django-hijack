@@ -2,6 +2,7 @@ import logging
 import warnings
 
 from django.apps import AppConfig
+from django.contrib import admin
 from django.contrib.auth import get_user_model
 
 logger = logging.getLogger(__name__)
@@ -12,9 +13,7 @@ class HijackAdminConfig(AppConfig):
     label = "hijack_admin"
 
     def ready(self):
-        from django.contrib import admin
-
-        from . import HijackUserAdminMixin
+        from . import HijackUserAdminMixin  # noqa: PLC0415
 
         UserModel = get_user_model()
         try:
