@@ -37,4 +37,4 @@ msgstr "скрыть предупреждение"
 
 #: templates/hijack/notification.html:19
 msgid "stop impersonating"
-msgstr "выйти"
+msgstr "завершить"
