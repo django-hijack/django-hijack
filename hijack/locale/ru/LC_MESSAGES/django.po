@@ -14,7 +14,7 @@ msgstr ""
 
 #: contrib/admin/admin.py:64
 msgid "impersonate user"
-msgstr "Авторизоваться"
+msgstr "войти как пользователь"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:7
 msgctxt "verb"
