@@ -19,7 +19,7 @@ msgstr "Авторизоваться"
 #: contrib/admin/templates/hijack/contrib/admin/button.html:7
 msgctxt "verb"
 msgid "impersonate"
-msgstr "авторизоваться"
+msgstr "войти как"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:9
 #, python-format
