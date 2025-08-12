@@ -19,7 +19,7 @@ jobs:
           - "msgcheck -n hijack/locale/*/LC_MESSAGES/*.po"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: sudo apt install -y gettext
       - uses: actions/setup-python@v5
         with:
@@ -37,7 +37,7 @@ jobs:
           - "npm run lint"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4
       - run: npm ci
       - run: ${{ matrix.lint-command }}
@@ -45,7 +45,7 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: sudo apt install -y gettext
       - uses: actions/setup-python@v5
         with:
@@ -58,7 +58,7 @@ jobs:
   readme:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: sudo apt install -y gettext
       - uses: actions/setup-python@v5
         with:
@@ -76,7 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-node@v4
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: npm ci
       - run: npm test
         env:
@@ -111,7 +111,7 @@ jobs:
             python-version: "3.9"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: sudo apt install -y gettext
       - uses: actions/setup-python@v5
         with:
@@ -140,7 +140,7 @@ jobs:
           - javascript
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
