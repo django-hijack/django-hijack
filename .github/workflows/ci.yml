@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: sudo apt install -y gettext
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.x"
           cache: "pip"
@@ -47,7 +47,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: sudo apt install -y gettext
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.x"
           cache: "pip"
@@ -60,7 +60,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: sudo apt install -y gettext
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.x"
       - uses: actions/setup-node@v4
@@ -113,7 +113,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: sudo apt install -y gettext
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
       - uses: actions/setup-node@v4
