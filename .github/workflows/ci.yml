@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
       - run: npm ci
       - run: ${{ matrix.lint-command }}
 
@@ -63,7 +63,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.x"
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
       - name: Install Python dependencies
         run: python -m pip install --upgrade pip build wheel twine readme-renderer
       - run: python -m build --sdist --wheel
@@ -75,7 +75,7 @@ jobs:
   node-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
       - uses: actions/checkout@v5
       - run: npm ci
       - run: npm test
@@ -116,7 +116,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
       - run: python -m pip install -e .[test]
       - run: python -m pip install django~=${{ matrix.django-version }}.0
       - run: python -m pytest
