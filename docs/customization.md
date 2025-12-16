@@ -60,6 +60,22 @@ def hijack_staff_other_staff(*, hijacker, hijacked):
 
     if hijacker.is_staff and not hijacked.is_superuser:
         return True
+
+
+# Add permissions in YourModel.Meta.permissions
+# See: https://docs.djangoproject.com/en/dev/topics/auth/customizing/#custom-permissions
+def hijack_allowed_group(*, hijacker: User, hijacked: User):
+    """Check if hijacker is a member of custom permission group belonging to a model in my_app."""
+    if not hijacked.is_active:
+        return False
+
+    if hijacker.is_superuser:
+        return True
+
+    requester_can_impersonate = hijacker.is_staff and hijacker.has_perm(
+        "my_app.can_hijack"
+    )
+    return requester_can_hijack
 ```
 
 **Warning: Writing custom permission check functions is highly dangerous.**
