@@ -65,7 +65,7 @@ def hijack_staff_other_staff(*, hijacker, hijacked):
 # Add permissions in YourModel.Meta.permissions
 # See: https://docs.djangoproject.com/en/stable/topics/auth/customizing/#custom-permissions
 def hijack_allowed_group(*, hijacker: User, hijacked: User):
-    """Check if hijacker is a member of custom permission group belonging to a model in my_app."""
+    """Users with model-based permissions or superusers may hijack any active user."""
     if not hijacked.is_active:
         return False
 
