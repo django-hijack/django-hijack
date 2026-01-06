@@ -1,26 +1,7 @@
 {
-  "name": "django-hijack",
-  "version": "1.0.0",
-  "scripts": {
-    "test": "node --test",
-    "lint": "prettier . --check"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/django-hijack/django-hijack.git"
-  },
   "author": "Johannes Maron",
-  "license": "MIT",
-  "type": "module",
   "bugs": {
     "url": "https://github.com/django-hijack/django-hijack/issues"
-  },
-  "homepage": "https://github.com/django-hijack/django-hijack#readme",
-  "prettier": {
-    "semi": false,
-    "plugins": [
-      "prettier-plugin-jsdoc"
-    ]
   },
   "devDependencies": {
     "global-jsdom": "*",
@@ -28,10 +9,30 @@
     "prettier": "*",
     "prettier-plugin-jsdoc": "*"
   },
+  "homepage": "https://github.com/django-hijack/django-hijack#readme",
+  "license": "MIT",
+  "name": "django-hijack",
+  "prettier": {
+    "plugins": [
+      "prettier-plugin-jsdoc"
+    ],
+    "semi": false
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/django-hijack/django-hijack.git"
+  },
+  "scripts": {
+    "lint": "prettier . --check",
+    "lint:write": "prettier . --check --write",
+    "test": "node --test"
+  },
   "standard": {
     "globals": [
       "fetch",
       "FormData"
     ]
-  }
+  },
+  "type": "module",
+  "version": "1.0.0"
 }

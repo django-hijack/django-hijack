@@ -2,7 +2,6 @@
 
 import os
 
-import django
 from django.urls import reverse_lazy
 
 DEBUG = True
@@ -105,6 +104,3 @@ USE_TZ = True
 LOGOUT_REDIRECT_URL = reverse_lazy("bye-bye")
 
 AUTH_USER_MODEL = "test_app.CustomUser"
-
-if django.VERSION < (4, 0):
-    SESSION_SERIALIZER = "django.contrib.sessions.serializers.PickleSerializer"
