@@ -95,20 +95,15 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - "3.9"
           - "3.10"
           - "3.11"
           - "3.12"
           - "3.13"
+          - "3.14"
         django-version:
           - "4.2"
-          - "5.1"
           - "5.2"
-        exclude:
-          - django-version: "5.1"
-            python-version: "3.9"
-          - django-version: "5.2"
-            python-version: "3.9"
+          - "6.0"
 
     steps:
       - uses: actions/checkout@v6
