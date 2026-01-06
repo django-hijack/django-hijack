@@ -16,10 +16,8 @@ maintainers directly via email available on their GitHub profiles.
 
 ### Cross-Site-Request-Forging (CSRF)
 
-We use the [csrf_protect][csrf_protect] decorator to enforce Django's CSRF protection
+We use the [csrf_protect] decorator to enforce Django's CSRF protection
 on all or views. This is also why we only support `POST` requests.
-
-[csrf_protect]: https://docs.djangoproject.com/en/stable/ref/csrf/#django.views.decorators.csrf.csrf_protect
 
 ### Session injection / poisoning
 
@@ -44,7 +42,7 @@ all possible scenarios to prevent permission escalation.
 
 ### Undeliberate action
 
-The built-in hijack notification can only be permanently hidden by setting the 
+The built-in hijack notification can only be permanently hidden by setting the
 `HIJACK_INSERT_BEFORE` setting to `None`.
 To protect users from performing operations as another user without their
 knowledge, it should only be set to `None` if an equivalent global notification has been
@@ -55,10 +53,11 @@ built into your project - for example, in a project-wide layout file.
 Hijack does not extend a users original session life. If the original user is due
 for reauthentication, the session will expire as it used to.
 
-
 ### Session leaking
 
 Hijack uses Django's `login` utility function, that flushes the session every time
 a users is being hijacked or released ensure that no session data leaks from one user
 to another. The only exception is the session expiry which is transferred from one
 session to another.
+
+[csrf_protect]: https://docs.djangoproject.com/en/stable/ref/csrf/#django.views.decorators.csrf.csrf_protect

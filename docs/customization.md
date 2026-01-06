@@ -45,6 +45,7 @@ a boolean value. Example:
 ```python
 # mysite/permissions.py
 
+
 def hijack_superusers_only(*, hijacker, hijacked):
     """Only superusers may hijack other users."""
     return hijacked.is_active and hijacker.is_superuser
@@ -83,34 +84,34 @@ please refer to Django's guide on [overriding templates][overriding-templates].
 ```html
 <!-- hijack/notification.html -->
 {% load i18n static %}
-
-<link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack.css' %}" media="screen">
+<link href="{% static 'hijack/hijack.css' %}" media="screen" rel="stylesheet" type="text/css"/>
 <div class="djhj" id="djhj">
-  <div class="djhj-notification">
-    <div class="djhj-message">
-      {% blocktrans trimmed with user=request.user %}
-        You are currently working on behalf of <em>{{ user }}</em>.
+ <div class="djhj-notification">
+  <div class="djhj-message">
+   {% blocktrans trimmed with user=request.user %}
+        You are currently working on behalf of
+   <em>
+    {{ user }}
+   </em>
+   .
       {% endblocktrans %}
-    </div>
-    <form action="{% url 'hijack:release' %}" method="POST" class="djhj-actions">
-      {% csrf_token %}
-      <input type="hidden" name="next" value="{{ request.path }}">
-      <button class="djhj-button" onclick="document.getElementById('djhj').style.display = 'none';" type="button">
-        {% trans 'hide warning' %}
-      </button>
-      <button class="djhj-button" type="submit">
-        {% translate 'stop impersonating' %}
-      </button>
-    </form>
   </div>
+  <form action="{% url 'hijack:release' %}" class="djhj-actions" method="POST">
+   {% csrf_token %}
+   <input name="next" type="hidden" value="{{ request.path }}"/>
+   <button class="djhj-button" onclick="document.getElementById('djhj').style.display = 'none';" type="button">
+    {% trans 'hide warning' %}
+   </button>
+   <button class="djhj-button" type="submit">
+    {% translate 'stop impersonating' %}
+   </button>
+  </form>
+ </div>
 </div>
 ```
 
 The `next` field is optional as well, but with a different default. If not provided
-a user will be forwarded to the [LOGOUT_REDIRECT_URL][LOGOUT_REDIRECT_URL].
-
-[overriding-templates]: https://docs.djangoproject.com/en/3.1/howto/overriding-templates/
-[LOGOUT_REDIRECT_URL]: https://docs.djangoproject.com/en/stable/ref/settings/#logout-redirect-url
+a user will be forwarded to the [LOGOUT_REDIRECT_URL].
 
 ### Identifying hijacked users
 
@@ -143,7 +144,7 @@ You can use the default template as a cheat-sheet.
 
 ### `HIJACK_INSERT_BEFORE`
 
-Alters at which point of the DOM the notification is injected.  The notification will not be injected if set to `None`.
+Alters at which point of the DOM the notification is injected. The notification will not be injected if set to `None`.
 
 **Warning: Hiding the notification increases the risk of [undeliberate action](security.md#undeliberate-action).
 Ensure your project has its own notification mechanism before setting this to `None`.**
@@ -151,12 +152,14 @@ Ensure your project has its own notification mechanism before setting this to `N
 Default: `</body>`.
 
 ### `HIJACK_PERMISSION_CHECK`
+
 Dotted path of a function checking whether `hijacker` is allowed to hijack `hijacked`.
 The function must accept two keyword arguments `hijacker` and `hijacked`.
 
 Default: `'hijack.permissions.has_hijack_perm'`.
 
 ## Signals
+
 You can catch a signal when someone is hijacked or released. Here is an example:
 
 ```python
@@ -164,10 +167,18 @@ from hijack import signals
 
 
 def print_hijack_started(sender, hijacker, hijacked, request, **kwargs):
-    print('%d has hijacked %d' % (hijacker, hijacked))
+    print("%d has hijacked %d" % (hijacker, hijacked))
+
+
 signals.hijack_started.connect(print_hijack_started)
 
+
 def print_hijack_ended(sender, hijacker, hijacked, request, **kwargs):
-    print('%d has released %d' % (hijacker, hijacked))
+    print("%d has released %d" % (hijacker, hijacked))
+
+
 signals.hijack_ended.connect(print_hijack_ended)
 ```
+
+[logout_redirect_url]: https://docs.djangoproject.com/en/stable/ref/settings/#logout-redirect-url
+[overriding-templates]: https://docs.djangoproject.com/en/3.1/howto/overriding-templates/

@@ -62,6 +62,6 @@ export function hijack(event) {
   form.submit()
 }
 
-mount(function (element) {
+mount((element) => {
   element.addEventListener("click", hijack)
 }, "[data-hijack-user]")

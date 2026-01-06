@@ -25,12 +25,9 @@ It is a complete rewrite and all former APIs are broken.
 >
 > -- [benzinonapoloni](https://www.reddit.com/user/benzinonapoloni) on [reddit](https://redd.it/39aggd)
 
-
 > This is a super useful tool. I have a site where I occasionally impersonating users to help troubleshoot their issues. This is a huge time saver.
 >
 > -- [orangishyellow](https://www.reddit.com/user/orangishyellow) on [reddit](https://redd.it/2i35fu)
-
-
 
 > ... one of our standard apps to install now.
 >

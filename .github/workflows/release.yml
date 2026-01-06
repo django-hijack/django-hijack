@@ -1,17 +1,13 @@
 name: Release
-
 on:
   release:
     types: [published]
   workflow_dispatch:
-
 permissions:
   id-token: write
-
 jobs:
   release-build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
@@ -24,14 +20,12 @@ jobs:
         with:
           name: release-dists
           path: dist/
-
   pypi-publish:
     runs-on: ubuntu-latest
     needs:
       - release-build
     permissions:
       id-token: write
-
     steps:
       - uses: actions/download-artifact@v7
         with:
