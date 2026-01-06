@@ -1,0 +1,66 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: check-merge-conflict
+      - id: check-ast
+      - id: check-json
+      - id: pretty-format-json
+        args: [--autofix]
+      - id: check-toml
+      - id: check-xml
+      - id: check-symlinks
+      - id: debug-statements
+      - id: destroyed-symlinks
+      - id: check-executables-have-shebangs
+      - id: end-of-file-fixer
+      - id: no-commit-to-branch
+        args: [--branch, master]
+      - id: detect-private-key
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.21.2
+    hooks:
+      - id: pyupgrade
+  - repo: https://github.com/adamchainz/django-upgrade
+    rev: 1.29.1
+    hooks:
+      - id: django-upgrade
+  - repo: https://github.com/hukkin/mdformat
+    rev: 1.0.0
+    hooks:
+      - id: mdformat
+        additional_dependencies:
+          - mdformat-beautysh
+          - mdformat-config
+          - mdformat-ruff
+          - mdformat-footnote
+          - mdformat-gfm
+          - mdformat-gfm-alerts
+          - mdformat-web
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.10
+    hooks:
+      - id: ruff-check
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format
+  - repo: https://github.com/google/yamlfmt
+    rev: v0.21.0
+    hooks:
+      - id: yamlfmt
+  - repo: https://github.com/codingjoe/esupgrade
+    rev: 2025.9.0
+    hooks:
+      - id: esupgrade
+  - repo: local
+    hooks:
+      - id: msgcheck
+        name: msgcheck
+        entry: uvx msgcheck
+        language: system
+        types:
+          - pofile
+ci:
+  skip:
+    - no-commit-to-branch
+    - msgcheck

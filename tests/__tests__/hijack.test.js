@@ -27,7 +27,7 @@ describe("ready", () => {
     hijack.ready(spy)
     assert(!spy.mock.callCount())
 
-    document.dispatchEvent(new window.Event("DOMContentLoaded"))
+    document.dispatchEvent(new globalThis.window.Event("DOMContentLoaded"))
 
     assert(spy.mock.callCount())
   })
@@ -42,7 +42,7 @@ describe("mount", () => {
     })
     const spy = mock.fn()
     hijack.mount(spy, "div.foo")
-    document.dispatchEvent(new window.Event("DOMContentLoaded"))
+    document.dispatchEvent(new globalThis.window.Event("DOMContentLoaded"))
     assert(spy.mock.calls[0].arguments[0] === document.querySelector("div.foo"))
   })
 
@@ -54,7 +54,7 @@ describe("mount", () => {
     const spy = mock.fn()
     document.body.innerHTML = '<div class="foo"></div>'
     hijack.mount(spy, "div.does-not-exist")
-    document.dispatchEvent(new window.Event("DOMContentLoaded"))
+    document.dispatchEvent(new globalThis.window.Event("DOMContentLoaded"))
     console.warn(spy.mock.calls)
     assert(!spy.mock.callCount())
   })

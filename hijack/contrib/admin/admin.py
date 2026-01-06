@@ -1,4 +1,3 @@
-import django
 from django import forms
 from django.shortcuts import resolve_url
 from django.template.loader import render_to_string
@@ -89,6 +88,5 @@ class HijackUserAdminMixin:
             self,
             sortable_by,
         ]
-        if django.VERSION >= (4, 0):
-            args.append(self.search_help_text)
+        args.append(self.search_help_text)
         return ChangeList(*args)
