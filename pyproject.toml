@@ -41,7 +41,7 @@ test = [
 ]
 lint = [
   "ruff==0.15.0",
-  "msgcheck==4.1.0",
+  "msgcheck==4.2.0",
 ]
 docs = [
   "mkdocs==1.6.1",
