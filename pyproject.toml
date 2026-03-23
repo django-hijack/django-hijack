@@ -48,8 +48,8 @@ docs = [
 ]
 
 [project.urls]
-Project-URL = "https://github.com/django-hijack/django-hijack"
 Changelog = "https://github.com/django-hijack/django-hijack/releases"
+Repository = "https://github.com/django-hijack/django-hijack"
 
 [tool.flit.module]
 name = "hijack"
