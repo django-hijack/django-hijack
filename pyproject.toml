@@ -48,8 +48,13 @@ docs = [
 ]
 
 [project.urls]
-Project-URL = "https://github.com/django-hijack/django-hijack"
+# https://packaging.python.org/en/latest/specifications/well-known-project-urls/#well-known-labels
+Homepage = "https://github.com/django-hijack/django-hijack"
 Changelog = "https://github.com/django-hijack/django-hijack/releases"
+Source = "https://github.com/django-hijack/django-hijack"
+Releasenotes = "https://github.com/django-hijack/django-hijack/releases/latest"
+Documentation = "https://django-hijack.rtfd.io/"
+Issues = "https://github.com/django-hijack/django-hijack/issues"
 
 [tool.flit.module]
 name = "hijack"
