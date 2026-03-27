@@ -1,8 +1,16 @@
 from unittest.mock import MagicMock
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import (
+    BACKEND_SESSION_KEY,
+    HASH_SESSION_KEY,
+    SESSION_KEY,
+    get_user_model,
+)
+from django.contrib.auth.middleware import AuthenticationMiddleware
 from django.contrib.sessions.backends.file import SessionStore
+from django.contrib.sessions.middleware import SessionMiddleware
 from django.http import HttpResponse, JsonResponse
+from django.utils.functional import SimpleLazyObject, empty
 
 from hijack import middleware
 
@@ -50,6 +58,30 @@ class TestHijackRemoteUserMiddleware:
         self.middleware.process_request(request)
         assert not request.user.is_hijacked
         assert request.META["REMOTE_USER"] == "eve"
+
+    def test_process_request__refreshes_user_after_cache_reset(self, rf, bob):
+        request = rf.get("/")
+        SessionMiddleware(lambda request: None).process_request(request)
+        AuthenticationMiddleware(lambda request: None).process_request(request)
+        self.middleware.process_request(request)
+
+        assert not request.user.is_authenticated
+
+        request.session[SESSION_KEY] = str(bob.pk)
+        request.session[BACKEND_SESSION_KEY] = (
+            "django.contrib.auth.backends.ModelBackend"
+        )
+        request.session[HASH_SESSION_KEY] = bob.get_session_auth_hash()
+
+        # Match allauth's cache reset without adding it as a test dependency.
+        for attr in ["_cached_user", "_acached_user"]:
+            if hasattr(request, attr):
+                delattr(request, attr)
+        if isinstance(request.user, SimpleLazyObject):
+            request.user._wrapped = empty
+
+        assert request.user.is_authenticated
+        assert request.user.pk == bob.pk
 
     def test_process_response__session_not_accessed(self, rf, monkeypatch, bob):
         request = rf.get("/")

@@ -23,8 +23,10 @@ class HijackUserMiddleware(MiddlewareMixin):
 
     def process_request(self, request):
         """Set `is_hijacked` and override REMOTE_USER header."""
-        user = copy.copy(request.user)  # prevent recursion error
-        request.user = SimpleLazyObject(lambda: self.setup_user(request, user))
+        user = request.user
+        request.user = SimpleLazyObject(
+            lambda: self.setup_user(request, copy.copy(user))
+        )
         if "REMOTE_USER" in request.META and request.user.is_hijacked:
             request.META["REMOTE_USER"] = request.user.get_username()
 
