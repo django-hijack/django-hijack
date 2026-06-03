@@ -8,6 +8,10 @@
 
 With Django Hijack, admins can impersonate and work on behalf of other users without having to know their credentials.
 
+## Sponsors
+
+[![Sponsors](https://django.the-box.sh/sponsors/django-hijack/django-hijack.svg)](https://github.com/sponsors/codingjoe)
+
 ## Docs
 
 Docs are available on Read the Docs https://django-hijack.readthedocs.org/en/stable/, both for **v2.x** and **v3.x**.
