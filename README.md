@@ -10,7 +10,7 @@ With Django Hijack, admins can impersonate and work on behalf of other users wit
 
 ## Sponsors
 
-[![Sponsors](https://django.the-box.sh/sponsors/django-hijack/django-hijack.svg)](https://github.com/sponsors/codingjoe)
+[![Sponsors](https://sponsor.pics/django-hijack/django-hijack.svg)](https://github.com/sponsors/codingjoe)
 
 ## Docs
 
