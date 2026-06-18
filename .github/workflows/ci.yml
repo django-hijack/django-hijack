@@ -14,7 +14,7 @@ jobs:
     outputs:
       file-names: ${{ steps.diff.outputs.file-names }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - run: sudo apt install -y gettext
@@ -34,7 +34,7 @@ jobs:
           - "msgcheck -n hijack/locale/*/LC_MESSAGES/*.po"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: sudo apt install -y gettext
       - uses: actions/setup-python@v6
         with:
@@ -51,14 +51,14 @@ jobs:
           - "npm run lint"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
       - run: npm ci
       - run: ${{ matrix.lint-command }}
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: sudo apt install -y gettext
       - uses: actions/setup-python@v6
         with:
@@ -70,7 +70,7 @@ jobs:
   readme:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: sudo apt install -y gettext
       - uses: actions/setup-python@v6
         with:
@@ -87,7 +87,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-node@v6
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: npm ci
       - run: npm test
         env:
@@ -124,7 +124,7 @@ jobs:
           - django-version: "4.2"
             python-version: "3.14"
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: sudo apt install -y gettext
       - uses: actions/setup-python@v6
         with:
@@ -152,7 +152,7 @@ jobs:
           - javascript
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
