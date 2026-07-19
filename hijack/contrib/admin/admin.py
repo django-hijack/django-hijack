@@ -1,6 +1,8 @@
 from django import forms
 from django.shortcuts import resolve_url
 from django.template.loader import render_to_string
+from django.urls import reverse
+from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 
 from hijack.conf import settings
@@ -34,6 +36,20 @@ class HijackUserAdminMixin:
             success_url = obj
         return resolve_url(success_url)
 
+    def get_hijack_button_context(self, request, obj):
+        """Return context for the hijack admin button."""
+        user = self.get_hijack_user(obj)
+        can_hijack = import_string(settings.HIJACK_PERMISSION_CHECK)
+        return {
+            "request": request,
+            "another_user": user,
+            "can_hijack": can_hijack(hijacker=request.user, hijacked=user),
+            "username": str(user),
+            "is_user_admin": self.model is type(user),
+            "next": self.get_hijack_success_url(request, obj),
+            "hijack_url": reverse("hijack:acquire"),
+        }
+
     def hijack_button(self, request, obj):
         """
         Render hijack button.
@@ -42,17 +58,9 @@ class HijackUserAdminMixin:
         to ensure deliberate action. However, the name is omitted in the user admin,
         as the table layout suggests that the button targets the current user.
         """
-        user = self.get_hijack_user(obj)
         return render_to_string(
             "hijack/contrib/admin/button.html",
-            {
-                "request": request,
-                "another_user": user,
-                "username": str(user),
-                "is_user_admin": self.model is type(user),
-                "next": self.get_hijack_success_url(request, obj),
-            },
-            request=request,
+            self.get_hijack_button_context(request, obj),
         )
 
     def get_changelist_instance(self, request):
