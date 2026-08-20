@@ -1,8 +1,8 @@
-{% load i18n l10n hijack %}
+{% load i18n l10n %}
 
-{% if request.user|can_hijack:another_user %}
+{% if can_hijack %}
   <button type="button" class="button" data-hijack-user="{{ another_user.pk|unlocalize }}"
-          data-hijack-next="{{ next }}" data-hijack-url="{% url 'hijack:acquire' %}">
+          data-hijack-next="{{ next }}" data-hijack-url="{{ hijack_url }}">
     {% if is_user_admin %}
       {% translate 'impersonate'|capfirst context 'verb' %}
     {% else %}
