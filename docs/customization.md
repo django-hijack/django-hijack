@@ -147,20 +147,27 @@ You can override the hijack button that renders in the admin.
 Create a template called hijack/contrib/admin/button.html in your template folder.
 You can use the default template as a cheat-sheet.
 
-```
-{% load i18n l10n hijack %}
+```django
+{% load i18n l10n %}
 
-{% if request.user|can_hijack:another_user %}
+{% if can_hijack %}
   <button type="button" class="button" data-hijack-user="{{ another_user.pk|unlocalize }}"
-          data-hijack-next="{{ next }}" data-hijack-url="{% url 'hijack:acquire' %}">
+          data-hijack-next="{{ next }}" data-hijack-url="{{ hijack_url }}">
     {% if is_user_admin %}
-      {% trans 'hijack'|upper %}
+      {% translate 'impersonate'|capfirst context 'verb' %}
     {% else %}
-      {% blocktrans %}impersonate {{ username }}{% endblocktrans %}
+      {% blocktranslate trimmed %}
+        impersonate {{ username }}
+      {% endblocktranslate %}
     {% endif %}
   </button>
 {% endif %}
 ```
+
+The admin button template is rendered without a request context to avoid running
+project-level context processors once per changelist row. The `request` object is
+still available as a regular template variable. If your custom template needs
+additional values, override `get_hijack_button_context()`.
 
 ## Settings
 
