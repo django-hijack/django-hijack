@@ -16,17 +16,17 @@ msgstr ""
 
 #: contrib/admin/admin.py:64
 msgid "impersonate user"
-msgstr "przejmij się pod użytkownika"
+msgstr "podszyj się pod użytkownika"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:7
 msgctxt "verb"
 msgid "impersonate"
-msgstr "przejmij się"
+msgstr "podszyj się"
 
 #: contrib/admin/templates/hijack/contrib/admin/button.html:9
 #, python-format
 msgid "impersonate %(username)s"
-msgstr "przejmij %(username)s"
+msgstr "podszyj się pod %(username)s"
 
 #: templates/hijack/notification.html:8
 #, python-format
