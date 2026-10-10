@@ -109,6 +109,7 @@ jobs:
         django-version:
           - "5.2"
           - "6.0"
+          - "6.1"
     steps:
       - uses: actions/checkout@v7
       - run: sudo apt install -y gettext
