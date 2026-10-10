@@ -112,24 +112,11 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - "3.10"
-          - "3.11"
-          - "3.12"
-          - "3.13"
           - "3.14"
         django-version:
-          - "4.2"
           - "5.2"
           - "6.0"
-        exclude:
-          # Django 6.0 requires Python 3.12+
-          - django-version: "6.0"
-            python-version: "3.10"
-          - django-version: "6.0"
-            python-version: "3.11"
-          # Django 4.2 doesn't support Python 3.14
-          - django-version: "4.2"
-            python-version: "3.14"
+          - "6.1"
     steps:
       - uses: actions/checkout@v7
       - run: sudo apt install -y gettext
