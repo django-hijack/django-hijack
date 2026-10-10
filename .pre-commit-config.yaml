@@ -8,6 +8,7 @@ repos:
       - id: check-json
       - id: pretty-format-json
         args: [--autofix]
+        exclude: .*-lock.json$
       - id: check-toml
       - id: check-xml
       - id: check-symlinks
