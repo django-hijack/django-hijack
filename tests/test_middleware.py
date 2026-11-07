@@ -10,6 +10,7 @@ from django.contrib.auth.middleware import AuthenticationMiddleware
 from django.contrib.sessions.backends.file import SessionStore
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.http import HttpResponse, JsonResponse
+from django.template.loader import render_to_string
 from django.utils.functional import SimpleLazyObject, empty
 
 from hijack import middleware
@@ -166,3 +167,16 @@ class TestHijackRemoteUserMiddleware:
         assert self.middleware.process_response(request, response) is response
         # the session was not accessed, not need to vary on it
         render_to_string.assert_not_called()
+
+
+class TestNotificationTemplate:
+    def test_render__no_inline_event_handler(self, rf, bob):
+        request = rf.get("/")
+        request.user = bob
+        html = render_to_string(
+            "hijack/notification.html", {"request": request}, request=request
+        )
+        # Inline handlers are blocked by a strict Content-Security-Policy.
+        assert "onclick" not in html
+        assert 'data-hijack-hide="djhj"' in html
+        assert '<script src="/static/hijack/hijack.js" type="module"></script>' in html

@@ -79,3 +79,20 @@ describe("hijack", () => {
     )
   })
 })
+
+describe("hide", () => {
+  test("hide", () => {
+    document.body.innerHTML =
+      '<div id="djhj"><button data-hijack-hide="djhj"></button></div>'
+    const button = document.querySelector("[data-hijack-hide]")
+    hijack.hide({ currentTarget: button })
+    assert.equal(document.getElementById("djhj").style.display, "none")
+  })
+
+  test("hide missing element", () => {
+    document.body.innerHTML = '<button data-hijack-hide="missing"></button>'
+    const button = document.querySelector("[data-hijack-hide]")
+    hijack.hide({ currentTarget: button })
+    assert.equal(button.style.display, "")
+  })
+})

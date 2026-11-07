@@ -2,6 +2,7 @@
 
 {% block content %}
   <link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack.css' %}" media="screen">
+  <script src="{% static 'hijack/hijack.js' %}" type="module"></script>
   <div class="djhj" id="djhj">
     <div class="djhj-notification">
       <div class="djhj-message">
@@ -12,7 +13,7 @@
       <form action="{% url 'hijack:release' %}" method="POST" class="djhj-actions">
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ request.path }}">
-        <button class="djhj-button" onclick="document.getElementById('djhj').style.display = 'none';" type="button">
+        <button class="djhj-button" data-hijack-hide="djhj" type="button">
           {% trans 'hide warning' %}
         </button>
         <button class="djhj-button" type="submit">

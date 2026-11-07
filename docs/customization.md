@@ -107,6 +107,8 @@ please refer to Django's guide on [overriding templates][overriding-templates].
 <!-- hijack/notification.html -->
 {% load i18n static %}
 <link href="{% static 'hijack/hijack.css' %}" media="screen" rel="stylesheet" type="text/css"/>
+<script src="{% static 'hijack/hijack.js' %}" type="module">
+</script>
 <div class="djhj" id="djhj">
  <div class="djhj-notification">
   <div class="djhj-message">
@@ -121,7 +123,7 @@ please refer to Django's guide on [overriding templates][overriding-templates].
   <form action="{% url 'hijack:release' %}" class="djhj-actions" method="POST">
    {% csrf_token %}
    <input name="next" type="hidden" value="{{ request.path }}"/>
-   <button class="djhj-button" onclick="document.getElementById('djhj').style.display = 'none';" type="button">
+   <button class="djhj-button" data-hijack-hide="djhj" type="button">
     {% trans 'hide warning' %}
    </button>
    <button class="djhj-button" type="submit">
@@ -131,6 +133,10 @@ please refer to Django's guide on [overriding templates][overriding-templates].
  </div>
 </div>
 ```
+
+The `hijack/hijack.js` module hides the element whose `id` is given in a button's
+`data-hijack-hide` attribute when it is clicked. It needs no inline event handlers, so it
+works with a strict [Content Security Policy][csp] such as `script-src 'self'`.
 
 The `next` field is optional as well, but with a different default. If not provided
 a user will be forwarded to the [LOGOUT_REDIRECT_URL].
@@ -202,5 +208,6 @@ def print_hijack_ended(sender, hijacker, hijacked, request, **kwargs):
 signals.hijack_ended.connect(print_hijack_ended)
 ```
 
+[csp]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP
 [logout_redirect_url]: https://docs.djangoproject.com/en/stable/ref/settings/#logout-redirect-url
 [overriding-templates]: https://docs.djangoproject.com/en/3.1/howto/overriding-templates/

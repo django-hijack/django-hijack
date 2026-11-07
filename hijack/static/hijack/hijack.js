@@ -62,6 +62,23 @@ export function hijack(event) {
   form.submit()
 }
 
+/**
+ * Hide the element whose id is given in the `data-hijack-hide` attribute.
+ *
+ * @param {Event} event - Click event.
+ * @returns {void}
+ */
+export function hide(event) {
+  const target = document.getElementById(event.currentTarget.dataset.hijackHide)
+  if (target) {
+    target.style.display = "none"
+  }
+}
+
 mount((element) => {
   element.addEventListener("click", hijack)
 }, "[data-hijack-user]")
+
+mount((element) => {
+  element.addEventListener("click", hide)
+}, "[data-hijack-hide]")
