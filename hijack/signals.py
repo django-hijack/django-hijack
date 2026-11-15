@@ -16,9 +16,11 @@ def no_update_last_login():
 
     was_connected = user_logged_in.disconnect(**kw)
     was_connected_id = not was_connected and user_logged_in.disconnect(**kw_id)
-    yield
-    # Restore signal if needed
-    if was_connected:
-        user_logged_in.connect(**kw)
-    elif was_connected_id:
-        user_logged_in.connect(**kw_id)
+    try:
+        yield
+    finally:
+        # Restore signal if needed, even when the body raises
+        if was_connected:
+            user_logged_in.connect(**kw)
+        elif was_connected_id:
+            user_logged_in.connect(**kw_id)
