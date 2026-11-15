@@ -1,5 +1,6 @@
 from unittest.mock import MagicMock
 
+import pytest
 from django.contrib.auth import (
     BACKEND_SESSION_KEY,
     HASH_SESSION_KEY,
@@ -118,6 +119,21 @@ class TestHijackRemoteUserMiddleware:
         monkeypatch.setattr("hijack.middleware.render_to_string", render_to_string)
         assert self.middleware.process_response(request, response) is response
         render_to_string.assert_not_called()
+
+    @pytest.mark.parametrize("encoding", ["gzip", "br", "deflate", "zstd"])
+    def test_process_response__encoded(self, rf, monkeypatch, encoding):
+        request = rf.get("/")
+        request.user = get_user_model()
+        request.user.is_hijacked = True
+        request.session = SessionStore("some_session_key")
+        request.session.accessed = True
+        render_to_string = MagicMock()
+        monkeypatch.setattr("hijack.middleware.render_to_string", render_to_string)
+        response = HttpResponse(b"\x8b\xff</body>")
+        response["Content-Encoding"] = encoding
+        assert self.middleware.process_response(request, response) is response
+        render_to_string.assert_not_called()
+        assert response.content == b"\x8b\xff</body>"
 
     def test_process_response__content_length(self, rf, monkeypatch):
         request = rf.get("/")

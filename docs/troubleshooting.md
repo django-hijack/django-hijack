@@ -17,3 +17,21 @@ MIDDLEWARE_CLASSES = [
     # …
 ]
 ```
+
+## Notification banner missing
+
+Hijack can't insert the notification into a compressed response.
+Place compression middleware, like `django.middleware.gzip.GZipMiddleware`,
+above `'hijack.middleware.HijackUserMiddleware'`, so it compresses the response
+after the banner was added:
+
+```python
+# settings.py
+
+MIDDLEWARE = [
+    "django.middleware.gzip.GZipMiddleware",
+    # …
+    "hijack.middleware.HijackUserMiddleware",
+    # …
+]
+```

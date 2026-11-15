@@ -41,11 +41,11 @@ class HijackUserMiddleware(MiddlewareMixin):
             return response
 
         # Check for responses where the toolbar can't be inserted.
-        content_encoding = response.get("Content-Encoding", "")
+        content_encoding = response.get("Content-Encoding")
         content_type = response.get("Content-Type", "").split(";")[0]
         if (
             getattr(response, "streaming", False)
-            or "gzip" in content_encoding
+            or content_encoding
             or content_type not in _HTML_TYPES
         ):
             return response
