@@ -107,9 +107,9 @@ please refer to Django's guide on [overriding templates][overriding-templates].
 <!-- hijack/notification.html -->
 {% load i18n static %}
 <link href="{% static 'hijack/hijack.css' %}" media="screen" rel="stylesheet" type="text/css"/>
-<div class="djhj" id="djhj">
+<dialog aria-labelledby="djhj-message" class="djhj" id="djhj" open="">
  <div class="djhj-notification">
-  <div class="djhj-message">
+  <div class="djhj-message" id="djhj-message">
    {% blocktrans trimmed with user=request.user %}
         You are currently working on behalf of
    <em>
@@ -121,7 +121,7 @@ please refer to Django's guide on [overriding templates][overriding-templates].
   <form action="{% url 'hijack:release' %}" class="djhj-actions" method="POST">
    {% csrf_token %}
    <input name="next" type="hidden" value="{{ request.path }}"/>
-   <button class="djhj-button" onclick="document.getElementById('djhj').style.display = 'none';" type="button">
+   <button class="djhj-button" formmethod="dialog" type="submit">
     {% trans 'hide warning' %}
    </button>
    <button class="djhj-button" type="submit">
@@ -129,8 +129,12 @@ please refer to Django's guide on [overriding templates][overriding-templates].
    </button>
   </form>
  </div>
-</div>
+</dialog>
 ```
+
+The notification is a non-modal `<dialog>` element. It opens through the `open`
+attribute. The hide button uses `formmethod="dialog"` to close the dialog natively,
+so it needs no JavaScript and works with a strict Content Security Policy.
 
 The `next` field is optional as well, but with a different default. If not provided
 a user will be forwarded to the [LOGOUT_REDIRECT_URL].

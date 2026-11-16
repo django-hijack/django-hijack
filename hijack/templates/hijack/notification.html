@@ -2,9 +2,9 @@
 
 {% block content %}
   <link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack.css' %}" media="screen">
-  <div class="djhj" id="djhj">
+  <dialog aria-labelledby="djhj-message" class="djhj" id="djhj" open>
     <div class="djhj-notification">
-      <div class="djhj-message">
+      <div class="djhj-message" id="djhj-message">
         {% blocktrans trimmed with user=request.user %}
           You are currently working on behalf of <em>{{ user }}</em>.
         {% endblocktrans %}
@@ -12,7 +12,7 @@
       <form action="{% url 'hijack:release' %}" method="POST" class="djhj-actions">
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ request.path }}">
-        <button class="djhj-button" onclick="document.getElementById('djhj').style.display = 'none';" type="button">
+        <button class="djhj-button" formmethod="dialog" type="submit">
           {% trans 'hide warning' %}
         </button>
         <button class="djhj-button" type="submit">
@@ -20,5 +20,5 @@
         </button>
       </form>
     </div>
-  </div>
+  </dialog>
 {% endblock content %}
