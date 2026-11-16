@@ -3,7 +3,7 @@ import re
 
 from django.template.loader import render_to_string
 from django.utils.deprecation import MiddlewareMixin
-from django.utils.functional import SimpleLazyObject
+from django.utils.functional import SimpleLazyObject, empty
 
 from hijack.conf import settings
 
@@ -32,37 +32,47 @@ class HijackUserMiddleware(MiddlewareMixin):
 
     def process_response(self, request, response):
         """Render hijack notification and inject into HTML response."""
-        if request.session.is_empty() or not request.session.accessed:
-            # do not touch empty sessions to avoid unnecessary vary on cookie header
-            return response
-
+        session = request.session
         insert_before = settings.HIJACK_INSERT_BEFORE
-        if not getattr(request.user, "is_hijacked", False) or insert_before is None:
-            return response
-
-        # Check for responses where the toolbar can't be inserted.
         content_encoding = response.get("Content-Encoding", "")
         content_type = response.get("Content-Type", "").split(";")[0]
-        if (
-            getattr(response, "streaming", False)
-            or "gzip" in content_encoding
-            or content_type not in _HTML_TYPES
-        ):
-            return response
 
-        rendered = render_to_string(
-            "hijack/notification.html",
-            {"request": request},
-            request=request,
+        has_insertion_point = insert_before is not None
+        session_was_accessed = session.accessed
+        has_session_data = not session.is_empty()
+        is_html = (
+            not getattr(response, "streaming", False)
+            and "gzip" not in content_encoding
+            and content_type in _HTML_TYPES
         )
+        # Reading the session sets `accessed` and adds a `Vary: Cookie` header.
+        # Do not do that for a session the view never used.
+        is_hijacked = session_was_accessed and (
+            bool(session.get("hijack_history"))
+            if isinstance(user := request.user, SimpleLazyObject)
+            and user._wrapped is empty
+            else getattr(user, "is_hijacked", False)
+        )
+        if (
+            has_insertion_point
+            and session_was_accessed
+            and has_session_data
+            and is_html
+            and is_hijacked
+        ):
+            rendered = render_to_string(
+                "hijack/notification.html",
+                {"request": request},
+                request=request,
+            )
 
-        # Insert the toolbar in the response.
-        content = response.content.decode(response.charset)
-        pattern = re.escape(insert_before)
-        bits = re.split(pattern, content, flags=re.IGNORECASE)
-        if len(bits) > 1:
-            bits[-2] += rendered
-            response.content = insert_before.join(bits)
-            if "Content-Length" in response:
-                response["Content-Length"] = len(response.content)
+            # Insert the toolbar in the response.
+            content = response.content.decode(response.charset)
+            pattern = re.escape(insert_before)
+            bits = re.split(pattern, content, flags=re.IGNORECASE)
+            if len(bits) > 1:
+                bits[-2] += rendered
+                response.content = insert_before.join(bits)
+                if "Content-Length" in response:
+                    response["Content-Length"] = len(response.content)
         return response

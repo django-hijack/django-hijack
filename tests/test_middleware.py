@@ -91,6 +91,33 @@ class TestHijackRemoteUserMiddleware:
         assert self.middleware.process_response(request, response) is response
         assert not request.session.accessed
 
+    def test_process_response__does_not_load_user(self, rf):
+        request = rf.get("/")
+        calls = []
+        request.user = SimpleLazyObject(lambda: calls.append(True))
+        request.session = SessionStore("some_session_key")
+        request.session.accessed = True
+        response = HttpResponse("")
+        assert self.middleware.process_response(request, response) is response
+        assert calls == []
+
+    def test_process_response__hijacked_without_loaded_user(self, rf, monkeypatch):
+        request = rf.get("/")
+        request.user = SimpleLazyObject(get_user_model())
+        request.session = SessionStore("some_session_key")
+        request.session.accessed = True
+        request.session["hijack_history"] = ["1"]
+        render_to_string = MagicMock(return_value="HIJACKED")
+        monkeypatch.setattr("hijack.middleware.render_to_string", render_to_string)
+        response = HttpResponse(b"<body></body>")
+        assert self.middleware.process_response(request, response) is response
+        render_to_string.assert_called_once_with(
+            "hijack/notification.html",
+            {"request": request},
+            request=request,
+        )
+        assert request.user._wrapped is empty
+
     def test_process_response__html(self, rf, monkeypatch):
         request = rf.get("/")
         request.user = get_user_model()
