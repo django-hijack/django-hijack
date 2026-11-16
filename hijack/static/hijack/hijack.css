@@ -6,9 +6,18 @@
 
   position: fixed;
   bottom: 0;
+  right: auto;
   left: 50%;
   transform: translateX(-50%);
   z-index: 300;
+
+  /* Reset user agent styles of the <dialog> element. */
+  border: none;
+  padding: 0;
+  margin: 0;
+  max-width: none;
+  max-height: none;
+  background: transparent;
 
   .djhj-notification {
     display: flex;
