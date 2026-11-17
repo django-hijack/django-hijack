@@ -3,7 +3,7 @@ import re
 
 from django.template.loader import render_to_string
 from django.utils.deprecation import MiddlewareMixin
-from django.utils.functional import SimpleLazyObject, empty
+from django.utils.functional import SimpleLazyObject
 
 from hijack.conf import settings
 
@@ -47,19 +47,8 @@ class HijackUserMiddleware(MiddlewareMixin):
         )
         # Reading the session sets `accessed` and adds a `Vary: Cookie` header.
         # Do not do that for a session the view never used.
-        is_hijacked = session_was_accessed and (
-            bool(session.get("hijack_history"))
-            if isinstance(user := request.user, SimpleLazyObject)
-            and user._wrapped is empty
-            else getattr(user, "is_hijacked", False)
-        )
-        if (
-            has_insertion_point
-            and session_was_accessed
-            and has_session_data
-            and is_html
-            and is_hijacked
-        ):
+        is_hijacked = session_was_accessed and bool(session.get("hijack_history"))
+        if has_insertion_point and has_session_data and is_html and is_hijacked:
             rendered = render_to_string(
                 "hijack/notification.html",
                 {"request": request},
