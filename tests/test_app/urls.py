@@ -9,6 +9,7 @@ urlpatterns = [
     path("hijack/", include("hijack.urls", namespace="hijack")),
     path("users/", views.UserListView.as_view(), name="user-list"),
     path("accounts/profile/", views.UserDetailView.as_view(), name="user-detail"),
+    path("session-only/", views.SessionOnlyView.as_view(), name="session-only"),
     path(
         "bye-bye/", TemplateView.as_view(template_name="bye_bye.html"), name="bye-bye"
     ),

@@ -222,6 +222,15 @@ class TestIntegration:
             admin_client.get(self.user_detail_url).content == b'{"username": "admin"}'
         )
 
+    def test_session_only_view__no_user_query(self, alice_client):
+        url = reverse_lazy("session-only")
+        alice_client.get(url)
+        with CaptureQueriesContext(connections["default"]) as ctx:
+            response = alice_client.get(url)
+        assert response.status_code == 200
+        user_table = get_user_model()._meta.db_table
+        assert not any(user_table in query["sql"] for query in ctx.captured_queries)
+
     def test_keep_session_age(self, admin_client, bob, settings):
         engine = import_module(settings.SESSION_ENGINE)
         session = engine.SessionStore(
