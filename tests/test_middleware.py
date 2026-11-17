@@ -145,6 +145,31 @@ class TestHijackRemoteUserMiddleware:
         assert self.middleware.process_response(request, response) is response
         render_to_string.assert_not_called()
 
+    def test_process_response__content_encoding(self, rf, monkeypatch):
+        request = rf.get("/")
+        request.session = SessionStore("some_session_key")
+        request.session.accessed = True
+        request.session["hijack_history"] = ["1"]
+        render_to_string = MagicMock()
+        monkeypatch.setattr("hijack.middleware.render_to_string", render_to_string)
+        response = HttpResponse(b"\x8b\xff</body>")
+        response["Content-Encoding"] = "br"
+        assert self.middleware.process_response(request, response) is response
+        render_to_string.assert_not_called()
+        assert response.content == b"\x8b\xff</body>"
+
+    def test_process_response__empty_content_encoding(self, rf, monkeypatch):
+        request = rf.get("/")
+        request.session = SessionStore("some_session_key")
+        request.session.accessed = True
+        request.session["hijack_history"] = ["1"]
+        render_to_string = MagicMock(return_value="HIJACKED")
+        monkeypatch.setattr("hijack.middleware.render_to_string", render_to_string)
+        response = HttpResponse(b"<body></body>")
+        response["Content-Encoding"] = ""
+        assert self.middleware.process_response(request, response) is response
+        assert response.content == b"<body>HIJACKED</body>"
+
     def test_process_response__content_length(self, rf, monkeypatch):
         request = rf.get("/")
         request.session = SessionStore("some_session_key")

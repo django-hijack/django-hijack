@@ -42,7 +42,7 @@ class HijackUserMiddleware(MiddlewareMixin):
         has_session_data = not session.is_empty()
         is_html = (
             not getattr(response, "streaming", False)
-            and "gzip" not in content_encoding
+            and not content_encoding
             and content_type in _HTML_TYPES
         )
         # Reading the session sets `accessed` and adds a `Vary: Cookie` header.
